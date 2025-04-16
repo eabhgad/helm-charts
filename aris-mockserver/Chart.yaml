@@ -1,0 +1,8 @@
+apiVersion: v2
+name: aris-mockserver
+description: HTTP Mock server for API testing
+type: application
+## Chart version
+version: "0.1"
+## Version of Aris Mock Server
+appVersion: "2.5.1.m.0.3"

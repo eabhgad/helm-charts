@@ -1,0 +1,21 @@
+##
+replicaCount: 1
+
+image:
+  repository: adgadre/mock-server
+  pullPolicy: IfNotPresent
+  tag: "1.3"
+
+service:
+  type: ClusterIP
+  port: 80
+
+volumes:
+  mockserverConfigVol:
+    name: mockserver-config-vol
+    hostPath: "/mnt/nfs_share/volumes/mock-server/config"
+
+volumeMounts:
+  mockserverConfigVol:
+    mountPath: "/home/eabhgad/app/mock-server/config"
+    readOnly: true

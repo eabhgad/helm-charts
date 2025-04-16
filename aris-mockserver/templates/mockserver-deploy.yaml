@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}-deploy
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app: aris-mockserver
+  template:
+    metadata:
+      labels:
+        app: aris-mockserver
+    spec:
+      containers:
+        - name: mockserver
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          volumeMounts: 
+            - name: mockserver-config-vol
+              mountPath: /home/eabhgad/app/mock-server/config
+          ports:
+            - name: beam-api
+              containerPort: 8080
+            - name: gen-api-port
+              containerPort: 8091
+            - name: gen-tkn-port
+              containerPort: 8090
+      volumes:
+        - name: mockserver-config-vol
+          hostPath:
+            path: /mnt/nfs_share/volumes/mock-server/config
+            type: Directory 
