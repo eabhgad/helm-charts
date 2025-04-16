@@ -1,6 +1,6 @@
 apiVersion: v2
 name: aris-mockserver
-description: HTTP Mock server for API testing
+description: Mock server for API testing
 type: application
 ## Chart version
 version: "0.1"
