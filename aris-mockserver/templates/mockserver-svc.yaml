@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: mocksvc
+  name: {{ .Release.Name }}-svc
   labels:
     app: mocksvc
 spec:

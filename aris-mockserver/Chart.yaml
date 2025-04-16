@@ -3,6 +3,6 @@ name: aris-mockserver
 description: Mock server for API testing
 type: application
 ## Chart version
-version: "0.1"
+version: "0.2"
 ## Version of Aris Mock Server
 appVersion: "2.5.1.m.0.3"

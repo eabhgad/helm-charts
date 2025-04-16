@@ -16,8 +16,8 @@ spec:
         - name: mockserver
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           volumeMounts: 
-            - name: mockserver-config-vol
-              mountPath: /home/eabhgad/app/mock-server/config
+            - name: {{ .Values.volumes.mockserverConfigVol.name }}
+              mountPath: {{ .Values.volumeMounts.mockserverConfigVol.mountPath }}
           ports:
             - name: beam-api
               containerPort: 8080
@@ -26,7 +26,7 @@ spec:
             - name: gen-tkn-port
               containerPort: 8090
       volumes:
-        - name: mockserver-config-vol
+        - name: {{ .Values.volumes.mockserverConfigVol.name }}
           hostPath:
-            path: /mnt/nfs_share/volumes/mock-server/config
+            path: {{ .Values.volumes.mockserverConfigVol.hostPath }}
             type: Directory 
