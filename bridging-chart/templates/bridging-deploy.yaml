@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: bridging-deploy
+  labels:
+    app: bridging
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: bridging
+  template:
+    metadata:
+      labels:
+        app: bridging
+    spec:
+      containers:
+        - name: bridging
+          image: "ghcr.io/eabhgad/bridging:1.1"
+          volumeMounts: 
+            - name: bridging-config
+              mountPath: /home/eabhgad/app/bridging/config
+            - name: bridging-log
+              mountPath: /home/eabhgad/app/logs
+          ports:
+            - name: generic-port
+              containerPort: 8081
+            - name: server-port
+              containerPort: 8989
+      imagePullSecrets:
+        - name: ghcr-cred
+      volumes:
+        - name: bridging-config
+          hostPath:
+            path: /mnt/nfs_share/volumes/bridging/config
+            type: Directory         
+        - name: bridging-log
+          hostPath:
+            path: /mnt/nfs_share/volumes/bridging/logs
+            type: Directory         
+#        - name: bridging-log
+#          persistentVolumeClaim:
+#            claimName: pvc-nfs-dynamic       

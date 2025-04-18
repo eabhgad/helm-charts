@@ -1,0 +1,75 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: cassandra
+  labels:
+    app: cassandra
+spec:
+  serviceName: cassandra
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app: cassandra
+  template:
+    metadata:
+      labels:
+        app: cassandra
+    spec:
+      terminationGracePeriodSeconds: 500
+      securityContext:
+        fsGroup: 1001
+      initContainers:
+        - name: volume-permissions
+          image: "{{ .Values.image.osShell.repository }}:{{ .Values.image.osShell.tag }}"
+          imagePullPolicy: "{{ .Values.image.osShell.pullPolicy }}"
+          command:
+            - /bin/sh
+            - -cx
+            - |
+              chown 1001:1001 /bitnami/cassandra
+              mkdir -p /bitnami/cassandra/data
+              chmod 700 /bitnami/cassandra/data
+              find /bitnami/cassandra -mindepth 1 -maxdepth 1 -not -name ".snapshot" -not -name "lost+found" | \
+                xargs chown -R 1001:1001
+          securityContext:
+            runAsUser: 0
+          volumeMounts:
+            - name: cassandra-data
+              mountPath: /bitnami
+      containers:
+        - name: cassandra
+          image: bitnami/cassandra:latest
+          image: "{{ .Values.image.cassandra.repository }}:{{ .Values.image.cassandra.tag }}"
+          imagePullPolicy: "{{ .Values.image.cassandra.pullPolicy }}"
+          ports:
+            - containerPort: 7000
+              name: intra-node
+            - containerPort: 7001
+              name: tls-intra-node
+            - containerPort: 7199
+              name: jmx
+            - containerPort: 9042
+              name: cql
+          env:
+            - name: CASSANDRA_SEEDS
+              value: "cassandra-0.cassandra.default.svc.cluster.local"
+            - name: CASSANDRA_CLUSTER_NAME
+              value: "demo-cass-cluster"
+          # These volume mounts are persistent. They are like inline claims,
+          # but not exactly because the names need to match exactly one of
+          # the stateful pod volumes.
+          volumeMounts:
+          - name: cassandra-data
+            mountPath: /bitnami
+  # These are converted to volume claims by the controller
+  # and mounted at the paths mentioned above.
+  # do not use these in production until ssd GCEPersistentDisk or other ssd pd
+  volumeClaimTemplates:
+  - metadata:
+      name: cassandra-data
+    spec:
+      accessModes: [ "ReadWriteOnce" ]
+      storageClassName: nfs-csi
+      resources:
+        requests:
+          storage: 1Gi
