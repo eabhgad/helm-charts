@@ -1,0 +1,6 @@
+dependencies:
+- name: cassandra-chart
+  repository: file://../cassandra-chart
+  version: "1"
+digest: sha256:99de3208504fcefe81ed73e001f02a4fc7ada6b03c8bd02fcbbfb8771ac5b5ad
+generated: "2025-04-18T17:25:53.381498678Z"

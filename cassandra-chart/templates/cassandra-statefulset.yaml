@@ -38,9 +38,15 @@ spec:
               mountPath: /bitnami
       containers:
         - name: cassandra
-          image: bitnami/cassandra:latest
           image: "{{ .Values.image.cassandra.repository }}:{{ .Values.image.cassandra.tag }}"
           imagePullPolicy: "{{ .Values.image.cassandra.pullPolicy }}"
+          readinessProbe:
+            exec:
+              command:
+                - /bin/bash
+                - -ec
+                - |
+                  nodetool status | grep -E "^UN\\s+${POD_IP}"
           ports:
             - containerPort: 7000
               name: intra-node
