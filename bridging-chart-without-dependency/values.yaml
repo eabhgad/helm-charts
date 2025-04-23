@@ -1,0 +1,27 @@
+##
+replicaCounts: 1
+
+image:
+  bridging:
+    repository: ghcr.io/eabhgad/bridging
+    pullPolicy: IfNotPresent
+    tag: "1.1"
+
+imagePullSecrets:
+  ghcr: ghcr-cred
+  docker:
+
+service:
+  type: ClusterIP
+  port: 80
+
+volumes:
+  mockserverConfigVol:
+    name: mockserver-config-vol
+    hostPath: "/mnt/nfs_share/volumes/mock-server/config"
+
+volumeMounts:
+  mockserverConfigVol:
+    mountPath: "/home/eabhgad/app/mock-server/config"
+    readOnly: true
+##

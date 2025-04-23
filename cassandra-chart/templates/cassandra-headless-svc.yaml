@@ -7,6 +7,9 @@ metadata:
 spec:
   clusterIP: None
   ports:
-  - port: {{ .Values.service.headless.port }}
+  - name: cqlsh
+    port: {{ .Values.service.headless.port }}
+  - name: jmx
+    port: 7199
   selector:
     app: cassandra
