@@ -1,0 +1,11 @@
+<soapenv:Envelope
+	xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/"
+	xmlns:ser="http://www.telstra.com/ServiceDetails.wsdl">
+	<soapenv:Header />
+	<soapenv:Body>
+		<ser:ServiceDetailsExceptionInfo>
+			<faultcode>400</faultcode>
+			<faultstring>Invalid MSISDN</faultstring>
+		</ser:ServiceDetailsExceptionInfo>
+	</soapenv:Body>
+</soapenv:Envelope>

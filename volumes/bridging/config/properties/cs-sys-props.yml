@@ -1,0 +1,4 @@
+system-specifications:
+  cs-system-props: !!com.ericsson.datamigration.bridging.commons.core.dto.CSSystemProps
+    global:
+      date-format: yyyyMMdd'T'HH:mm:ssZ

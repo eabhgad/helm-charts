@@ -1,0 +1,749 @@
+{
+	"href": "/cpq/shoppingCart/v1/shoppingCart/20221-1565-10000784-34522715",
+	"id": "20221-1565-10000784-34522715",
+	"humanReadableId": "34522715",
+	"validFor": {
+		"endDateTime": "2020-08-15T07:58:35.584Z",
+		"startDateTime": "2020-08-08T07:58:35.584Z"
+	},
+	"cartItem": [{
+			"action": "ADD",
+			"id": "a58f4ec4-c86f-4c80-9145-fe8c31f5dd1a",
+			"product": {
+				"@type": "product",
+				"id": "a58f4ec4-c86f-4c80-9145-fe8c31f5dd1a",
+				"name": "$2 SIM Kit - Telstra Pre-Paid Mobile",
+				"productRelationship": [{
+						"relationshipType": "contains",
+						"relationshipHierarchyType": "child",
+						"product": {
+							"@type": "product",
+							"id": "51241406-45bc-4908-93fa-b00382acaa2b",
+							"isBundle": false
+						}
+					}, {
+						"relationshipType": "contains",
+						"relationshipHierarchyType": "child",
+						"product": {
+							"@type": "product",
+							"id": "346d469e-b34d-4e6c-89ad-da4747743666",
+							"isBundle": false
+						}
+					}, {
+						"relationshipType": "contains",
+						"relationshipHierarchyType": "child",
+						"product": {
+							"@type": "product",
+							"id": "91ab6244-8d52-484d-af40-06d080a0bd03",
+							"isBundle": false
+						}
+					}, {
+						"relationshipType": "contains",
+						"relationshipHierarchyType": "child",
+						"product": {
+							"@type": "product",
+							"id": "671d5178-bb71-44b2-a928-5e99dd9ef33b",
+							"isBundle": false
+						}
+					}, {
+						"relationshipType": "contains",
+						"relationshipHierarchyType": "child",
+						"product": {
+							"@type": "product",
+							"id": "d7cc2452-9733-4520-93e4-bc9be6111db3",
+							"isBundle": false
+						}
+					}
+				],
+				"currentLifecycleState": "ProductCreated",
+				"action": "ADD",
+				"lifecycleStateTimeline": [{
+						"status": "ProductActive",
+						"validFor": {
+							"startDateTime": "2020-08-08T08:00:54.251Z"
+						}
+					}
+				],
+				"productType": "activationBundle",
+				"isBundle": true
+			},
+			"productOffering": {
+				"id": "BPO_C_MB_PRE_AB_TPPCP_0"
+			},
+			"relatedEntity": [{
+					"id": "77b318bb-5c9b-498a-97c1-9c9c73ac342e",
+					"role": "Contract",
+					"entitySpecification": {
+						"id": "MobileTechnicalContract"
+					}
+				}
+			],
+			"createdDate": "2020-08-08T08:00:54.442Z",
+			"updatedDate": "2020-08-08T08:00:54.442Z",
+			"interactionDate": "2020-08-08T08:00:54.000Z"
+		}, {
+			"action": "ADD",
+			"id": "51241406-45bc-4908-93fa-b00382acaa2b",
+			"product": {
+				"@type": "product",
+				"id": "51241406-45bc-4908-93fa-b00382acaa2b",
+				"name": "Telstra Pre-Paid Mobile",
+				"productRelationship": [{
+						"relationshipType": "requires",
+						"relationshipHierarchyType": "peer",
+						"product": {
+							"@type": "product",
+							"id": "541bc510-d30e-4956-b180-22dbde8501aa",
+							"isBundle": false
+						}
+					}, {
+						"relationshipType": "contains",
+						"relationshipHierarchyType": "child",
+						"product": {
+							"@type": "product",
+							"id": "3a553bcb-1dcf-4221-a129-a7cc46118ad2",
+							"isBundle": false
+						}
+					}, {
+						"relationshipType": "contains",
+						"relationshipHierarchyType": "child",
+						"product": {
+							"@type": "product",
+							"id": "bb02ec53-6f3d-4bd4-a078-d04787ec9ba4",
+							"isBundle": false
+						}
+					}
+				],
+				"currentLifecycleState": "ProductCreated",
+				"action": "ADD",
+				"lifecycleStateTimeline": [{
+						"status": "ProductActive",
+						"validFor": {
+							"startDateTime": "2020-08-08T08:00:54.251Z"
+						}
+					}
+				],
+				"requestedStartDate": "2020-08-08T08:00:54.251Z",
+				"productType": "tariffPlan",
+				"isBundle": true
+			},
+			"productOffering": {
+				"id": "BPO_C_MB_PRE_TP_TPPCP"
+			},
+			"relatedEntity": [{
+					"id": "77b318bb-5c9b-498a-97c1-9c9c73ac342e",
+					"role": "Contract",
+					"entitySpecification": {
+						"id": "MobileTechnicalContract"
+					}
+				}
+			],
+			"createdDate": "2020-08-08T08:00:54.442Z",
+			"updatedBy": "SYSTEM",
+			"updatedDate": "2020-08-08T08:00:54.442Z",
+			"interactionDate": "2020-08-08T08:00:54.000Z"
+		}, {
+			"action": "ADD",
+			"id": "77b318bb-5c9b-498a-97c1-9c9c73ac342e",
+			"product": {
+				"@type": "contract",
+				"id": "77b318bb-5c9b-498a-97c1-9c9c73ac342e",
+				"type": "TechnicalContractSpec",
+				"name": "Mobile Technical Contract",
+				"currentLifecycleState": "ContractCreated",
+				"action": "ADD",
+				"lifecycleStateTimeline": [{
+						"status": "ContractActive",
+						"validFor": {
+							"startDateTime": "2020-08-08T08:00:54.251Z"
+						}
+					}
+				],
+				"requestedStartDate": "2020-08-08T08:00:54.251Z",
+				"contractSpecification": {
+					"id": "MobileTechnicalContract",
+					"type": "TechnicalContractSpec"
+				},
+				"scopeProducts": [{
+						"associatedInstanceId": "a58f4ec4-c86f-4c80-9145-fe8c31f5dd1a",
+						"type": "ProductOffering",
+						"cartItemId": "a58f4ec4-c86f-4c80-9145-fe8c31f5dd1a"
+					}, {
+						"associatedInstanceId": "51241406-45bc-4908-93fa-b00382acaa2b",
+						"type": "ProductOffering",
+						"cartItemId": "51241406-45bc-4908-93fa-b00382acaa2b"
+					}, {
+						"associatedInstanceId": "346d469e-b34d-4e6c-89ad-da4747743666",
+						"type": "ProductOffering",
+						"cartItemId": "346d469e-b34d-4e6c-89ad-da4747743666"
+					}, {
+						"associatedInstanceId": "91ab6244-8d52-484d-af40-06d080a0bd03",
+						"type": "ProductOffering",
+						"cartItemId": "91ab6244-8d52-484d-af40-06d080a0bd03"
+					}, {
+						"associatedInstanceId": "671d5178-bb71-44b2-a928-5e99dd9ef33b",
+						"type": "ProductOffering",
+						"cartItemId": "671d5178-bb71-44b2-a928-5e99dd9ef33b"
+					}, {
+						"associatedInstanceId": "d7cc2452-9733-4520-93e4-bc9be6111db3",
+						"type": "ProductOffering",
+						"cartItemId": "d7cc2452-9733-4520-93e4-bc9be6111db3"
+					}, {
+						"associatedInstanceId": "541bc510-d30e-4956-b180-22dbde8501aa",
+						"type": "ProductOffering",
+						"cartItemId": "541bc510-d30e-4956-b180-22dbde8501aa"
+					}, {
+						"associatedInstanceId": "3a553bcb-1dcf-4221-a129-a7cc46118ad2",
+						"type": "ProductOffering",
+						"cartItemId": "3a553bcb-1dcf-4221-a129-a7cc46118ad2"
+					}, {
+						"associatedInstanceId": "bb02ec53-6f3d-4bd4-a078-d04787ec9ba4",
+						"type": "ProductOffering",
+						"cartItemId": "bb02ec53-6f3d-4bd4-a078-d04787ec9ba4"
+					}
+				],
+				"scopeResources": [{
+						"type": "LogicalResourceSpec",
+						"cartItemId": "3fabb7fc-d889-4074-844b-c6f888151ae7"
+					}
+				]
+			},
+			"createdDate": "2020-08-08T08:00:54.442Z",
+			"updatedBy": "SYSTEM",
+			"updatedDate": "2020-08-08T08:00:54.442Z",
+			"interactionDate": "2020-08-08T08:00:54.000Z"
+		}, {
+			"action": "ADD",
+			"id": "346d469e-b34d-4e6c-89ad-da4747743666",
+			"product": {
+				"@type": "product",
+				"id": "346d469e-b34d-4e6c-89ad-da4747743666",
+				"name": "Recharge Product Offering",
+				"productSpecification": {
+					"id": "PS_C_MB_PRE_RC_0"
+				},
+				"currentLifecycleState": "ProductCreated",
+				"action": "ADD",
+				"lifecycleStateTimeline": [{
+						"status": "ProductActive",
+						"validFor": {
+							"endDateTime": "2020-08-15T08:00:54.278Z",
+							"startDateTime": "2020-08-08T08:00:54.251Z"
+						}
+					}
+				],
+				"requestedStartDate": "2020-08-08T08:00:54.251Z",
+				"requestedEndDate": "2020-08-15T08:00:54.278Z",
+				"productType": "recharge",
+				"isBundle": false
+			},
+			"productOffering": {
+				"id": "PO_C_MB_PRE_RC_0"
+			},
+			"relatedEntity": [{
+					"id": "77b318bb-5c9b-498a-97c1-9c9c73ac342e",
+					"role": "Contract",
+					"entitySpecification": {
+						"id": "MobileTechnicalContract"
+					}
+				}
+			],
+			"createdDate": "2020-08-08T08:00:54.442Z",
+			"updatedBy": "SYSTEM",
+			"updatedDate": "2020-08-08T08:00:54.442Z",
+			"interactionDate": "2020-08-08T08:00:54.000Z"
+		}, {
+			"action": "ADD",
+			"id": "91ab6244-8d52-484d-af40-06d080a0bd03",
+			"product": {
+				"@type": "product",
+				"id": "91ab6244-8d52-484d-af40-06d080a0bd03",
+				"name": "First 3 Recharges receive 20GB Bonus Data",
+				"productSpecification": {
+					"id": "PS_C_MB_PRE_PROMO_XOFYRCRG"
+				},
+				"currentLifecycleState": "ProductCreated",
+				"action": "ADD",
+				"lifecycleStateTimeline": [{
+						"status": "ProductActive",
+						"validFor": {
+							"startDateTime": "2020-08-08T08:00:54.251Z"
+						}
+					}
+				],
+				"requestedStartDate": "2020-08-08T08:00:54.251Z",
+				"productType": "promotion",
+				"productSubType": "template",
+				"isBundle": false
+			},
+			"productOffering": {
+				"id": "PO_C_MB_PRE_PROMO_1OF3RCRG"
+			},
+			"relatedEntity": [{
+					"id": "77b318bb-5c9b-498a-97c1-9c9c73ac342e",
+					"role": "Contract",
+					"entitySpecification": {
+						"id": "MobileTechnicalContract"
+					}
+				}
+			],
+			"createdDate": "2020-08-08T08:00:54.442Z",
+			"updatedBy": "SYSTEM",
+			"updatedDate": "2020-08-08T08:00:54.442Z",
+			"interactionDate": "2020-08-08T08:00:54.000Z"
+		}, {
+			"action": "ADD",
+			"id": "671d5178-bb71-44b2-a928-5e99dd9ef33b",
+			"product": {
+				"@type": "product",
+				"id": "671d5178-bb71-44b2-a928-5e99dd9ef33b",
+				"name": "SIM Card",
+				"productSpecification": {
+					"id": "PS_C_MB_PRE_SIMCARD"
+				},
+				"realizingResource": [{
+						"@type": "resource",
+						"id": "34547719-0854-41e3-ad75-0c07e4533b88",
+						"currentLifecycleState": "ResourceCreated",
+						"action": "ADD",
+						"lifecycleStateTimeline": [{
+								"status": "ResourceActive",
+								"validFor": {
+									"startDateTime": "2020-08-08T08:00:54.251Z"
+								}
+							}
+						],
+						"requestedStartDate": "2020-08-08T08:00:54.251Z",
+						"resourceSpecification": {
+							"id": "PRS_B2A_MB_SIMCARD",
+							"type": "PhysicalResourceSpec"
+						}
+					}
+				],
+				"currentLifecycleState": "ProductCreated",
+				"action": "ADD",
+				"lifecycleStateTimeline": [{
+						"status": "ProductActive",
+						"validFor": {
+							"startDateTime": "2020-08-08T08:00:54.251Z"
+						}
+					}
+				],
+				"requestedStartDate": "2020-08-08T08:00:54.251Z",
+				"productType": "sim",
+				"isBundle": false
+			},
+			"productOffering": {
+				"id": "PO_C_MB_PRE_SIMCARD"
+			},
+			"relatedEntity": [{
+					"id": "77b318bb-5c9b-498a-97c1-9c9c73ac342e",
+					"role": "Contract",
+					"entitySpecification": {
+						"id": "MobileTechnicalContract"
+					}
+				}
+			],
+			"createdDate": "2020-08-08T08:00:54.442Z",
+			"updatedBy": "SYSTEM",
+			"updatedDate": "2020-08-08T08:00:54.442Z",
+			"interactionDate": "2020-08-08T08:00:54.000Z"
+		}, {
+			"action": "ADD",
+			"id": "d7cc2452-9733-4520-93e4-bc9be6111db3",
+			"product": {
+				"@type": "product",
+				"id": "d7cc2452-9733-4520-93e4-bc9be6111db3",
+				"name": "MSISDN",
+				"productSpecification": {
+					"id": "PS_C_MB_PRE_MSISDN"
+				},
+				"realizingResource": [{
+						"@type": "resource",
+						"id": "3fabb7fc-d889-4074-844b-c6f888151ae7",
+						"currentLifecycleState": "ResourceCreated",
+						"action": "ADD",
+						"lifecycleStateTimeline": [{
+								"status": "ResourceActive",
+								"validFor": {
+									"startDateTime": "2020-08-08T08:00:54.251Z"
+								}
+							}
+						],
+						"requestedStartDate": "2020-08-08T08:00:54.251Z",
+						"resourceSpecification": {
+							"id": "LRS_B2A_MB_MSISDN",
+							"type": "LogicalResourceSpec"
+						}
+					}
+				],
+				"currentLifecycleState": "ProductCreated",
+				"action": "ADD",
+				"lifecycleStateTimeline": [{
+						"status": "ProductActive",
+						"validFor": {
+							"startDateTime": "2020-08-08T08:00:54.251Z"
+						}
+					}
+				],
+				"requestedStartDate": "2020-08-08T08:00:54.251Z",
+				"productType": "msisdn",
+				"isBundle": false
+			},
+			"productOffering": {
+				"id": "PO_C_MB_PRE_MSISDN"
+			},
+			"relatedEntity": [{
+					"id": "77b318bb-5c9b-498a-97c1-9c9c73ac342e",
+					"role": "Contract",
+					"entitySpecification": {
+						"id": "MobileTechnicalContract"
+					}
+				}
+			],
+			"createdDate": "2020-08-08T08:00:54.442Z",
+			"updatedBy": "SYSTEM",
+			"updatedDate": "2020-08-08T08:00:54.442Z",
+			"interactionDate": "2020-08-08T08:00:54.000Z"
+		}, {
+			"action": "ADD",
+			"id": "541bc510-d30e-4956-b180-22dbde8501aa",
+			"product": {
+				"@type": "product",
+				"id": "541bc510-d30e-4956-b180-22dbde8501aa",
+				"name": "Mobile network access",
+				"productSpecification": {
+					"id": "PS_C_MB_PRE_NETACC_ALL"
+				},
+				"realizingService": [{
+						"@type": "service",
+						"id": "473ce5ea-c6c6-4768-ba92-c2dd191a3eff",
+						"currentLifecycleState": "ServiceCreated",
+						"action": "ADD",
+						"lifecycleStateTimeline": [{
+								"status": "ServiceActive",
+								"validFor": {
+									"startDateTime": "2020-08-08T08:00:54.251Z"
+								}
+							}
+						],
+						"requestedStartDate": "2020-08-08T08:00:54.251Z",
+						"serviceSpecification": {
+							"id": "CFSS_C_MB_PRE_NETACC_ALL",
+							"type": "CustomerFacingServiceSpec"
+						},
+						"supportingService": [{
+								"associatedInstanceId": "45306d5f-00dd-4b5b-83e5-f8e6b6f87167",
+								"type": "ResourceFacingServiceSpec"
+							}
+						]
+					}, {
+						"@type": "service",
+						"id": "45306d5f-00dd-4b5b-83e5-f8e6b6f87167",
+						"currentLifecycleState": "ServiceCreated",
+						"action": "ADD",
+						"lifecycleStateTimeline": [{
+								"status": "ServiceActive",
+								"validFor": {
+									"startDateTime": "2020-08-08T08:00:54.251Z"
+								}
+							}
+						],
+						"requestedStartDate": "2020-08-08T08:00:54.251Z",
+						"serviceSpecification": {
+							"id": "RFSS_C_MB_PRE_NETACC_ALL",
+							"type": "ResourceFacingServiceSpec"
+						},
+						"supportingResource": [{
+								"associatedInstanceId": "3fabb7fc-d889-4074-844b-c6f888151ae7",
+								"type": "LogicalResourceSpec"
+							}, {
+								"associatedInstanceId": "34547719-0854-41e3-ad75-0c07e4533b88",
+								"type": "PhysicalResourceSpec"
+							}
+						]
+					}
+				],
+				"currentLifecycleState": "ProductCreated",
+				"action": "ADD",
+				"lifecycleStateTimeline": [{
+						"status": "ProductActive",
+						"validFor": {
+							"startDateTime": "2020-08-08T08:00:54.251Z"
+						}
+					}
+				],
+				"requestedStartDate": "2020-08-08T08:00:54.251Z",
+				"productType": "access",
+				"isBundle": false
+			},
+			"productOffering": {
+				"id": "PO_C_MB_PRE_NETACC_ALL"
+			},
+			"relatedEntity": [{
+					"id": "77b318bb-5c9b-498a-97c1-9c9c73ac342e",
+					"role": "Contract",
+					"entitySpecification": {
+						"id": "MobileTechnicalContract"
+					}
+				}
+			],
+			"createdDate": "2020-08-08T08:00:54.442Z",
+			"updatedBy": "SYSTEM",
+			"updatedDate": "2020-08-08T08:00:54.442Z",
+			"interactionDate": "2020-08-08T08:00:54.000Z"
+		}, {
+			"action": "ADD",
+			"id": "3a553bcb-1dcf-4221-a129-a7cc46118ad2",
+			"product": {
+				"@type": "product",
+				"id": "3a553bcb-1dcf-4221-a129-a7cc46118ad2",
+				"name": "BASE OFFER",
+				"productSpecification": {
+					"id": "PS_C_MB_PRE_BASE_OFFER"
+				},
+				"realizingService": [{
+						"@type": "service",
+						"id": "9b0d3db8-7393-4239-b220-a94f1463bfd1",
+						"currentLifecycleState": "ServiceCreated",
+						"action": "ADD",
+						"lifecycleStateTimeline": [{
+								"status": "ServiceActive",
+								"validFor": {
+									"startDateTime": "2020-08-08T08:00:54.251Z"
+								}
+							}
+						],
+						"requestedStartDate": "2020-08-08T08:00:54.251Z",
+						"serviceSpecification": {
+							"id": "CFSS_C_MB_PRE_BASE_OFFER",
+							"type": "CustomerFacingServiceSpec"
+						},
+						"supportingService": [{
+								"associatedInstanceId": "248fb536-f217-4341-8ad7-649130076099",
+								"type": "ResourceFacingServiceSpec"
+							}, {
+								"associatedInstanceId": "66f8a536-bd8d-4d4b-bc01-0ebc7fddc355",
+								"type": "ChargingConfigurationSpec"
+							}
+						]
+					}, {
+						"@type": "service",
+						"id": "248fb536-f217-4341-8ad7-649130076099",
+						"currentLifecycleState": "ServiceCreated",
+						"action": "ADD",
+						"lifecycleStateTimeline": [{
+								"status": "ServiceActive",
+								"validFor": {
+									"startDateTime": "2020-08-08T08:00:54.251Z"
+								}
+							}
+						],
+						"requestedStartDate": "2020-08-08T08:00:54.251Z",
+						"serviceSpecification": {
+							"id": "RFSS_C_MB_PRE_BASE_OFFER",
+							"type": "ResourceFacingServiceSpec"
+						},
+						"supportingResource": [{
+								"associatedInstanceId": "3fabb7fc-d889-4074-844b-c6f888151ae7",
+								"type": "LogicalResourceSpec"
+							}, {
+								"associatedInstanceId": "34547719-0854-41e3-ad75-0c07e4533b88",
+								"type": "PhysicalResourceSpec"
+							}
+						]
+					}, {
+						"@type": "service",
+						"id": "66f8a536-bd8d-4d4b-bc01-0ebc7fddc355",
+						"currentLifecycleState": "ServiceCreated",
+						"action": "ADD",
+						"lifecycleStateTimeline": [{
+								"status": "ServiceActive",
+								"validFor": {
+									"startDateTime": "2020-08-08T08:00:54.251Z"
+								}
+							}
+						],
+						"requestedStartDate": "2020-08-08T08:00:54.251Z",
+						"serviceSpecification": {
+							"id": "csOffer_1",
+							"type": "ChargingConfigurationSpec"
+						}
+					}
+				],
+				"currentLifecycleState": "ProductCreated",
+				"action": "ADD",
+				"lifecycleStateTimeline": [{
+						"status": "ProductActive",
+						"validFor": {
+							"startDateTime": "2020-08-08T08:00:54.251Z"
+						}
+					}
+				],
+				"requestedStartDate": "2020-08-08T08:00:54.251Z",
+				"productType": "baseOffer",
+				"isBundle": false
+			},
+			"productOffering": {
+				"id": "PO_C_MB_PRE_BASE_OFFER"
+			},
+			"relatedEntity": [{
+					"id": "77b318bb-5c9b-498a-97c1-9c9c73ac342e",
+					"role": "Contract",
+					"entitySpecification": {
+						"id": "MobileTechnicalContract"
+					}
+				}
+			],
+			"createdDate": "2020-08-08T08:00:54.442Z",
+			"updatedBy": "SYSTEM",
+			"updatedDate": "2020-08-08T08:00:54.442Z",
+			"interactionDate": "2020-08-08T08:00:54.000Z"
+		}, {
+			"action": "ADD",
+			"id": "bb02ec53-6f3d-4bd4-a078-d04787ec9ba4",
+			"product": {
+				"@type": "product",
+				"id": "bb02ec53-6f3d-4bd4-a078-d04787ec9ba4",
+				"name": "PPMAX Service Class",
+				"productSpecification": {
+					"id": "PS_C_MB_PRE_SC_TPPCP"
+				},
+				"realizingService": [{
+						"@type": "service",
+						"id": "2bc8867d-cb68-4e84-a7ef-645872dcfc67",
+						"currentLifecycleState": "ServiceCreated",
+						"action": "ADD",
+						"lifecycleStateTimeline": [{
+								"status": "ServiceActive",
+								"validFor": {
+									"startDateTime": "2020-08-08T08:00:54.251Z"
+								}
+							}
+						],
+						"requestedStartDate": "2020-08-08T08:00:54.251Z",
+						"serviceSpecification": {
+							"id": "CS_SC_10",
+							"type": "ChargingConfigurationSpec"
+						}
+					}, {
+						"@type": "service",
+						"id": "d931e683-a563-4646-be68-7665385fad8c",
+						"currentLifecycleState": "ServiceCreated",
+						"action": "ADD",
+						"lifecycleStateTimeline": [{
+								"status": "ServiceActive",
+								"validFor": {
+									"startDateTime": "2020-08-08T08:00:54.251Z"
+								}
+							}
+						],
+						"requestedStartDate": "2020-08-08T08:00:54.251Z",
+						"serviceSpecification": {
+							"id": "RFSS_C_MB_PRE_SC_TPPCP",
+							"type": "ResourceFacingServiceSpec"
+						}
+					}, {
+						"@type": "service",
+						"id": "5efb4c79-988b-40f1-ae25-cf884d4ea52d",
+						"currentLifecycleState": "ServiceCreated",
+						"action": "ADD",
+						"lifecycleStateTimeline": [{
+								"status": "ServiceActive",
+								"validFor": {
+									"startDateTime": "2020-08-08T08:00:54.251Z"
+								}
+							}
+						],
+						"requestedStartDate": "2020-08-08T08:00:54.251Z",
+						"serviceSpecification": {
+							"id": "CFSS_C_MB_PRE_SC_TPPCP",
+							"type": "CustomerFacingServiceSpec"
+						},
+						"supportingService": [{
+								"associatedInstanceId": "d931e683-a563-4646-be68-7665385fad8c",
+								"type": "ResourceFacingServiceSpec"
+							}, {
+								"associatedInstanceId": "2bc8867d-cb68-4e84-a7ef-645872dcfc67",
+								"type": "ChargingConfigurationSpec"
+							}
+						]
+					}
+				],
+				"currentLifecycleState": "ProductCreated",
+				"action": "ADD",
+				"lifecycleStateTimeline": [{
+						"status": "ProductActive",
+						"validFor": {
+							"startDateTime": "2020-08-08T08:00:54.251Z"
+						}
+					}
+				],
+				"requestedStartDate": "2020-08-08T08:00:54.251Z",
+				"productType": "serviceClass",
+				"isBundle": false
+			},
+			"productOffering": {
+				"id": "PO_C_MB_PRE_SC_TPPCP"
+			},
+			"relatedEntity": [{
+					"id": "77b318bb-5c9b-498a-97c1-9c9c73ac342e",
+					"role": "Contract",
+					"entitySpecification": {
+						"id": "MobileTechnicalContract"
+					}
+				}
+			],
+			"createdDate": "2020-08-08T08:00:54.442Z",
+			"updatedBy": "SYSTEM",
+			"updatedDate": "2020-08-08T08:00:54.442Z",
+			"interactionDate": "2020-08-08T08:00:54.000Z"
+		}
+	],
+	"relatedParty": [{
+			"id": "acc85f64-5717-4562-b3fc-361474860645",
+			"role": "customer",
+			"characteristic": [{
+					"name": "customerSegment",
+					"value": "residential",
+					"configurable": false,
+					"mandatory": false,
+					"hidden": false,
+					"personalized": false
+				}
+			]
+		}
+	],
+	"owner": "EMT",
+	"createdBy": "Telstra Initiated Migration",
+	"updatedDate": "2020-08-08T08:00:54.442Z",
+	"status": "OPEN.DRAFT",
+	"contextCharacteristic": [{
+			"name": "customerJourney",
+			"value": "onboarding",
+			"configurable": false,
+			"mandatory": false,
+			"hidden": false,
+			"personalized": false
+		}, {
+			"name": "accountProfileId",
+			"value": "UN30DS00",
+			"configurable": false,
+			"mandatory": false,
+			"hidden": false,
+			"personalized": false
+		}, {
+			"name": "salesChannel",
+			"value": "EMT",
+			"configurable": false,
+			"mandatory": false,
+			"hidden": false,
+			"personalized": false
+		}
+	],
+	"createdDate": "2020-08-08T07:58:36.886Z",
+	"requestedCompletionDate": "2020-12-07T03:43:38.129Z",
+	"contextSpecification": {
+		"id": "TELSTRA_B2C_MB_PREP_CONTEXT"
+	}
+}

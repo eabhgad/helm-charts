@@ -1,0 +1,33 @@
+<persistence keyspace="dmtool_dev" table="networkids">
+    <keyspaceOptions>
+        REPLICATION = { 'class' : 'SimpleStrategy',  'replication_factor': 3}
+        AND DURABLE_WRITES = true
+    </keyspaceOptions>
+    <tableOption>
+        comment = 'Cache account'
+        AND read_repair_chance = 0.2
+    </tableOption>
+    <keyPersistence class="com.ericsson.datamigration.bridging.commons.core.model.database.AccountId" strategy="POJO"/>
+    
+    <!-- Partition key fields if POJO strategy used -->
+        <partitionKey>
+            <!-- Mapping from POJO field to Cassandra table column -->
+            <field name="typeofidentifier" 	column="typeofidentifier" />
+            <field name="identifier" 		column="identifier" />
+        </partitionKey>
+        
+        <!-- Cluster key fields if POJO strategy used -->
+<!--         <clusterKey> -->
+            <!-- Mapping from POJO field to Cassandra table column -->
+<!--             <field name="personNumber" column="number" sort="desc"/> -->
+<!--         </clusterKey> -->
+        
+    <valuePersistence class="com.ericsson.datamigration.bridging.commons.core.model.database.Account" strategy="POJO" serializer="org.apache.ignite.cache.store.cassandra.serializer.KryoSerializer">
+    	 <field name="typeofidentifier" 		column="typeofidentifier"/>
+    	 <field name="identifier" 				column="identifier"/>
+    	 <field name="hashmsisdn" 				column="hashmsisdn"/>
+    	 <field name="msisdn" 					column="msisdn"/>
+    	 <field name="status" 					column="status"/>
+     	 <field name="locations" 				column="locationinfo"/>
+    </valuePersistence>
+</persistence>

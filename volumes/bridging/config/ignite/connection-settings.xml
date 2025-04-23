@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:util="http://www.springframework.org/schema/util"
+       xsi:schemaLocation="
+        http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/context 
+      	http://www.springframework.org/schema/context/spring-context.xsd
+      	http://www.springframework.org/schema/util
+      	http://www.springframework.org/schema/util/spring-util.xsd">
+
+	<bean id="loadBalancingPolicy" class="com.datastax.driver.core.policies.TokenAwarePolicy">
+		<constructor-arg
+			type="com.datastax.driver.core.policies.LoadBalancingPolicy">
+			<bean class="com.datastax.driver.core.policies.RoundRobinPolicy" />
+		</constructor-arg>
+	</bean>
+
+	<bean id="poolingOptions" class="com.datastax.driver.core.PoolingOptions">
+		<property name="poolTimeoutMillis" value="${database.pool.timeout.millis}" />
+		<property name="idleTimeoutSeconds" value="${database.pool.idle.timeout.seconds}" />
+		<property name="heartbeatIntervalSeconds" value="${database.pool.heartbeat.interval.seconds}" />
+	</bean>
+	<bean
+		class="org.springframework.beans.factory.config.MethodInvokingFactoryBean">
+		<property name="targetObject" ref="poolingOptions" />
+		<property name="targetMethod" value="setConnectionsPerHost" />
+		<property name="arguments">
+			<list>
+				<value>${database.pool.host.distance}</value>
+				<value>${database.pool.core.connections}</value>
+				<value>${database.pool.max.connections}</value>
+			</list>
+		</property>
+	</bean>
+
+	<bean id="socketOptions" class="com.datastax.driver.core.SocketOptions">
+		<property name="connectTimeoutMillis" value="5000" />
+		<property name="readTimeoutMillis" value="5000" />
+		<property name="keepAlive" value="true" />
+	</bean>
+	
+	<bean id="contactPoints" factory-bean="addressPointsClass" factory-method="getPropertyAsListFromString">
+    	<constructor-arg name="values" value="${database.host}"/>
+    </bean>
+
+	<bean id="cassandraCredentials" class="com.ericsson.datamigration.bridging.cassandra.core.service.CassandraCredentials"/>
+    
+	<!-- DATASOURCE CONFIG BY PROFILE -->
+	<beans profile="dev">
+		<bean id="cassandraDataSource"
+			class="org.apache.ignite.cache.store.cassandra.datasource.DataSource">
+			<property name="credentials" ref="cassandraCredentials"/>
+			<property name="contactPoints" ref="contactPoints" />
+			<property name="port" value="${database.port}" />
+			<property name="sessionExpirationTimeout" value="${database.session.expiration.timeout}" />
+			<property name="jmxReporting" value="${database.jmx.enable}" />
+			<property name="loadBalancingPolicy" ref="loadBalancingPolicy" />
+			<property name="poolingOptions" ref="poolingOptions" />
+			<property name="socketOptions" ref="socketOptions" />
+			<property name="readConsistency" value="LOCAL_QUORUM" />
+			<property name="writeConsistency" value="LOCAL_QUORUM" />
+		</bean>
+	</beans>
+	<beans profile="prod">
+		<bean id="cassandraDataSource"
+			class="org.apache.ignite.cache.store.cassandra.datasource.DataSource">
+			<property name="credentials" ref="cassandraCredentials"/>
+			<property name="contactPoints" ref="contactPoints" />
+			<property name="port" value="${database.port}" />
+			<property name="sessionExpirationTimeout" value="${database.session.expiration.timeout}" />
+			<property name="jmxReporting" value="${database.jmx.enable}" />
+			<property name="loadBalancingPolicy" ref="loadBalancingPolicy" />
+			<property name="poolingOptions" ref="poolingOptions" />
+			<property name="socketOptions" ref="socketOptions" />
+			<property name="readConsistency" value="ONE" />
+			<property name="writeConsistency" value="LOCAL_QUORUM" />
+		</bean>
+		<!--
+		<bean id="sslOptions" class="com.datastax.driver.core.JdkSSLOptions" >
+			<constructor-arg name="context" ref="sslCasandraContext" />
+			<constructor-arg name="cipherSuites" value="${database.keystore.cipher}" />
+		</bean>
+		<bean id="sslCasandraContext" factory-bean="sslFactory" factory-method="create"/>
+		<bean id="sslFactory" class="org.apache.ignite.ssl.SslContextFactory">
+			<property name="keyStoreFilePath" value="${database.keystore}" />
+			<property name="keyStorePassword" ref="keyStorePass" />
+			<property name="trustStoreFilePath" value="${database.truststore}" />
+			<property name="trustStorePassword" ref="trustStorePass" />
+		</bean>
+		<bean id="keyStorePass" class="com.ericsson.datamigration.bridging.commons.core.util.IOUtils" factory-method="readFilePwd">
+			<constructor-arg name="path" value="${database.keystore.pass}" />
+		</bean>		
+		<bean id="trustStorePass" class="com.ericsson.datamigration.bridging.commons.core.util.IOUtils" factory-method="readFilePwd">
+			<constructor-arg name="path" value="${database.truststore.pass}" />
+		</bean>		
+		-->
+	</beans>
+</beans>

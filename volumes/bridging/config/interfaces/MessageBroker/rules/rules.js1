@@ -1,0 +1,3155 @@
+'use strict'
+
+let rules = {};
+//const format = '%Y-%m-%d %H:%M:%S'; //yyyy-MM-ddThh:MM:ss + TMZ 13/10/2018 09:24:41
+//const format = '%Y-%m-%d %H:%M:%S'; //yyyy-MM-ddThh:MM:ss + TMZ 13/10/2018 09:24:41
+var catalog
+var mapping
+var errorMap
+//Global variables for holding DM mapping information
+var defaultMapping
+var statusMapping
+var timezone
+var offer
+var wallet
+var chars_map
+var partition
+var topics
+var recurrenceLimit
+//Global variables for holding catalogue information
+var contactmedium
+var billingAccounts
+var customer
+var contract
+var user
+var billingCycles
+var cproducts
+var resource
+var schedule
+var sharingConsumer
+var sharingProvider
+var bucketDetermination
+
+//holders of tmp Id for various entities
+var id_tracker=[]
+var tmp_acc_tracker=[]
+var tmp_pid_tracker=[]
+var tmp_service_tracker=[]
+var pbQinfo=[]
+var pcreation_date
+var def_date='1970/01/01 23:35:01'
+
+var errFlag
+var cota=false
+var luw_name
+var setz=true
+var GdisableNotif_end
+var cu_flag=false
+var t0, t1
+
+function loadResources(){
+	errFlag = false
+	cu_flag = false
+    //writeLog.setDefaultLevel("error")
+	t0 = Date.now();
+    if((catalog === '' || catalog === undefined) && (mapping === '' || mapping === undefined) && (errorMap === '' || errorMap === undefined)) {
+		catalog = JSON.parse(JSON.parse(getResourcesFromMap.invoke('catalog.json')).callback_value);
+		errorMap = JSON.parse(JSON.parse(getResourcesFromMap.invoke('VIVO_Pandora_error_desc.json')).callback_value).Error;
+		mapping = JSON.parse(JSON.parse(getResourcesFromMap.invoke('VIVO_Pandora_mapping.json')).callback_value);
+	
+		contactmedium = catalog.contactMedium
+		billingAccounts = catalog.billingAccounts
+		billingCycles = catalog.billingCycles
+		customer = catalog.customer
+		contract = catalog.contract
+		user = catalog.user
+		cproducts = catalog.products
+		resource = catalog.resources
+		schedule = catalog.schedules
+		sharingConsumer = catalog.sharingConsumer
+		sharingProvider = catalog.sharingProvider
+		bucketDetermination = catalog.bucketDetermination
+	
+		defaultMapping = mapping.Default
+		statusMapping = mapping.Status
+		timezone = mapping.Timezone
+		offer = mapping.Offer
+		wallet = mapping.Wallet
+		chars_map=mapping.Chars
+		partition=mapping.Partition
+		topics=mapping.Topics
+		recurrenceLimit=mapping.Recurrence
+		//GdisableNotif_end=defaultMapping["disableNotif_End"].Value
+		let today = new Date();
+		//console.log('Today: '+today)
+		today.setHours(today.getHours() + parseInt(defaultMapping["disableNotif_End"].Value));
+		//console.log('Today: '+today.toString())
+		GdisableNotif_end=today.toISOString()
+		//console.log('Today: '+GdisableNotif_end)
+	}
+
+}
+
+function party_entities (source) {
+	//load the resources like catalog json and mapping json
+	loadResources();
+	let entity_data = [];
+	let clients = JSON.parse(source[0])
+	let cli_info = []
+	//console.log('party input: '+ JSON.stringify(clients))
+	//console.log('Customer present: '+clients.CUST_INFO.hasOwnProperty('cust_extId'))
+	for (let iidx=0;iidx<clients.CLIENT.length; iidx++){
+		//if(clients.CLIENT[iidx].PRODUCER === "Y") {
+			/*validate whether customer_id is already provisioned*/
+			//console.log('customer validation:: '+JSON.parse(getFromMap.invoke("tmp_cust",clients.CLIENT[iidx].CUST_ID)).callback_value+' : '+clients.CLIENT[iidx].CUST_ID)
+			//if(JSON.parse(getFromMap.invoke("tmp_cust",clients.CLIENT[iidx].CUST_ID)).callback_value.length <= 0){
+				//saveIntoMap.invoke('tmp_cust', clients.CLIENT[iidx].CUST_ID, clients.CLIENT[iidx].CUST_ID)
+				//cu_flag = true
+			//}
+		//}
+		if((clients.CUST_INFO) && clients.CUST_INFO.hasOwnProperty('cust_extId') === true) {
+			cu_flag = true
+			luw_name=clients.CLIENT[0].LUW_ID
+		}
+	   clients.CLIENT[iidx].CREATION_DATE=(isValidDate(clients.CLIENT[iidx].CREATION_DATE))?clients.CLIENT[iidx].CREATION_DATE:def_date
+	   cli_info.push({'client_id' : clients.CLIENT[iidx].CLIENT_ID,
+					  'CUST_ID' : clients.CLIENT[iidx].CUST_ID,
+					  'CONT_ID' : clients.CLIENT[iidx].CONT_ID,
+				      'PRODUCER' :  clients.CLIENT[iidx].PRODUCER,
+					  'MSISDN' : clients.CLIENT[iidx].MSISDN,
+	                })
+	}	
+	for (let idx=0;idx<clients.CLIENT.length; idx++){
+		clients.CLIENT[idx].CREATION_DATE=(isValidDate(clients.CLIENT[idx].CREATION_DATE))?clients.CLIENT[idx].CREATION_DATE:def_date
+	   ////console.log("Logging contract entity data:: "+ JSON.stringify(clients.CLIENT[idx].CLIENT_ID))
+	   //console.log('Check the party-customer create: '+clients.CLIENT[idx].MSISDN+' : '+cu_flag)
+		if(cu_flag === false) {
+			if(clients.CLIENT[idx].PRODUCER === "Y") {
+				luw_name=clients.CLIENT[idx].LUW_ID
+				entity_data.push({'CLIENT' : clients.CLIENT[idx],
+								'OFFER' : clients.OFFER,
+			                    'BUCKETS' : clients.BUCKETS,
+								'SERVICES' : clients.SERVICES,
+								'client_info' : cli_info,
+								'partyType': 'customerParty'
+							  })
+				cu_flag=true
+			}
+		}
+		 entity_data.push({'CLIENT' : clients.CLIENT[idx],
+								'OFFER' : clients.OFFER,
+			                    'BUCKETS' : clients.BUCKETS,
+								'SERVICES' : clients.SERVICES,
+								'client_info' : cli_info,
+								'partyType': 'userParty'
+							  })
+	}
+	return {'result': entity_data};
+}
+
+function customer_entities (source) {
+	let entity_data = [];
+	let clients = JSON.parse(source[0])
+	if((clients.CUST_INFO) && clients.CUST_INFO.hasOwnProperty('cust_extId') === true) {
+		return {'result': entity_data};
+	}
+	//console.log('customer info: '+clients.CLIENT.length)
+	if(clients.CLIENT.length > 1){
+		for (let iidx=0;iidx<clients.CLIENT.length; iidx++){
+			clients.CLIENT[iidx].CREATION_DATE=(isValidDate(clients.CLIENT[iidx].CREATION_DATE))?clients.CLIENT[iidx].CREATION_DATE:def_date
+			//console.log('create: '+clients.CLIENT[iidx].CREATION_DATE)
+			//console.log('Check the customer create: '+clients.CLIENT[iidx].MSISDN+' : '+cu_flag)
+			if(clients.CLIENT[iidx].PRODUCER === 'Y'){
+				//console.log('Check the inside PROVIDER: '+clients.CLIENT[iidx].MSISDN+' : '+cu_flag)
+				entity_data.push({'CLIENT' : [clients.CLIENT[iidx]]})
+			    return {'result': entity_data};
+			}  
+		}
+	}
+	clients.CLIENT[0].CREATION_DATE=(isValidDate(clients.CLIENT[0].CREATION_DATE))?clients.CLIENT[0].CREATION_DATE:def_date
+	entity_data.push(clients)
+	//console.log('Customer entity:: '+ entity_data)
+	return {'result': entity_data};
+}
+function user_entities (source) {
+	let entity_data = [];
+	let clients = JSON.parse(source[0])
+	for (let idx=0;idx<clients.CLIENT.length; idx++){   
+		 clients.CLIENT[idx].CREATION_DATE=(isValidDate(clients.CLIENT[idx].CREATION_DATE))?clients.CLIENT[idx].CREATION_DATE:def_date
+		  entity_data.push({'CLIENT' : clients.CLIENT[idx],
+								'OFFER' : clients.OFFER,
+			                    'BUCKETS' : clients.BUCKETS,
+								'SERVICES' : clients.SERVICES
+							  })
+	}
+	return {'result': entity_data};
+}
+function route_entities(source) {
+	//Clean the tmpId hashmaps
+	cleantmpId()
+	let clients = JSON.parse(source[0])
+	let rpartition =[]
+	let cli_info=[]
+	let non_custId = false
+	if((clients.CUST_INFO) && clients.CUST_INFO.hasOwnProperty('cust_extId') === true) {
+			non_custId = true
+		}
+	for (let iidx_py=0;iidx_py<clients.CLIENT.length; iidx_py++){
+		//clients.CLIENT[iidx_py].CREATION_DATE=(isValidDate(clients.CLIENT[iidx_py].CREATION_DATE))?clients.CLIENT[iidx_py].CREATION_DATE:'1970/01/01 00:00:01'
+					cli_info.push({
+						'CLIENT_ID': clients.CLIENT[iidx_py].CLIENT_ID,
+						'PRODUCER' : clients.CLIENT[iidx_py].PRODUCER,
+						'MSISDN' : clients.CLIENT[iidx_py].MSISDN,
+						'NON_CUST' : non_custId})
+	}
+	rpartition.push({'cli_info' : cli_info})
+	//lines for Date testing 21/Sep/2020
+	t1 = Date.now()
+	let s1 = (((t1 - t0) % 60000) / 1000);
+	console.log('LUW '+ clients.CLIENT[0].LUW_ID+' processing took ' + (t1 - t0) + ' (millseconds)/ '+ s1+ ' (seconds)')
+	//end of lines for Date testing 21/Sep/2020
+	
+	return {'result' : rpartition}
+}
+
+function pplc_entities (source) {
+	let entity_data = [];
+	let clients = JSON.parse(source[0])
+	
+	for (let iidx=0;iidx<clients.CLIENT.length; iidx++){
+		
+	    entity_data.push({'client' : clients.CLIENT[iidx]})
+	}
+	return {'result': entity_data};
+}
+
+function contract_entities (source) {
+	let entity_data = [];
+	let clients = JSON.parse(source[0])
+	let cli_info = []
+
+	//Looping through contracts for individuals, Multi-vivo & sharing accounts
+	for (let iidx=0;iidx<clients.CLIENT.length; iidx++){
+       clients.CLIENT[iidx].CREATION_DATE=(isValidDate(clients.CLIENT[iidx].CREATION_DATE))?clients.CLIENT[iidx].CREATION_DATE:def_date	
+	   cli_info.push({'client_id' : clients.CLIENT[iidx].CLIENT_ID,
+					  'CUST_ID' : clients.CLIENT[iidx].CUST_ID,
+					  'CONT_ID' : clients.CLIENT[iidx].CONT_ID,
+				      'PRODUCER' :  clients.CLIENT[iidx].PRODUCER,
+					  'MSISDN' : clients.CLIENT[iidx].MSISDN,
+					  'GROUP_ID' : clients.CLIENT[iidx].GROUP_ID,
+					  'CREATION_DATE': clients.CLIENT[iidx].CREATION_DATE,
+					  'BILL_DAY': clients.CLIENT[iidx].BILL_DAY,
+					  'tmpCEId' : 'tmpCEId_'+clients.CLIENT[iidx].MSISDN,
+					  'cust_info' : (clients.CUST_INFO)?clients.CUST_INFO:undefined
+	                })
+	}
+	
+	for (let idx=0;idx<clients.CLIENT.length; idx++){
+	   clients.CLIENT[idx].CREATION_DATE=(isValidDate(clients.CLIENT[idx].CREATION_DATE))?clients.CLIENT[idx].CREATION_DATE:def_date
+	   if(clients.CLIENT[idx].PRODUCER === "Y") {
+		   //Set the provider date for addressing later date of products for providers
+		   //console.log('pcreation_date true/false: '+isValidDate(clients.CLIENT[idx].CREATION_DATE))
+		   pcreation_date=isValidDate(clients.CLIENT[idx].CREATION_DATE)?clients.CLIENT[idx].CREATION_DATE:def_date
+			//pcreation_date = def_date
+			//console.log('pcreation_date: '+pcreation_date)
+			if(clients.hasOwnProperty('BUCKETS') === false && clients.hasOwnProperty('OFFER') === true) {
+				//console.log("contract: BUCKETS: "+clients.hasOwnProperty('BUCKETS'))
+				errFlag = true
+				let data = errorMap['ERR021'].Data
+				data['CLIENT_ID'] = clients.CLIENT[idx].CLIENT_ID
+				errorLog('ERR021', data, clients.CLIENT[idx])
+				return {'error': {'error_code':'ERR021'}}
+			}
+			//console.log("contract: PROVIDER G_ID: "+clients.CLIENT[idx].GROUP_ID)
+			entity_data.push({'client' : clients.CLIENT[idx],
+								'offer' : setOffer(clients.OFFER,clients.CLIENT[idx].CLIENT_ID,'Y'),
+			                    'bucket' : clients.BUCKETS,
+								'services' : clients.SERVICES,
+								'client_info' : cli_info
+							   })
+	     }
+	}
+	
+	for (let idx=0;idx<clients.CLIENT.length; idx++){
+		clients.CLIENT[idx].CREATION_DATE=(isValidDate(clients.CLIENT[idx].CREATION_DATE))?clients.CLIENT[idx].CREATION_DATE:def_date
+		if(clients.CLIENT[idx].PRODUCER === "N") {
+				if (compare_dates(date(pcreation_date), date(clients.CLIENT[idx].CREATION_DATE)) === false) {
+					//console.log('pcreation_Date is: '+pcreation_date+' clients with Nope: '+ clients.CLIENT[idx].CREATION_DATE)
+					pcreation_date=clients.CLIENT[idx].CREATION_DATE
+				}
+			   entity_data.push({'client' : clients.CLIENT[idx],
+								'offer' : setOffer(clients.OFFER,clients.CLIENT[idx].CLIENT_ID,'N'),
+			                    'bucket' : clients.BUCKETS,
+								'services' : clients.SERVICES,
+								'client_info' : cli_info
+							   })
+		 }			
+	   }
+	
+	if(pbQinfo.length === 0 && (clients.BUCKETS.length)) {
+		//console.log('building the consumer_mv list: ')
+		for (let cu_dx=0;cu_dx<clients.BUCKETS.length;cu_dx++) {
+			if((clients.BUCKETS[cu_dx]) && clients.BUCKETS[cu_dx].QUOTA === 'Y' && clients.BUCKETS[cu_dx].ROLLOVER === 'YES') {
+				//console.log('Group based info: '+buckets[cu_dx].CLIENT_ID)
+				pbQinfo.push({
+								'CLIENT_ID' : clients.BUCKETS[cu_dx].CLIENT_ID,
+								'BUCKET_ID': clients.BUCKETS[cu_dx].BUCKET_ID,
+								'WAY': clients.BUCKETS[cu_dx].WAY,
+								'LIMIT_VALUE': clients.BUCKETS[cu_dx].LIMIT_VALUE,
+								'BALANCE': clients.BUCKETS[cu_dx].BALANCE,
+								'INITIAL_DATE': clients.BUCKETS[cu_dx].INITIAL_DATE,
+								'FINAL_DATE' : clients.BUCKETS[cu_dx].FINAL_DATE
+								})
+				//console.log('pbQinfo looping the list: '+buckets[cu_dx].CLIENT_ID+' BalanceType: '+ buckets[cu_dx].BALANCE+' Value: '+ buckets[cu_dx].BALANCE.match(/\d+/g))
+			}
+		}
+	}
+	
+	let cfs_info = 	getCFS_info(cproducts,'all')
+	let rfs_info = getRFS_info(cfs_info)
+	
+	//tmpId for CFS only	
+	for(let tmpIdx=0;tmpIdx<rfs_info.length;tmpIdx++) {
+	   srv_update_tmpId('cfs',tmp_service_tracker,'tmpId_cfs',rfs_info[tmpIdx].cfs_id,'-')
+	
+	}
+	//tmpId for RFS only
+	for(let tmpIdx=0;tmpIdx<rfs_info.length;tmpIdx++) {
+		srv_update_tmpId('rfs',tmp_service_tracker,'tmpId_rfs',rfs_info[tmpIdx].cfs_id,rfs_info[tmpIdx].rfs_id)
+	}
+	//Write the customer realId into ignite when it's already existing on the RM
+	if((clients.CUST_INFO) && clients.CUST_INFO.hasOwnProperty('cust_extId') === true) {
+		saveIntoMap.invoke('tmp_cust', clients.CUST_INFO.cust_extId, clients.CUST_INFO.cust_realId)
+		saveIntoMap.invoke('tmp_billing', clients.CUST_INFO.bill_extId, clients.CUST_INFO.bill_realId)
+	}
+	return {'result': entity_data};
+}
+
+//Define for header entity
+function header_entities(source) {
+ return {'result' : ['payload_header']}
+}
+
+//Common for all the entities
+function genKey(Entity) {
+	
+	if(errFlag === true) {
+		return {'result': ''}
+	}
+	//console.log('setting key for customer: ' + Entity[0]+' : ' + Entity[1])
+	let pKey
+		if(Entity[3]) {
+			pKey = writeTocache(Entity[0].toLowerCase(),Entity[1]+":"+Entity[3])
+		}
+		else {
+			pKey = writeTocache(Entity[0].toLowerCase(),Entity[1])
+			//console.log('setting key for customer: ' + Entity[0]+' : ' + Entity[1]+ ' : '+pKey)
+		}
+		if(Entity[0] === "CUSTOMER") {
+			//console.log('setting key for customer: ' + Entity[1]+ ' : '+pKey)
+			//saveIntoMap.invoke('tmp_cust',Entity[1],pKey)
+		}
+		id_tracker.push({ "entity_type" : Entity[0],
+					  "entity_key"	: pKey,//sequence.get(Entity[1]),
+					  "entity_resource" : Entity[1],
+					  "entity_parent" : Entity[2],
+					  "entity_cat" :  Entity[3]
+					})
+	
+	return {'result' : pKey}
+}
+
+function get_externalId (source) {
+	
+	return {'result' : (source[1]) ? (source[0]+source[1]) : source[0]};
+}
+
+function get_partyexternalId (source) {
+	
+	if(errFlag === true) {
+		return {'result': ''}
+	}
+	switch (source[0]) {
+			case 'customerParty': return {'result' : defaultMapping["party.externalId"].Value+source[2]}							  
+									break;
+			default: return {'result' :defaultMapping["userParty.externalId"].Value+source[1]}
+	}
+}
+
+function getKey(type, msisdn,luw_id,cat) {
+	let o_id
+	
+	if(type === "CUSTOMER" ) {
+	  for (let idx =0;idx < id_tracker.length;idx++){
+		if(id_tracker[idx]["entity_type"].includes(type) && id_tracker[idx]["entity_parent"].includes(luw_id)) {
+	          
+			   o_id = id_tracker[idx]["entity_key"]
+			 
+		    }
+		
+	      }
+	}
+	else if (type === "PARTY") {
+		for (let idx =0;idx < id_tracker.length;idx++){
+		if(id_tracker[idx]["entity_type"].includes(type) && id_tracker[idx]["entity_resource"].includes(msisdn) && id_tracker[idx]["entity_cat"].includes(cat)) {
+	          
+			   o_id = id_tracker[idx]["entity_key"]
+			  
+		}
+		
+	 } 
+	}
+	else {
+	for (let idx =0;idx < id_tracker.length;idx++){
+		if(id_tracker[idx]["entity_type"].includes(type) && id_tracker[idx]["entity_resource"].includes(msisdn)) {
+	          
+			   o_id = id_tracker[idx]["entity_key"]
+			 
+		}
+		
+	 } 
+	}
+	
+	return o_id
+}
+
+function getPartyKey(source) {
+	let party_key
+	party_key = getKey(source[0],source[1],"",source[3])
+	
+	return {'result' : party_key}
+}
+
+function getCustomerKey(source) {
+	let cust_key
+	cust_key = getKey(source[0],source[1],source[2])
+	return {'result' : cust_key}
+}
+
+function getContractKey(source) {
+	let cont_key
+	cont_key = getKey(source[0],source[1])
+	return {'result' : cont_key}
+}
+
+function convert_date (source) {
+	
+	if(errFlag === true) {
+		return {'result': ''}
+	}
+	if (isValidDate(source[0]) === true) {
+		return {'result': date(source[0],source[1])}
+	}
+	console.log('Non-epoch detected! Converted into start of epoch')
+	return {'result': date('1970/01/01 00:00:00')}
+	/*errFlag = true
+	let data = errorMap['ERR011'].Data
+	data['CLIENT_ID'] = source[2]
+	data['CLIENT.MSISDN'] = source[3]
+	data['CLIENT.CREATION_DATE'] = source[0]
+	let elog =errorLog('ERR011', data, "")
+	console.log(JSON.stringify(elog))
+	return {'error': {'error_code':'ERR011'}}*/
+}
+
+function getPartyType (source) {
+	//Change it to input data
+	if(errFlag === true) {
+		return {'result': ''}
+	}
+	if(source[0] === '8'){	// default party type	
+		return {'result' : (defaultMapping["party.type"]) ? defaultMapping["party.type"].Value : undefined}
+	}
+	
+	return {'result' : undefined}
+}
+
+function getDistributionId(source) {
+	let distId = undefined
+	let clients = JSON.parse(source[0])
+	//console.log('dist count : '+clients[0]["NON_CUST"])
+	for(let dn=0;dn<Object.keys(topics).length;dn++) {
+		let dist_range=topics[Object.keys(topics)[dn]].Range
+		//console.log('distribution range: '+dist_range)
+		switch (typeof(dist_range)) {
+			case 'number':
+				//console.log('distribution range: '+dist_range)
+				if (clients.length >= parseInt(dist_range)) {
+					//console.log('distribution batch value: '+Object.keys(topics)[dn])
+					switch(clients[0]["NON_CUST"]) {
+						case true:
+							return {'result': Object.keys(topics)[dn]+'cf'}
+							break;
+						case false:
+							return {'result': Object.keys(topics)[dn]}
+							break;
+					}
+				}
+				break;
+			case 'string':
+				if (clients.length >= parseInt(dist_range.split('#')[0]) && clients.length <= parseInt(dist_range.split('#')[1])) {
+					//console.log('distribution batch value: '+Object.keys(topics)[dn])
+					switch(clients[0]["NON_CUST"]) {
+						case true:
+							return {'result': Object.keys(topics)[dn]+'cf'}
+							break;
+						case false:
+							return {'result': Object.keys(topics)[dn]}
+							break;
+					}
+				}
+				break;
+		}
+	}
+	return {'result': distId}
+}
+//Based on the partition table information from partition mapping -- May 2020
+function getPartyPartitionId(source) {
+	let part_id
+	switch (defaultMapping["party.defaultPartitionId"].Value) {
+		case "NO":
+			
+				let pmsisdn=getProducerMSISDN1(JSON.parse(source[0])).substring(0,2)
+				//console.log('DDD detected: '+pmsisdn)
+				for(let pn=0;pn<Object.keys(partition).length;pn++) {
+					let site_range=partition[Object.keys(partition)[pn]].Range
+					//console.log('site detected: '+site_range)
+					switch (String(site_range).split(',').length) {
+						case 1:
+							
+							switch (typeof(site_range)) {
+								case 'number':
+										if(site_range === parseInt(pmsisdn) || (site_range === parseInt(pmsisdn.substring(0,1)))) {
+											//console.log('Paritition match found: '+Object.keys(partition)[pn])
+											part_id=Object.keys(partition)[pn]
+										}
+										break;
+								case 'string':
+										//console.log('Trying match string site detected: '+parseInt(pmsisdn)+' : '+parseInt(site_range.split('#')[0])+" : "+parseInt(site_range.split('#')[1]))
+										if(parseInt(pmsisdn) >= parseInt(site_range.split('#')[0])  && parseInt(pmsisdn) <= parseInt(site_range.split('#')[1])
+										|| (parseInt(pmsisdn.substring(0,1)) >= site_range.split('#')[0] && parseInt(pmsisdn.substring(0,1)) <= site_range.split('#')[1])) {
+											//console.log('Paritition match found: '+Object.keys(partition)[pn])
+											part_id=Object.keys(partition)[pn]
+										}
+										
+										break;
+							}
+							break;
+						default:
+							//console.log('default site detected: '+site_range)
+							for(let s_range=0;s_range<site_range.split(',').length; s_range++) {
+								
+								switch (site_range.split(',')[s_range].split('#').length) {
+									case 1:
+										
+										if(parseInt(site_range.split(',')[s_range].split('#')) === parseInt(pmsisdn) || parseInt(site_range.split(',')[s_range].split('#')) === parseInt(pmsisdn.substring(0,1))) {
+											//console.log('Paritition match found: '+Object.keys(partition)[pn])
+											part_id=Object.keys(partition)[pn]
+										}
+										break;
+									case 2:
+										
+										if(parseInt(pmsisdn) >= parseInt(site_range.split(',')[s_range].split('#')[0]) && parseInt(pmsisdn) <= parseInt(site_range.split(',')[s_range].split('#')[1]) ||
+											(parseInt(pmsisdn.substring(0,1)) >= parseInt(site_range.split(',')[s_range].split('#')[0])  && parseInt(pmsisdn.substring(0,1)) <= parseInt(site_range.split(',')[s_range].split('#')[1]))) {
+											//console.log('Paritition match found: '+Object.keys(partition)[pn])
+											part_id=Object.keys(partition)[pn]
+										}
+										
+										break;
+								}
+							}
+							//console.log('Range detected!')
+							break;
+					}
+				}
+				
+				break;
+		case "YES":
+			part_id = (defaultMapping["party.partitionId"]) ? defaultMapping["party.partitionId"].Value: undefined
+			//console.log('object type for part_id: '+typeof(part_id))
+			break;
+	}
+	//console.log('partition Id:: '+part_id)
+	return {'result': (part_id)?part_id.toString(): '1'}
+	
+	
+}
+function getPartyLanguage( source ) {
+	if(errFlag === true) {
+		return {'result': ''}
+	}
+	let lang_id = []
+	var client = JSON.parse(source[0])
+	
+	var lang = (defaultMapping["party.languageId"]) ? defaultMapping["party.languageId"].Value : undefined
+			
+	if (lang) {
+	  
+		lang_id.push({'languageId' : lang})
+		return {'result' : lang_id}
+	}
+	else {
+		errFlag = true
+		let data = errorMap['ERR003'].Data
+		errorLog('ERR003', data, client)
+		return {'error' : {'error_code': 'ERR003'}}
+	}
+}
+function getPartyNames (source) {					
+	
+	var msisdn = JSON.parse(source[0]).MSISDN
+	let names = []
+	names.push(	{'givenNames' : 'givenName-'+msisdn},
+				{'familyNames' : 'familyName-'+msisdn},
+				{'middleNames' : 'middleName-'+msisdn},
+				{'formattedName' : 'formattedName-'+msisdn},
+				//'language' : {'languageId' : (defaultMapping["party.languageId"]) ? defaultMapping["party.languageId"].Value : undefined})
+	           )
+	return {'result' : names }
+}
+
+function getPartyContactMedia (source) {
+	
+	if(errFlag === true) {
+		return {'result': ''}
+	}
+	let cm = [];
+	let charVal = [];
+	let client = JSON.parse(source[0])
+	let validFor= validForDate(date(client.CREATION_DATE,client.TIMEZONE))
+	//Check whether MSISDN length meets the critiria 	
+		let msisdn_min = defaultMapping["msisdn.min.length"]
+		let msisdn_max = defaultMapping["msisdn.max.length"]
+		if((client.MSISDN && client.MSISDN !== undefined) && (client.MSISDN.length < msisdn_min || client.MSISDN.length > msisdn_max)) {
+		errFlag = true
+		let errorData1 = errorMap['ERR001'].Data
+		errorData1['CLIENT_ID'] = client.CLIENT_ID
+		errorData1['CLIENT.MSISDN'] = client.MSISDN
+		errorLog('ERR001', errorData1, "")
+		console.log("Invalid MSISDN length")
+		return {'error' : {'error_code': 'ERR001'}}
+	}
+	
+	////console.log("Date Conversion :: " + date(JSON.parse(source[0]).CREATION_DATE))
+	var contactM = (defaultMapping["party.contactMedia"]) ? defaultMapping["party.contactMedia"].Value : undefined
+	if (contactM) {
+		//Review whether we need to mention catalog at array[0] - Yet to review
+		contactM = contactM.split(":")[1]
+		var cmV = contactmedium[contactM]		
+		if(defaultMapping["party.contactMedia.key"].Value !==undefined) {
+			let keys = defaultMapping["party.contactMedia.key"].Value.split(":")
+			//Value for the contactMedia characteristics values
+			charVal = get_charValues(defaultMapping["resource.cc"].Value+client.MSISDN, defaultMapping["party.contactMedia.CHANNELTYPE_SMS.value"].Value)
+			////console.log("Party contactMedia charskey/value: " + JSON.stringify(keys) +", "+JSON.stringify(charVal))
+			var res = chars(cmV,keys,validFor,charVal)
+			//let ext_id = partycontactMediaExternalId(client.MSISDN,defaultMapping["partyUser.contactMediaExtID"].Value,11)
+			let ext_id = defaultMapping["partyUser.contactMediaExtID"].Value+client.CONT_ID
+			let tmp_id = 'userCM'+":"+client.MSISDN
+			
+			if(source[1] === 'customerParty') { 
+				
+				ext_id = defaultMapping["party.contactMediaExtID"].Value+client.CUST_ID
+				tmp_id = 'customerCM'+":"+client.MSISDN
+				id_tracker.push({ "entity_type" : 'contactMedia',
+					  "entity_key"	: 'CUST_'+client.MSISDN,
+					  "entity_resource" : tmp_id,
+					  "entity_parent" : "-",
+					  "entity_cat" :  "-"
+					})
+			}
+			else {
+		    id_tracker.push({ "entity_type" : 'contactMedia',
+					  "entity_key"	: client.MSISDN,
+					  "entity_resource" : tmp_id,
+					  "entity_parent" : "-",
+					  "entity_cat" :  "-"
+					})
+			}
+			cm.push({'validFor' : validFor,
+					
+					 'externalId' : ext_id,
+					 'tmpId' : writeTocache('contact_media',tmp_id),
+					 'characteristicValues' : res,
+					 'commonName' : (cmV) ? cmV.name : undefined,
+					 'description' : (cmV) ? cmV.description : undefined,
+					 'contactMediumSpecificationId' : cmV.id
+					})
+			}
+			else {
+				errFlag = true
+				var data = errorMap['ERR017'].Data
+				errorLog('ERR017', data, client)
+				return {'error' : {'error_code': 'ERR017'}}
+			}
+		}
+	else {
+		errFlag = true
+		var errorData = errorMap['ERR016'].Data
+		errorLog('ERR016', errorData, client)
+		return {'error' : {'error_code': 'ERR016'}}
+	} 
+	
+	return {'result' : cm }	
+}
+
+function getPartyStatuses ( source  ) {
+	if(errFlag === true) {
+		return {'result': ''}
+	}
+	let statuses = [];
+	var client = JSON.parse(source[0])
+	//var start_date = date(client.CREATION_DATE)
+	var start_date = date('1970/01/01 22:59:59','-03:00')
+	var status = client.STATUS
+	//writeLog.debug("status: "+status)
+	
+	if(status && statusMapping[status]){		
+		statuses.push({'status' : statusMapping[status].Party_State,'validFor' : {'start' : start_date}})
+		//writeLog.debug("status::"+JSON.stringify(statuses))
+		return {'result' :	statuses}		
+	}else{
+		errFlag = true
+		var data = errorMap['ERR005'].Data
+		data['CLIENT.STATUS'] = status
+		
+		errorLog('ERR005', data, client)
+		return {'error' : {'error_code': 'ERR005'}}
+	}		
+	
+}
+
+function getPartyCharacteristics ( source ){				// need to check and complete the rule for characteristics
+	if(errFlag === true) {
+		return {'result': ''}
+	}
+	let client = JSON.parse(source[0])
+	var validFor = validForDate(date(client.CREATION_DATE))
+	if(JSON.stringify(validFor).includes("error")){		
+		return validFor
+	}
+//	let charVal = [];
+	let res 
+	//Need to write the code for ensuring, we handle the characteristics for party when it's available
+/*	var contactM = (defaultMapping["party.contactMedia"]) ? defaultMapping["party.contactMedia"].Value : undefined
+	if (contactM) {
+		contactM = contactM.split(":")[1]
+		var cmV = contactmedium[contactM]		
+		let keys = defaultMapping["party.contactMedia.key"].Value.split(":")
+		//Value for the contactMedia characteristics values
+		charVal = get_charValues(JSON.parse(source[0]).MSISDN, 
+		                         defaultMapping["party.contactMedia.CHANNELTYPE_SMS.value"].Value)
+		////console.log("Party contactMedia charskey/value: " + JSON.stringify(keys) +", "+JSON.stringify(charVal))
+		res = chars(cmV,keys,validFor,charVal)
+	}
+	*/	
+	return {'result' :	res}
+}
+function getCustomerParty(source) {
+	let p_id
+	for (let idx =0;idx < id_tracker.length;idx++){
+		if(id_tracker[idx]["entity_type"].includes("PARTY")) {
+	           ////console.log("Tracking keys :: " + JSON.stringify(id_tracker[idx]))
+			   p_id = id_tracker[idx]["entity_key"]
+			   //writeLog.debug("Tracking keys (Party) :: " + p_id)
+		}
+	}
+	return {'result' : p_id}
+}
+
+function getBillingAccounts ( source ){
+	if(errFlag === true) {
+		return {'result': ''}
+	}
+	var client = JSON.parse(source[0])
+	var extId = client.CUST_ID
+//	var custId = client.CUST_ID
+
+	if(!defaultMapping["customer.billingAccounts"]){	//TODO verify the error
+		errFlag = true
+		var data = errorMap['ERR003'].Data
+				
+		errorLog('ERR003', data, client)
+		return {'error' : {'error_code': 'ERR003'}}
+	}
+	
+	var bas = billingAccounts[defaultMapping["customer.billingAccounts"].Value]
+	//var bACKey = billingAccounts[defaultMapping["customer.billingAccounts.key"].Value]
+	
+	if(!bas){											//TODO verify the error
+		errFlag = true
+		var errorData = errorMap['ERR005'].Data
+				
+		errorLog('ERR005', errorData, client)
+		return {'error' : {'error_code': 'ERR005'}}
+	}
+	
+	
+	var validFor = validForDate(date(client.CREATION_DATE),undefined,'Default_PO',0,client.TIMEZONE)
+	
+	let ba = []
+	let characteristicValues = []
+	let customerBillSpecifications = []
+	let statuses = []
+	//getCharactersiticsValue for personalizedId
+	let keys = defaultMapping["customer.billingAccounts.key"].Value.split(":")
+	let key_value = []
+	//Should be configurable on mapping sheet - Yet to confirm
+	//key_value.push('12','23')
+	key_value.push((defaultMapping["customer.billingAccounts.value"].Value).split('#')[0],(defaultMapping["customer.billingAccounts.value"].Value).split('#')[1])
+
+	characteristicValues = chars(bas,keys,validForDate(date('1970/01/01 23:30:59'),undefined,'Default_PO',0,client.TIMEZONE),key_value)
+	
+	for (let indx=0; indx<characteristicValues.length; indx++) {
+		if(!(characteristicValues[indx].characteristic).characteristicId 
+		   || (characteristicValues[indx].characteristic).characteristicId === "") {
+			errFlag = true
+		    let errorData18 = errorMap['ERR018'].Data
+		    errorData18['CLIENT_ID'] = client.CLIENT_ID		
+		    errorLog('ERR018', errorData18, client)
+		    return {'error' : {'error_code': 'ERR018'}}
+		}
+	}
+	//get the tmp Id assigned in billingRules 
+	let tmp_id
+	for (let tidx = 0; tidx < tmp_acc_tracker.length; tidx++){
+	  if(JSON.stringify(tmp_acc_tracker[tidx]["MSISDN"]).includes(client.MSISDN)) {
+		 
+	      tmp_id = tmp_acc_tracker[tidx]["tmp_acc_id"]
+	     }
+	}
+	
+	let billingCycleId, bcs_extId
+	for (let bc_idx = 0; bc_idx < Object.keys(billingCycles).length; bc_idx++){		
+		
+		if(billingCycles[Object.keys(billingCycles)[bc_idx]].externalId === client.BILL_DAY) {	
+			
+			billingCycleId = billingCycles[Object.keys(billingCycles)[bc_idx]].id
+			//bcs_extId = billingCycles[Object.keys(billingCycles)[bc_idx]].externalId
+		}
+	}
+	
+	//get the CustomerBillingSpec. tmp Id assigned in billing Account 
+	let cuBill_tmp_id = seqKey("cuBill_tmp_acc_id",client.MSISDN)
+	tmp_acc_tracker.push({
+						  'cuBill_tmp_acc_id' : cuBill_tmp_id,
+						  'MSISDN': client.MSISDN
+	                     })
+		//get the CustomerBillingSpec. tmp Id assigned in billing Account 
+	let cuBillCycle_tmp_id = seqKey("cuBillCycle_tmp_acc_id",client.MSISDN)
+	tmp_acc_tracker.push({
+						  'cuBillCycle_tmp_acc_id' : cuBillCycle_tmp_id,
+						  'MSISDN': client.MSISDN
+	                     })
+	//Customer Bill Cycle external Id = customerBillCycleExtId_<customerExternalId>
+	customerBillSpecifications.push({
+		'customerBillingCycleSpecifications' : [{				  
+												  'externalId' : defaultMapping["customer.billCycleSpecExternalId"].Value+client.CUST_ID,
+												  'tmpId' : cuBillCycle_tmp_id,
+												  'billingCycleSpec' : {'billingCycleSpecId' : billingCycleId},//"59d5f866-67fe-430a-924b-61560b03eebe"}
+												  'validFor' : validFor
+												}], 
+												'billSpec': {'billSpecId': 'CPM_INTERNAL_DUMMY_BILL_SPEC_ID'},
+												'tmpId' : cuBill_tmp_id,
+												'validFor' : validFor
+	})
+	
+	statuses.push({
+		'status' : (defaultMapping["customer.billingAccountStatus"]) ? defaultMapping["customer.billingAccountStatus"].Value : undefined,
+		'validFor' : validForDate(date('1970/01/01 23:30:59'),undefined,'Default_PO',5,client.TIMEZONE)
+	})
+	
+	//VIVO Requirement for external Id of BA
+	//Billing Account External Id should be billingAccountExtId_<customerExternalId>
+	
+	ba.push({
+			'buckets' : [{'bucketSpec': {'bucketSpecId': bas.babs[Object.keys(bas.babs)].id}}],
+			'statuses' : statuses,	
+			'externalId' : defaultMapping["customer.billingAccounts.externalId"].Value+client.CUST_ID,
+			'billingAccountSpec' : {'billingAccountSpecId' : bas.id},
+			'characteristicValues' : characteristicValues,
+			'customerBillSpecifications' : customerBillSpecifications,
+			'names' : [{'name' : 'Postpaid BA','validFor' : validFor}],
+			'tmpId' : writeTocache('billing_account',defaultMapping["customer.billingAccounts.externalId"].Value+extId),
+			'validFor' : validFor
+			})
+	
+	/* tracking billingAccount External Id for sharingProvider*/
+	tmp_acc_tracker.push({
+						  'billingAccExtId' : writeTocache('billing_account',defaultMapping["customer.billingAccounts.externalId"].Value+extId),
+						  'MSISDN': client.MSISDN
+	                     })
+	return {'result' : ba}
+
+}
+
+function getCustomerStatuses ( source  ) {
+	if(errFlag === true) {
+		return {'result': ''}
+	}
+	let statuses = [];
+	var client = JSON.parse(source[0])
+	
+	var validFor = validForDate(date('1970/01/01 23:30:59'),undefined,'Default_PO',2,'-03:00')
+	var status = client.STATUS
+	
+	
+	if(status && statusMapping[status]){		
+		statuses.push({'status' : statusMapping[status].Customer_State,'validFor' : validFor})
+		return {'result' :	statuses}		
+	}else{
+		errFlag = true
+		var data = errorMap['ERR007'].Data
+		data['CLIENT.STATUS'] = status
+		
+		errorLog('ERR007', data, client)
+		return {'error' : {'error_code': 'ERR007'}}
+	}
+}
+
+
+function getTimezone ( source  ) {
+	if(errFlag === true) {
+		return {'result': ''}
+	}
+	let tz = [];	
+	let client = JSON.parse(source[0])
+	let timeZone = client.TIMEZONE
+	let start_date = date(client.CREATION_DATE,timeZone) //TODO:: for customer it is creation date but for contract it was first call date
+	
+	
+	
+	if(timeZone && timezone[timeZone]){		
+		tz.push({'timeZone' : timezone[timeZone].timeZone, 'validFor' : {'start' : start_date}})
+		
+		return {'result' :	tz}		
+	}else{
+		errFlag = true
+		var data = errorMap['ERR009'].Data
+		data['CLIENT_ID'] = client.CLIENT_ID
+		data['CLIENT.MSISDN'] = client.MSISDN
+		data['CLIENT.TZ'] = timeZone
+		
+		errorLog('ERR009', data, client)
+		return {'error' : {'error_code': 'ERR009'}}
+	}	
+}
+
+function getPartyRoleCategories ( source  ) {
+	if(errFlag === true) {
+		return {'result': ''}
+	}
+	let prc = [];
+	let start_date = date(source[1],source[2])
+
+    if(source[0].includes('customer')) {
+	prc.push({'partyRoleCategoryId' : (defaultMapping["customer.partyRoleCategoryId"]) ? defaultMapping["customer.partyRoleCategoryId"].Value : undefined,
+				'validFor' : {'start' : start_date}})
+	}
+	else {
+		prc.push({'partyRoleCategoryId' : (defaultMapping["user.partyRoleCategoryId"]) ? defaultMapping["user.partyRoleCategoryId"].Value : undefined,
+				'validFor' : {'start' : start_date}})
+	}
+	return {'result' :	prc}
+}
+
+function getContactMediumAssociations ( source ){
+	if(errFlag === true) {
+		return {'result': ''}
+	}
+	let cma = []
+	//let validFor = validForDate(date(source[2],source[3]))
+	//let contactM = (defaultMapping["customer.contactMediumId"]) ? defaultMapping["customer.contactMediumId"].Value : undefined
+	
+	//let disable_start = (defaultMapping["disableNotif_Start"]) ? defaultMapping["disableNotif_Start"].Value : undefined
+	//let disable_end = (defaultMapping["disableNotif_End"]) ? defaultMapping["disableNotif_End"].Value : undefined
+	let disable_start = (new Date().toISOString()).split('Z')[0] + source[3]
+	let disable_end = GdisableNotif_end.split('Z')[0] + source[3]
+	
+	let contactMediumId
+	
+	for(let cmt_idx=0;cmt_idx<id_tracker.length;cmt_idx++) {
+		if(id_tracker[cmt_idx].entity_type.includes('contactMedia') && id_tracker[cmt_idx].entity_resource.includes(source[0].toLowerCase()+'CM:'+source[1])) {
+		  contactMediumId = writeTocache('contact_media',id_tracker[cmt_idx].entity_resource)
+		}
+	}
+	
+	cma.push({
+		'contactRole': { 'contactRoleId' : (defaultMapping["customer.contactRoleId"]) ? defaultMapping["customer.contactRoleId"].Value : undefined},
+		'language' : { 'languageId' : (defaultMapping["customer.languageId"]) ? defaultMapping["customer.languageId"].Value : undefined},
+		//'validFor' : validFor,
+		'contactMedium' : {'contactMediumId' : contactMediumId },
+		//'disabledDateTimePeriods' : [{ 'start': disable_start, 'end': disable_end}]
+		'disabledDateTimePeriods' : [validForDate(disable_start,disable_end)]
+	})
+
+	return {'result' :	cma}
+}
+
+function getCustomerCharacteristicValues (source) {
+	if(errFlag === true) {
+		return {'result': ''}
+	}
+	var client = JSON.parse(source[0])
+	var validFor = validForDate(date(client.CREATION_DATE))
+	if(JSON.stringify(validFor).includes("error")){		
+		return validFor
+	}
+
+	let charVal = [];
+	let keys = defaultMapping["customer.key"].Value.split(":")
+	let key_value = client.CLIENT_TYPE
+	//Value for the contactMedia characteristics values
+	
+	if (customer.chars[keys] && customer.chars[keys].values[key_value] ) {
+		
+		 charVal = get_charValues(key_value)
+	     //writeLog.debug("Customer charskey/value: " + JSON.stringify(keys) +", "+JSON.stringify(charVal))
+	     var characteristicValues = chars(customer,keys,validFor,charVal)
+		 return {'result' :	characteristicValues}
+	}
+	else {
+		return {'result' : undefined}
+	}
+	
+}
+
+function getUserCharacteristics (source) {
+	if(errFlag === true) {
+		return {'result': ''}
+	}
+	let validFor = validForDate(date(source[0]))
+	if(JSON.stringify(validFor).includes("error")){		
+		return validFor
+	}
+
+	let charVal = [];
+	let keys = defaultMapping["user.key"].Value.split(":")
+	let key_value
+	if (source[2] === 'N') {
+		key_value=chars_map['user'].chars[keys].Value.split('#')[1]
+	}
+	else if (source[2] === 'Y') {
+		key_value=chars_map['user'].chars[keys].Value.split('#')[0]
+	}
+	else {
+		key_value=chars_map['user'].chars[keys].Value.split('#')[2]
+	}
+	
+	//Value for the contactMedia characteristics values
+	
+	if (user.chars[keys] && user.chars[keys].values[key_value] ) {
+		
+		 charVal = get_charValues(key_value)
+	     let characteristicValues = chars(user,keys,validFor,charVal)
+		 return {'result' :	characteristicValues}
+	}
+	else {
+		return {'result' : undefined}
+	}
+}
+function getResources ( source ){
+	if(errFlag === true) {
+		return {'result': ''}
+	}
+	let resources = []
+	var client = JSON.parse(source[0]).client
+	var extId = client.MSISDN
+	var IMSI = client.IMSI
+	var start_date = date(client.CREATION_DATE)
+	var resourceSpec = resource[defaultMapping["resource.MSISDN"].Value]
+	
+	if(extId && IMSI){
+		//MSISDN
+		
+		let tmp_res_id = update_tmpId(tmp_acc_tracker,"tmp_res_msisdn_id",extId)									
+		resources.push({'logicalResource' : {
+		                  'resourceNumber' : '55'+extId,
+						  'resourceSpec' : {'resourceSpecId' : resourceSpec.id},
+						  'externalId' : ((defaultMapping["contract.resource.externalId"]) ? defaultMapping["contract.resource.externalId"].Value+extId : undefined),
+					      'validFor' : {'start' : start_date},
+						  'resourceType' : resource[defaultMapping["resource.MSISDN"].Value].numberingScheme,
+						  'statuses' : getResourceStatuses(client.CLIENT_CATEGORY, start_date),
+					      'tmpId' : tmp_res_id
+					   }
+					})
+		resourceSpec = resource[defaultMapping["resource.IMSI"].Value]
+		//IMSI
+		//For resource spec â€œLrsExtId_MSISDNâ€� with <resourceNumber> = â€œ71900000001â€�, Contract will have â€œ5571900000001â€� as the actual resourceNumber and â€œ7190000000â€� as that resourceâ€™s externalId.
+		tmp_res_id = update_tmpId(tmp_acc_tracker,'tmp_res_imsi_id',IMSI)	
+		resources.push({'logicalResource' : {
+		                  'resourceNumber' : IMSI,
+						  'resourceSpec' : {'resourceSpecId' : resourceSpec.id},
+						  'externalId' : ((defaultMapping["contract.resource.resourceSpecExtId"]) ? defaultMapping["contract.resource.resourceSpecExtId"].Value+IMSI : undefined),
+					      'validFor' : { 'start' : start_date},
+						  'resourceType' : resource[defaultMapping["resource.IMSI"].Value].numberingScheme,
+						  'statuses' :  getResourceStatuses(client.CLIENT_CATEGORY, start_date),
+					      'tmpId' : tmp_res_id
+					   }
+					})
+	} else {
+		// logging error whether IMSI is missing
+		errFlag = true
+		var data = errorMap['ERR002'].Data
+		data['CLIENT.IMSI'] = IMSI
+		
+		errorLog('ERR002', data, client)
+		return {'error' : {'error_code': 'ERR002'}}
+	}
+	return {'result' : resources}
+}
+
+function getcontractTmpId(source) {
+	
+	//source[0] receives MSISDN, source[1] receives CONT_ID
+	let tmp_id = source[1]
+	let tmp_exists =  tmpId_from_tracker(tmp_acc_tracker,'contract',source[0])
+	if(tmp_exists === undefined){
+		tmp_acc_tracker.push({'tmp_contract_acc_id' : tmp_id,
+											'MSISDN': source[0]
+										})
+	}
+	
+	return {'result' : tmp_id}
+}
+
+function contractBillAccAssignRules (source) {
+		
+	let cbaar = [];
+	//Not implemented -- 20 Jun2020
+	return {'result' : cbaar}
+}
+
+function paymentContext ( source ){
+	return {'result' : {'paymentContextId' : (defaultMapping["contract.paymentContextId"]) ? defaultMapping["contract.paymentContextId"].Value : undefined }}
+}
+
+function getAdditionalStatus(client_id,services) {
+	
+	let service_id = undefined
+	let sub_service_id = undefined
+	for (let idx=0;idx<services.length;idx++) {
+		if(services[idx].CLIENT_ID === client_id) {
+			service_id = services[idx].SERVICE_ID
+		}
+	}
+	
+	for (let o_idx=0;o_idx<Object.keys(offer).length;o_idx++) {
+		if(Object.keys(offer)[o_idx] === service_id && offer[Object.keys(offer)[o_idx]]['External ID'] !=='-') {
+			sub_service_id = offer[Object.keys(offer)[o_idx]]['External ID']
+		}
+	}
+	return sub_service_id
+}
+function getContractCharacteristicValues (source) {
+	if(errFlag === true) {
+		return {'result': ''}
+	}
+	let source_data=JSON.parse(source[0])
+	let validFor = validForDate(date(source_data.client.CREATION_DATE))
+	let charVal = [];
+	let keys = defaultMapping["contract.key"].Value.split(":")
+	let adnStatus = undefined
+	let rollOver = undefined
+	let clientQ = undefined
+	let clientC = chars_map.contract.chars.clientCategory.Value.split('#')[0]
+	console.log('Quota: '+ cota)
+	//It should be applicable to all the contract and not only PROVIDER contract - 16Oct2020
+	/*if(cota === true && source_data.client.PRODUCER=== 'Y'){
+		clientQ = chars_map.contract.chars.clientQuota.Value.split('#')[0]
+	}
+	else if(cota === false && source_data.client.PRODUCER=== 'Y'){
+		clientQ = chars_map.contract.chars.clientQuota.Value.split('#')[1]
+	}*/
+	if(cota === true){
+		clientQ = chars_map.contract.chars.clientQuota.Value.split('#')[0]
+		cota = false
+	}
+	else if(cota === false){
+		clientQ = chars_map.contract.chars.clientQuota.Value.split('#')[1]
+	}
+	
+	if(statusMapping[source_data.client.STATUS].Addn_State !== "-") {
+		keys.push('additionalStatus')
+		adnStatus = statusMapping[source_data.client.STATUS].Addn_State
+	}
+	rollOver = (source_data.services) ? clientRollover(source_data.client.CLIENT_ID,offer,chars_map.contract.chars.clientRollover.Value,source_data.services): chars_map.contract.chars.clientRollover.Value.split(':')[0]
+	
+	//Additional status is populated based on clientQuota
+	if(adnStatus === undefined) {
+		charVal = get_charValues(getsharingClassification(source_data.client),source_data.client.GROUP_ID,clientC,clientQ,rollOver,source_data.client.NOTIF_001,source_data.client.NOTIF_002,source_data.client.NOTIF_003,source_data.client.NOTIF_004,source_data.client.NOTIF_005,'true')
+		if(clientQ === undefined) {
+			let filtered = keys.filter(function(value, index, arr){ return value !== "clientQuota";})
+			keys = filtered
+			charVal = get_charValues(getsharingClassification(source_data.client),source_data.client.GROUP_ID,clientC,rollOver,source_data.client.NOTIF_001,source_data.client.NOTIF_002,source_data.client.NOTIF_003,source_data.client.NOTIF_004,source_data.client.NOTIF_005,'true')
+		}
+	}
+	else {
+		charVal = get_charValues(getsharingClassification(source_data.client),source_data.client.GROUP_ID,clientC,clientQ,rollOver,source_data.client.NOTIF_001,source_data.client.NOTIF_002,source_data.client.NOTIF_003,source_data.client.NOTIF_004,source_data.client.NOTIF_005,adnStatus)
+		if(clientQ === undefined) {
+			let filtered = keys.filter(function(value, index, arr){ return value !== "clientQuota";})
+			keys = filtered
+			charVal = get_charValues(getsharingClassification(source_data.client),source_data.client.GROUP_ID,clientC,rollOver,source_data.client.NOTIF_001,source_data.client.NOTIF_002,source_data.client.NOTIF_003,source_data.client.NOTIF_004,source_data.client.NOTIF_005,adnStatus)
+		}
+	}
+	let contractCharacteristicValues = chars(contract,keys,validFor,charVal)
+	return {'result': contractCharacteristicValues}
+}
+
+//Function computation to define the calculation for different characteristics values
+function getCharsValueSPO(chars_type, limit, type){
+	//let limit_value = (limit>0)? limit: parseInt('0').toString()
+	  let limit_value = (limit>0)? limit: parseInt('999999999999999').toString()
+		switch (chars_type) {
+			case 'recurrenceValue': return limit_value
+									break;
+			case 'initialValue': return limit_value 
+								 break;
+			case 'threshold 80': return (Math.floor(parseInt(limit_value) * 0.80)).toString()
+								 break;
+			case 'threshold 100': return (Math.floor(parseInt(limit_value) * 1.00)).toString()
+								 break;
+			case 'individualLimit': return 	(limit_value).toString()
+									break;
+		}
+}
+//Function to validate limit value passed for recurrence bill cycle
+function strictValidationLimit(limit,client_id,bucket_id,offer_id,client) {
+	let tmp_limit
+	switch (defaultMapping['contract.recurrence.strict.validation'].Value) {
+		case 'ENABLE':
+			
+			for(let rec_limit=0;rec_limit<Object.keys(recurrenceLimit).length;rec_limit++) {
+				
+				if(recurrenceLimit[Object.keys(recurrenceLimit)[rec_limit]].Range === '-' && parseInt(limit) === parseInt(Object.keys(recurrenceLimit)[rec_limit])) {
+					tmp_limit=limit
+					
+				}
+				else if (recurrenceLimit[Object.keys(recurrenceLimit)[rec_limit]].Range.split('#').length > 1 && (parseInt(limit) >= parseInt(recurrenceLimit[Object.keys(recurrenceLimit)[rec_limit]].Range.split('#')[0]) && parseInt(limit) <= parseInt(recurrenceLimit[Object.keys(recurrenceLimit)[rec_limit]].Range.split('#')[1]))) {
+					
+					tmp_limit=Object.keys(recurrenceLimit)[rec_limit]
+					
+				}
+			}
+			return tmp_limit
+			break;
+		case 'DISABLE':
+			
+			return limit
+			break;
+	}
+}
+
+function getcharsValueId(poChars_entity) {
+	for (let val_idx=0;val_idx<Object.keys(poChars_entity).length;val_idx++) {
+		if (poChars_entity[Object.keys(poChars_entity)[val_idx]].name.includes('range') || poChars_entity[Object.keys(poChars_entity)[val_idx]].name.includes('Range')) {
+			
+			return poChars_entity[Object.keys(poChars_entity)[val_idx]].id
+		}
+	}
+}
+function getcharsValuesUOM(poChars_entity) {
+	for (let val_idx=0;val_idx<Object.keys(poChars_entity).length;val_idx++) {
+		if (poChars_entity[Object.keys(poChars_entity)[val_idx]].hasOwnProperty("unitOfMeasure") && (poChars_entity[Object.keys(poChars_entity)[val_idx]].name.includes('range') || poChars_entity[Object.keys(poChars_entity)[val_idx]].name.includes('Range'))) {
+			
+			return poChars_entity[Object.keys(poChars_entity)[val_idx]].unitOfMeasure
+		}
+	}
+}
+//Function to set the charactersitics value of PO based on the Base and subscription PO
+function getCharsSubscriptionPO(client_id,po_name,validFor,limit,type,tz) {
+	let keys = defaultMapping["contract.po.key"].Value.split(":")
+	let charsSubPO
+	let charsVal
+	let val_str = {}
+	let po_chars= []
+	//console.log('Keys: '+ keys)
+	let cpo = Object.keys(cproducts)
+	for(let spsIdx=0;spsIdx<cpo.length;spsIdx++){
+		if(cproducts[cpo[spsIdx]].name === po_name) {
+			for(let prfIdx=0;prfIdx<Object.keys(cproducts[cpo[spsIdx]].poChars).length;prfIdx++){
+			   
+			   if(cproducts[cpo[spsIdx]].poChars[Object.keys(cproducts[cpo[spsIdx]].poChars)[prfIdx]].hasOwnProperty('personalized') && cproducts[cpo[spsIdx]].poChars[Object.keys(cproducts[cpo[spsIdx]].poChars)[prfIdx]].personalized === true && keys.includes(Object.keys(cproducts[cpo[spsIdx]].poChars)[prfIdx])) {
+			       let uoM
+				   //charsSubPO = Object.keys(cproducts[cpo[spsIdx]].poChars)[prfIdx]
+				   charsVal = getCharsValueSPO(Object.keys(cproducts[cpo[spsIdx]].poChars)[prfIdx],limit,type)
+				   val_str = { 
+								'value' : charsVal,
+								'unitOfMeasure' :  getcharsValuesUOM(cproducts[cpo[spsIdx]].poChars[Object.keys(cproducts[cpo[spsIdx]].poChars)[prfIdx]].values),
+								'charValueRef' : getcharsValueId(cproducts[cpo[spsIdx]].poChars[Object.keys(cproducts[cpo[spsIdx]].poChars)[prfIdx]].values),
+								'validFor': validFor
+								//'validFor': {'start' : date(validFor,tz)}
+								//'validFor': validForDate(date(validFor,tz),undefined,'Default_PO',5)
+								}
+				   po_chars.push({
+							"externalId":Object.keys(cproducts[cpo[spsIdx]].poChars)[prfIdx],
+							"name" : Object.keys(cproducts[cpo[spsIdx]].poChars)[prfIdx],
+							"tmpId" : seqKey("chars_tmp_id",client_id+"_"+po_name+Object.keys(cproducts[cpo[spsIdx]].poChars)[prfIdx]),
+							"characteristic":{"characteristicId": cproducts[cpo[spsIdx]].poChars[Object.keys(cproducts[cpo[spsIdx]].poChars)[prfIdx]].id},
+							"values":[val_str]
+						    })   
+			   }
+			}
+		}
+	}
+	//console.log('PO Chars type & value: '+charsSubPO+' Value: '+ charsVal)
+	return po_chars
+}
+function getProductInfo(info_type,validfor,po,resource2) {
+	let policyRef=[]
+	let price=[]
+	let strategy_flag = false
+	let price_flag = false
+	for (let cp_idx=0;cp_idx<Object.keys(cproducts).length;cp_idx++) {
+		if(cproducts[Object.keys(cproducts)[cp_idx]].poPolicyRefs !==undefined && cproducts[Object.keys(cproducts)[cp_idx]].name === po.split('#')[0]) {
+			for(let ppr_idx=0;ppr_idx<Object.keys(cproducts[Object.keys(cproducts)[cp_idx]].poPolicyRefs).length;ppr_idx++) {
+			   //console.log('Effective Strategy flag: '+cproducts[Object.keys(cproducts)[cp_idx]].poPolicyRefs[Object.keys(cproducts[Object.keys(cproducts)[cp_idx]].poPolicyRefs)[ppr_idx]].effectiveStrategy)
+				//if(cproducts[Object.keys(cproducts)[cp_idx]].poPolicyRefs[Object.keys(cproducts[Object.keys(cproducts)[cp_idx]].poPolicyRefs)[ppr_idx]].effectiveStrategy === true) {
+				//	strategy_flag = true
+				//}
+				if(cproducts[Object.keys(cproducts)[cp_idx]].poPolicyRefs[Object.keys(cproducts[Object.keys(cproducts)[cp_idx]].poPolicyRefs)[ppr_idx]].priceId === "Yes") {
+					price_flag = true
+				}
+			}
+			
+		}
+	}
+	switch (info_type) {
+		case 'policy':
+			switch(price_flag) {
+				case true:
+					//console.log('Strategy: '+strategy_flag)
+					for (let cp_idx=0;cp_idx<Object.keys(cproducts).length;cp_idx++) {
+						if(cproducts[Object.keys(cproducts)[cp_idx]].poPolicyRefs !==undefined && cproducts[Object.keys(cproducts)[cp_idx]].name === po.split('#')[0]) {
+							for(let ppr_idx=0;ppr_idx<Object.keys(cproducts[Object.keys(cproducts)[cp_idx]].poPolicyRefs).length;ppr_idx++) {
+								//console.log('Effective Strategy flag: '+cproducts[Object.keys(cproducts)[cp_idx]].poPolicyRefs[Object.keys(cproducts[Object.keys(cproducts)[cp_idx]].poPolicyRefs)[ppr_idx]].effectiveStrategy)
+								if(cproducts[Object.keys(cproducts)[cp_idx]].poPolicyRefs[Object.keys(cproducts[Object.keys(cproducts)[cp_idx]].poPolicyRefs)[ppr_idx]].priceId === "Yes") {
+									let tId = (po.split('#')[1] !== undefined)? po.split('#')[1]+'#'+ppr_idx : po.split('#')[0]+'#'+ppr_idx
+											
+									policyRef.push({
+										'tmpId': (po.split('#')[1] !== undefined)? po.split('#')[1]+'#'+ppr_idx : po.split('#')[0]+'#'+ppr_idx,
+										'validFor': validfor,
+										'poPolicyRefId': cproducts[Object.keys(cproducts)[cp_idx]].poPolicyRefs[Object.keys(cproducts[Object.keys(cproducts)[cp_idx]].poPolicyRefs)[ppr_idx]].id
+										})
+									id_tracker.push({ "entity_type" : 'POLICY',
+										"entity_key"	: po.split('#')[0],
+										"entity_resource" : tId,
+										"entity_parent" : resource2,
+										"entity_cat" :  '-'
+									})
+								}
+							}
+						}
+					}
+					break;
+				}
+		return policyRef
+		break;
+	}
+}
+function old_getProductInfo(info_type,validfor,po,resource1) {
+	let policyRef=[]
+	let price=[]
+	let strategy_flag = false
+	for (let cp_idx=0;cp_idx<Object.keys(cproducts).length;cp_idx++) {
+		if(cproducts[Object.keys(cproducts)[cp_idx]].poPolicyRefs !==undefined && cproducts[Object.keys(cproducts)[cp_idx]].name === po.split('#')[0]) {
+			for(let ppr_idx=0;ppr_idx<Object.keys(cproducts[Object.keys(cproducts)[cp_idx]].poPolicyRefs).length;ppr_idx++) {
+			   //console.log('Effective Strategy flag: '+cproducts[Object.keys(cproducts)[cp_idx]].poPolicyRefs[Object.keys(cproducts[Object.keys(cproducts)[cp_idx]].poPolicyRefs)[ppr_idx]].effectiveStrategy)
+				if(cproducts[Object.keys(cproducts)[cp_idx]].poPolicyRefs[Object.keys(cproducts[Object.keys(cproducts)[cp_idx]].poPolicyRefs)[ppr_idx]].effectiveStrategy === true) {
+					strategy_flag = true
+				}
+			}
+			
+		}
+	}
+	switch (info_type) {
+					 case 'policy':
+						//Check whether effective strategy is true or not
+						switch(strategy_flag) {
+							/*case true:
+								//console.log('Strategy: '+strategy_flag)
+								for (let cp_idx=0;cp_idx<Object.keys(cproducts).length;cp_idx++) {
+									if(cproducts[Object.keys(cproducts)[cp_idx]].poPolicyRefs !==undefined && cproducts[Object.keys(cproducts)[cp_idx]].name === po.split('#')[0]) {
+										for(ppr_idx=0;ppr_idx<Object.keys(cproducts[Object.keys(cproducts)[cp_idx]].poPolicyRefs).length;ppr_idx++) {
+											//console.log('Effective Strategy flag: '+cproducts[Object.keys(cproducts)[cp_idx]].poPolicyRefs[Object.keys(cproducts[Object.keys(cproducts)[cp_idx]].poPolicyRefs)[ppr_idx]].effectiveStrategy)
+											if(cproducts[Object.keys(cproducts)[cp_idx]].poPolicyRefs[Object.keys(cproducts[Object.keys(cproducts)[cp_idx]].poPolicyRefs)[ppr_idx]].priceId === "No") {
+												let tId = (po.split('#')[1] !== undefined)? po.split('#')[1]+'#'+ppr_idx : po.split('#')[0]+'#'+ppr_idx
+												
+												policyRef.push({
+													'tmpId': tId,
+													'validFor': validfor,
+													'poPolicyRefId': cproducts[Object.keys(cproducts)[cp_idx]].poPolicyRefs[Object.keys(cproducts[Object.keys(cproducts)[cp_idx]].poPolicyRefs)[ppr_idx]].id
+												})
+												id_tracker.push({ "entity_type" : 'POLICY',
+																"entity_key"	: po.split('#')[0],
+																"entity_resource" : tId,
+																"entity_parent" : resource,
+																"entity_cat" :  cproducts[Object.keys(cproducts)[cp_idx]].poPolicyRefs[Object.keys(cproducts[Object.keys(cproducts)[cp_idx]].poPolicyRefs)[ppr_idx]].effectiveStrategy
+													})
+											}
+										}
+			
+									}
+								}
+								return policyRef
+							  break;*/
+							  
+							case false:
+								//console.log('Strategy: '+strategy_flag)
+								for (let cp_idx=0;cp_idx<Object.keys(cproducts).length;cp_idx++) {
+									if(cproducts[Object.keys(cproducts)[cp_idx]].poPolicyRefs !==undefined && cproducts[Object.keys(cproducts)[cp_idx]].name === po.split('#')[0]) {
+										for(let ppr_idx=0;ppr_idx<Object.keys(cproducts[Object.keys(cproducts)[cp_idx]].poPolicyRefs).length;ppr_idx++) {
+											//console.log('Effective Strategy flag: '+cproducts[Object.keys(cproducts)[cp_idx]].poPolicyRefs[Object.keys(cproducts[Object.keys(cproducts)[cp_idx]].poPolicyRefs)[ppr_idx]].effectiveStrategy)
+											if(cproducts[Object.keys(cproducts)[cp_idx]].poPolicyRefs[Object.keys(cproducts[Object.keys(cproducts)[cp_idx]].poPolicyRefs)[ppr_idx]].priceId === "Yes") {
+												let tId = (po.split('#')[1] !== undefined)? po.split('#')[1]+'#'+ppr_idx : po.split('#')[0]+'#'+ppr_idx
+												
+												policyRef.push({
+													'tmpId': (po.split('#')[1] !== undefined)? po.split('#')[1]+'#'+ppr_idx : po.split('#')[0]+'#'+ppr_idx,
+													'validFor': validfor,
+													'poPolicyRefId': cproducts[Object.keys(cproducts)[cp_idx]].poPolicyRefs[Object.keys(cproducts[Object.keys(cproducts)[cp_idx]].poPolicyRefs)[ppr_idx]].id
+												})
+												id_tracker.push({ "entity_type" : 'POLICY',
+																"entity_key"	: po.split('#')[0],
+																"entity_resource" : tId,
+																"entity_parent" : resource,
+																"entity_cat" :  '-'
+													})
+											}
+										}
+			
+									}
+								}
+								return policyRef
+						}
+						break;
+					 case 'price':
+						/*switch (price_flag) {
+							case true:
+										console('Price strategy required')
+										return undefined
+										break;
+							case false:
+										return undefined
+										break;
+						}*/
+						/*switch(strategy_flag) {
+							case true:
+								//console.log('price strategy required')
+								for (let cp_idx=0;cp_idx<Object.keys(cproducts).length;cp_idx++) {
+									if(cproducts[Object.keys(cproducts)[cp_idx]].poPolicyRefs !==undefined && cproducts[Object.keys(cproducts)[cp_idx]].name === po.split('#')[0]) {
+										for(pops_idx=0;pops_idx<Object.keys(cproducts[Object.keys(cproducts)[cp_idx]].pops).length;pops_idx++) {
+											//console.log('Effective Strategy flag: '+cproducts[Object.keys(cproducts)[cp_idx]].poPolicyRefs[Object.keys(cproducts[Object.keys(cproducts)[cp_idx]].poPolicyRefs)[ppr_idx]].effectiveStrategy)
+											
+												price.push({
+													'tmpId': (po.split('#')[1] !== undefined)? 'prtmp_'+po.split('#')[1]+'#'+pops_idx : 'prtmp_'+po.split('#')[0]+'#'+pops_idx,
+													'validFor': validfor,
+													'productOfferingPriceId': cproducts[Object.keys(cproducts)[cp_idx]].pops[Object.keys(cproducts[Object.keys(cproducts)[cp_idx]].pops)[pops_idx]].id
+												})
+											
+										}
+			
+									}
+								}
+								return price
+								break;
+							case false:
+								//console.log('Skip price strategy')
+								return undefined
+						}*/							
+					    break;
+					 
+					}
+}
+
+function getProducts (source) {
+	
+	var products = []
+	if(errFlag === true) {
+		return {'result': ''}
+	}
+	let sdata = JSON.parse(source[0])
+	let ptt = []
+	let pbt = []
+	
+	let client = sdata.client
+	let group_id = source[1]
+	
+	//lines for Date testing 21/Sep/2020
+	t1 = Date.now()
+	let s1 = (((t1 - t0) % 60000) / 1000);
+	console.log('getProducts:: >>> LUW '+ client.CLIENT_ID+' processing took ' + (t1 - t0) + ' (millseconds)/ '+ s1+ ' (seconds)')
+	//end of lines for Date testing 21/Sep/2020
+	
+	//Validate whether bucket are included when offers are part of the request, otherwise raise exception
+	if(sdata.hasOwnProperty('bucket') === false && sdata.hasOwnProperty('offer') === true) {
+		//console.log("getProducts: BUCKETS: "+sdata.hasOwnProperty('bucket'))
+		errFlag = true
+		let data = errorMap['ERR021'].Data
+		data['CLIENT_ID'] = client.CLIENT_ID
+		errorLog('ERR021', data, client)
+		return {'error': {'error_code':'ERR021'}}
+	}
+	let key = 0
+	var ba_ref
+	let producer_custId
+	let po_type = 0
+	let tmp_offer=[], tmp_bucket=[]
+	for(let baIdx=0;baIdx<sdata.client_info.length;baIdx++){
+		//building the offer and bucket for specific group_id
+		if(sdata.client_info[baIdx].GROUP_ID === group_id) {
+			//console.log('client_id: '+sdata.client_info[baIdx].client_id)
+			//build the offer and assign it back to offer variable based on group_id
+			for(let of_idx=0;of_idx<sdata.offer.length;of_idx++) {
+				//console.log('getProducts: getOffers: '+JSON.stringify(sdata.offer))
+				if(sdata.offer[of_idx].CLIENT_ID === sdata.client_info[baIdx].client_id) {
+					//console.log('getProducts: getOffers: '+JSON.stringify(sdata.offer[of_idx]))
+					tmp_offer.push(sdata.offer[of_idx])
+				}
+			}
+			for(let bu_idx=0;bu_idx<sdata.bucket.length;bu_idx++) {
+				//console.log('getProducts: getOffers: '+JSON.stringify(sdata.offer))
+				if(sdata.bucket[bu_idx].CLIENT_ID === sdata.client_info[baIdx].client_id) {
+					//console.log('getProducts: getBucket: '+JSON.stringify(sdata.bucket[bu_idx]))
+					tmp_bucket.push(sdata.bucket[bu_idx])
+				}
+			}
+		}
+		if(sdata.client_info[baIdx].PRODUCER === 'Y') {
+			//ba_ref = sdata.client_info[baIdx].MSISDN
+			ba_ref = sdata.client_info[baIdx].CUST_ID
+			producer_custId = sdata.client_info[baIdx].CUST_ID
+		}
+	}
+	//console.log('getProducts: getOffers: '+JSON.stringify(tmp_offer))
+	//console.log('getProducts: getBucket: '+JSON.stringify(tmp_bucket))
+	let offers = tmp_offer     // subscriber offer
+	let buckets = tmp_bucket  // subscriber buckets
+	//console.log('getProducts: getOffers: '+JSON.stringify(offers))
+	//console.log('getProducts: getBucket: '+JSON.stringify(buckets))
+	//Validate whether offers and bucket has duplicate for rejection
+	let code = validate_duplicate(offers, buckets)
+	let edata 
+	switch(code.ERRCODE) {
+		case 'ERR023':
+						console.log('return code: '+JSON.stringify(code))
+						errFlag = true
+						edata = errorMap['ERR023'].Data
+						edata['CLIENT_ID'] = code.CLIENT_ID
+						edata['BUCKET.ID'] = code.BUCKET_ID
+						edata['OFFERS.ORIGIN_ID'] = code.ORIGIN_ID
+						edata['BUCKET.BALANCE'] = code.BALANCE
+						errorLog('ERR023', edata, '')
+						return {'error': {'error_code':'ERR023'}}
+						break;
+		case 'ERR028':
+						errFlag = true
+						edata = errorMap['ERR028'].Data
+						edata['CLIENT_ID'] = code.CLIENT_ID
+						edata['OFFERS.ID'] = code.OFFER_ID
+						edata['OFFERS.ORIGIN_ID'] = code.ORIGIN_ID
+						errorLog('ERR028', edata, '')
+						return {'error': {'error_code':'ERR028'}}
+						//console.log('return code: '+code)
+						break;
+	}
+	//console.log('return code: '+JSON.stringify(code))
+	//console.log('ERR code: '+JSON.stringify(errorMap))
+	
+	//Build individualLimit bucket list for consumer_mv
+	/*if(pbQinfo.length === 0 && (sdata.bucket.length)) {
+		//console.log('building the consumer_mv list: ')
+		for (let cu_dx=0;cu_dx<sdata.bucket.length;cu_dx++) {
+			if((sdata.bucket[cu_dx]) && sdata.bucket[cu_dx].QUOTA === 'Y' && sdata.bucket[cu_dx].ROLLOVER === 'YES') {
+				//console.log('Group based info: '+buckets[cu_dx].CLIENT_ID)
+				pbQinfo.push({
+								'CLIENT_ID' : sdata.bucket[cu_dx].CLIENT_ID,
+								'BUCKET_ID': sdata.bucket[cu_dx].BUCKET_ID,
+								'WAY': sdata.bucket[cu_dx].WAY,
+								'LIMIT_VALUE': sdata.bucket[cu_dx].LIMIT_VALUE,
+								'BALANCE': sdata.bucket[cu_dx].BALANCE,
+								'INITIAL_DATE': sdata.bucket[cu_dx].INITIAL_DATE,
+								'FINAL_DATE' : sdata.bucket[cu_dx].FINAL_DATE
+								})
+				//console.log('pbQinfo looping the list: '+buckets[cu_dx].CLIENT_ID+' BalanceType: '+ buckets[cu_dx].BALANCE+' Value: '+ buckets[cu_dx].BALANCE.match(/\d+/g))
+			}
+		}
+	}*/
+	//console.log('bucket: '+JSON.stringify(buckets))
+	//console.log('pbQinfo list: '+JSON.stringify(pbQinfo))
+	if(offers!== undefined && buckets!== undefined){
+		//console.log('Offer count: ' + offers.length)
+		for (let idx=0,l=offers.length;idx<l;idx++) {
+			let po = offer[offers[idx].OFFER_ID]
+			//checking if not null and RM_Scope == yes
+			var value
+			//if( (po) && po.RM_Scope.includes("yes") && (compare_dates(new Date().toISOString(), date(offers[idx].END_DATE)) === true || offers[idx].END_DATE === '')){
+			if( (po) && po.RM_Scope.includes("yes")){
+				for(key in po.bucket){			// key is for example 1015
+					// retrieving the limit value based on the subscriber buckets
+					var poFlag = false
+                    var multi_bucketFlag = false
+					var bucketFlag = false
+					let origin_id = []	
+					var POCharacteristics
+				    let bucket_value = 0
+					let rollover_bucket = 0
+					let rollover_limit = 0
+					let rollover_data = {}
+					let ind_rb_data= []
+					let bucketId_flag = false
+					let bucket_offer_match = false
+					let duplicate_bucket=[]
+					//Creating condition to build the PO characteristics value based on the bucket_Id and QUOTA switch
+					//Excempt from comparing the ORIGIN_ID between product and bucket, compare_dates
+					//LIMIT_VALUE = -1 is unlimited
+					/*The below condition is to consider default offers-services with no bucket reference at source*/
+					if (key.includes('Default')) {
+						let dproductBucket=[]
+						let dtmp_id=writeTocache('product',po["PO_Name"]+':'+client.MSISDN)
+						let dvalidFor = validForDate(date(offers[idx].START_DATE),undefined,'Default_PO',5,client.TIMEZONE)
+						let dpoValidFor = validForDate(date(offers[idx].START_DATE),undefined,'Default_PO',4,client.TIMEZONE) 
+						for (let cp_idx=0;cp_idx<Object.keys(cproducts).length;cp_idx++) {
+							if(cproducts[Object.keys(cproducts)[cp_idx]].externalId === po["External ID"]) {
+								//console.log('PO information: ' + po["PO_Name"] + JSON.stringify(cproducts[Object.keys(cproducts)[cp_idx]].pbsInfo))
+								for (let cp_pb_idx=0;cp_pb_idx<Object.keys(cproducts[Object.keys(cproducts)[cp_idx]].pbsInfo).length;cp_pb_idx++){
+										dproductBucket.push({ 'tmpId': writeTocache('product_bucket',po["PO_Name"]+':'+client.MSISDN+':'+key),
+															'externalId' : key,
+															'validFor' : dvalidFor,
+															'resourceSpec' : {'resourceSpecId': cproducts[Object.keys(cproducts)[cp_idx]].pbsInfo[Object.keys(cproducts[Object.keys(cproducts)[cp_idx]].pbsInfo)[cp_pb_idx]].id}
+										})
+									//console.log('PO-PB information: ' + po["PO_Name"] + JSON.stringify(cproducts[Object.keys(cproducts)[cp_idx]].pbsInfo[Object.keys(cproducts[Object.keys(cproducts)[cp_idx]].pbsInfo)[cp_pb_idx]].id))
+								}
+								products.push({
+																'tmpId' : dtmp_id,
+																'productOffering' : {'productOfferingId': cproducts[Object.keys(cproducts)[cp_idx]].poId},
+																//'name' : po["PO_Name"],
+																'poIntId' : {'PO_Name': po["PO_Name"], 'externalId': (offers[idx].ORIGIN_ID)? offers[idx].ORIGIN_ID:po["External_Name"]+new Date(offers[idx].START_DATE).getTime()},
+																'name' : (offers[idx].ORIGIN_ID_DESC)? offers[idx].ORIGIN_ID_DESC:po["PO_Name"],
+																'productBuckets' : dproductBucket,
+																'validFor' : dpoValidFor,
+																'statuses' : [{'status' : 'ProductActive','validFor' : validFor}],
+																//'statuses' : [{'status' : 'ProductActive','validFor' : dpoValidFor}],
+																'externalId' : (offers[idx].ORIGIN_ID)? offers[idx].ORIGIN_ID:po["External_Name"]+new Date(offers[idx].START_DATE).getTime()
+																//'characteristicValues' : POCharacteristics
+												})
+								bucket_offer_match=true
+								
+							}
+						}
+						//console.log('PO information: ' + key + ' PO-PB info: '+JSON.stringify(dproductBucket))
+					}
+					for (let li_dx=0;li_dx<buckets.length;li_dx++) {
+						//Building balance to be attached for a offer
+						if(client.CLIENT_ID === buckets[li_dx].CLIENT_ID && buckets[li_dx].QUOTA === 'Y' && buckets[li_dx].BUCKET_ID.includes(key) && compare_dates(new Date().toISOString(), date(buckets[li_dx].FINAL_DATE)) === true) {
+								//console.log('Bucket_Balance: '+buckets[li_dx].BUCKET_ID+' : '+buckets[li_dx].BALANCE+' : '+buckets[li_dx].FINAL_DATE)
+								bucket_value = bucket_value + parseInt(buckets[li_dx].BALANCE)
+								
+								for (let quota_idx=0;quota_idx<chars_map.bucket.chars.individualLimit.Value.split('#').length;quota_idx++) {
+								//console.log ('Bucket info: '+chars_map.bucket.chars.individualLimit.Value.split('#')[quota_idx] + 'original_Id: '+ buckets[jdx].BUCKET_ID)
+									if(buckets[li_dx].BUCKET_ID === chars_map.bucket.chars.individualLimit.Value.split('#')[quota_idx] && parseInt(buckets[li_dx].LIMIT_VALUE) < 0) {
+										console.log ('clientQuota set: '+chars_map.bucket.chars.individualLimit.Value.split('#')[quota_idx] +' Limit value: '+parseInt(buckets[li_dx].LIMIT_VALUE)+' Client id: '+client.CLIENT_ID)
+										cota = true
+									}
+								}
+								
+							}
+							//console.log ('Rollover bucket info:: ' + defaultMapping["bucket.rollover"].Value + " : "+buckets[li_dx].BUCKET_ID)
+						//Building the complete individual rollover balance and limit -- supported by offer origin Id 
+						if( buckets[li_dx].BUCKET_ID.includes(defaultMapping["individualbucket.rollover"].Value) && buckets[li_dx].QUOTA === 'N' && compare_dates(new Date().toISOString(), date(buckets[li_dx].FINAL_DATE)) === true) {
+							
+							ind_rb_data.push({"ORIGIN_ID": buckets[li_dx].ORIGIN_ID,
+											  "BALANCE": parseInt(buckets[li_dx].BALANCE),
+											  "LIMIT_VALUE": parseInt(buckets[li_dx].LIMIT_VALUE),
+											  "BUCKET_ID": buckets[li_dx].BUCKET_ID
+											})
+							//console.log('individual rollover: '+ JSON.stringify(ind_rb_data))
+						}
+						
+						//Building the complete rollover balance and limit
+						if( buckets[li_dx].BUCKET_ID.includes(defaultMapping["bucket.rollover"].Value) && buckets[li_dx].QUOTA === 'N' && compare_dates(new Date().toISOString(), date(buckets[li_dx].FINAL_DATE)) === true) {
+							rollover_bucket = rollover_bucket + parseInt(buckets[li_dx].LIMIT_VALUE)
+							//Discontinuing setting rollover_limit to 0 and going with same logic as other PBS Available balance = LIMIT - BALANCE
+							rollover_limit = rollover_limit + parseInt(buckets[li_dx].BALANCE)
+							//rollover_limit = 0
+						}
+						//Construct the POcharacteristics without any validation when it matches
+						//1. bucket array is not empty
+						//2. Non-quota exists
+						//3. ORIGIN_ID matches between offer and buckets
+						if((buckets[li_dx]) && buckets[li_dx].QUOTA === 'N' && buckets[li_dx].BUCKET_ID.includes(key) && buckets[li_dx].LIMIT_VALUE !== '-1' && buckets[li_dx].ORIGIN_ID === offers[idx].ORIGIN_ID) {
+							POCharacteristics = getCharsSubscriptionPO(client.MSISDN,po["PO_Name"],validForDate(offers[idx].START_DATE,undefined,'Default_PO',5,client.TIMEZONE),buckets[li_dx].LIMIT_VALUE,buckets[li_dx].WAY,client.TIMEZONE)
+						}
+						//Identifying the non-quota buckets which are to be updated and respective offer to be attached
+						if((buckets[li_dx]) && (buckets[li_dx].CLIENT_ID === client.CLIENT_ID) && buckets[li_dx].QUOTA === 'N' && buckets[li_dx].BUCKET_ID.includes(key) && buckets[li_dx].LIMIT_VALUE !== '-1' && buckets[li_dx].ORIGIN_ID === offers[idx].ORIGIN_ID && compare_dates(new Date().toISOString(), date(buckets[li_dx].FINAL_DATE)) === true) {
+							//console.log('Characteristics keys: '+getCharsSubscriptionPO(client.MSISDN,po["PO_Name"],offers[idx].START_DATE,buckets[li_dx].LIMIT_VALUE,buckets[li_dx].WAY))
+							if(duplicate_bucket.indexOf(buckets[li_dx].ORIGIN_ID) < 0) {
+								bucketId_flag = true
+							//console.log('Multiple Origin_id: '+duplicate_bucket.indexOf(buckets[li_dx].ORIGIN_ID))
+							//POCharacteristics = getCharsSubscriptionPO(client.MSISDN,po["PO_Name"],offers[idx].START_DATE,buckets[li_dx].LIMIT_VALUE,buckets[li_dx].WAY,client.TIMEZONE)
+							//validForDate(date(buckets[jdx].INITIAL_DATE),undefined,'Default_PO',4,client.TIMEZONE)
+							
+							//Commented on 27Sep2020 to make it available for default PO when bucket is expired
+							//POCharacteristics = getCharsSubscriptionPO(client.MSISDN,po["PO_Name"],validForDate(offers[idx].START_DATE,undefined,'Default_PO',5,client.TIMEZONE),buckets[li_dx].LIMIT_VALUE,buckets[li_dx].WAY,client.TIMEZONE)
+							//strictValidationLimit(limit,client_id,bucket_id,offer_id,client)
+							let getProducts_limit=strictValidationLimit(buckets[li_dx].LIMIT_VALUE,buckets[li_dx].CLIENT_ID,buckets[li_dx].BUCKET_ID,offers[idx].OFFER_ID,client)
+							//console.log('getProducts-limit: ' + JSON.stringify(getProducts_limit))
+							switch (getProducts_limit) {
+								case undefined:
+										//console.log('getProducts-limit-undefined: ' + JSON.stringify(getProducts_limit))
+										errFlag = true
+										let data = errorMap['ERR025'].Data
+										data['CLIENT_ID'] = offers[idx].CLIENT_ID
+										data['BUCKET.ID'] = offers[idx].BUCKET_ID
+										data['BUCKET.LIMIT'] = buckets[li_dx].LIMIT_VALUE
+										data['OFFER.ID'] = offers[idx].OFFER_ID
+										errorLog('ERR025', data, client)
+										return {'error': {'error_code':'ERR025'}}
+										break;
+								default :
+										//console.log('getProducts-limit: ' + JSON.stringify(getProducts_limit))
+										break;
+							}
+								if(parseInt(buckets[li_dx].BALANCE) > parseInt(buckets[li_dx].LIMIT_VALUE)) {
+									//console.log('Raise: ERR024: Balance '+buckets[li_dx].BALANCE+' Limit: '+buckets[li_dx].LIMIT_VALUE)
+									errFlag = true
+									let data = errorMap['ERR024'].Data
+									data['CLIENT_ID'] = offers[idx].CLIENT_ID
+									data['BUCKET.ID'] = key
+									data['BUCKET.BALANCE'] = buckets[li_dx].BALANCE
+									data['BUCKET.LIMIT'] = buckets[li_dx].LIMIT_VALUE
+									errorLog('ERR024', data, client)
+									return {'error': {'error_code':'ERR024'}}
+								}
+							}
+							//else if(duplicate_bucket.indexOf(buckets[li_dx].ORIGIN_ID) > 0){
+							else if(duplicate_bucket.includes(buckets[li_dx].ORIGIN_ID) > 0){
+								console.log('Raise: ERR023' + JSON.stringify(duplicate_bucket))
+								errFlag = true
+								let data = errorMap['ERR023'].Data
+								data['CLIENT_ID'] = offers[idx].CLIENT_ID
+								data['BUCKET.ID'] = key
+								data['BUCKET.FINAL_DATE'] = buckets[li_dx].FINAL_DATE
+								data['BUCKET.BALANCE'] = buckets[li_dx].BALANCE
+								data['OFFER.ID'] = offers[idx].OFFER_ID
+								errorLog('ERR023', data, client)
+								return {'error': {'error_code':'ERR023'}}
+							}
+							if(((offers[idx].END_DATE) && compare_dates(new Date().toISOString(), date(offers[idx].END_DATE)) === false && buckets[li_dx].ORIGIN_ID === offers[idx].ORIGIN_ID)) {
+								//if( ((offers[idx].END_DATE!==undefined && compare_dates(new Date().toISOString(), date(offers[idx].END_DATE)) === false) || compare_dates(new Date().toISOString(), date(buckets[li_dx].FINAL_DATE)) === false) && buckets[li_dx].ORIGIN_ID === offers[idx].ORIGIN_ID) {
+									//console.log('Reject the bucket as they are expired: '+ buckets[li_dx].BUCKET_ID)
+									//origin_id_reject = ''
+									//DIS001 - Product expired due to PB expired
+								console.log('Offer rejection>>Bucket ID: '+buckets[li_dx].BUCKET_ID+' Bucket Oid: '+buckets[li_dx].ORIGIN_ID+' offer Oid: '+offers[idx].ORIGIN_ID+' offer end date: '+offers[idx].END_DATE + ' comp_enddate: '+ compare_dates(new Date().toISOString(), date(offers[idx].END_DATE)))
+								bucketId_flag = false
+								let data = errorMap['DIS001'].Data
+								data['CLIENT_ID'] = offers[idx].CLIENT_ID									
+								data['OFFERS.OFFER_ID'] = offers[idx].OFFER_ID
+								data['OFFERS.FINAL_DATE'] = offers[idx].END_DATE
+								console.log('DIS001: '+JSON.stringify(data))
+								errorLog('DIS001', data, client)
+									
+								//DIS004 - Balance expired 
+								data = errorMap['DIS004'].Data
+								data['CLIENT_ID'] = offers[idx].CLIENT_ID
+								data['BUCKET.ID'] = key
+								data['BUCKET.FINAL_DATE'] = buckets[li_dx].FINAL_DATE
+								data['BUCKET.BALANCE'] = buckets[li_dx].BALANCE
+								data['OFFER.ID'] = offers[idx].OFFER_ID
+								console.log('DIS004: '+JSON.stringify(data))
+								errorLog('DIS004', data, client)
+							}
+						}
+						else {
+							if((buckets[li_dx]) && (buckets[li_dx].CLIENT_ID === client.CLIENT_ID) && buckets[li_dx].QUOTA === 'N' && buckets[li_dx].BUCKET_ID.includes(key)) {
+								/*if(compare_dates(new Date().toISOString(), date(buckets[li_dx].FINAL_DATE)) === false && buckets[li_dx].ORIGIN_ID !== offers[idx].ORIGIN_ID) {
+									origin_id_reject = true
+									console.log('Reject the bucket as origin_id mis-match: '+ buckets[li_dx].BUCKET_ID+' date: '+date(buckets[li_dx].FINAL_DATE)+'bucket or_id: '+buckets[li_dx].ORIGIN_ID+ ' offer or_id: '+offers[idx].ORIGIN_ID)
+								}*/
+								
+								//console.log('>>Bucket ID: '+buckets[li_dx].BUCKET_ID+' Bucket Oid: '+buckets[li_dx].ORIGIN_ID+' offer Oid: '+offers[idx].ORIGIN_ID+' offer end date: '+offers[idx].END_DATE + ' comp_enddate: '+ compare_dates(new Date().toISOString(), date(offers[idx].END_DATE)))
+										
+								if(compare_dates(new Date().toISOString(), date(buckets[li_dx].FINAL_DATE)) === false && buckets[li_dx].ORIGIN_ID === offers[idx].ORIGIN_ID) {
+								//if( ((offers[idx].END_DATE!==undefined && compare_dates(new Date().toISOString(), date(offers[idx].END_DATE)) === false) || compare_dates(new Date().toISOString(), date(buckets[li_dx].FINAL_DATE)) === false) && buckets[li_dx].ORIGIN_ID === offers[idx].ORIGIN_ID) {
+									//console.log('Reject the bucket as they are expired: '+ buckets[li_dx].BUCKET_ID)
+									//origin_id_reject = ''
+									//DIS001 - Product expired due to PB expired
+									//console.log('>>Bucket ID: '+buckets[li_dx].BUCKET_ID+' Bucket Oid: '+buckets[li_dx].ORIGIN_ID+' offer Oid: '+offers[idx].ORIGIN_ID+' offer end date: '+offers[idx].END_DATE + ' comp_enddate: '+ compare_dates(new Date().toISOString(), date(offers[idx].END_DATE)))
+									//let data = errorMap['DIS001'].Data
+									//data['CLIENT_ID'] = offers[idx].CLIENT_ID									
+									//data['OFFERS.OFFER_ID'] = offers[idx].OFFER_ID
+									//data['OFFERS.FINAL_DATE'] = offers[idx].END_DATE
+									//console.log('DIS001: '+JSON.stringify(data))
+									//errorLog('DIS001', data, client)
+									
+									//DIS004 - Balance expired 
+									data = errorMap['DIS004'].Data
+									data['CLIENT_ID'] = offers[idx].CLIENT_ID
+									data['BUCKET.ID'] = key
+									data['BUCKET.FINAL_DATE'] = buckets[li_dx].FINAL_DATE
+									data['BUCKET.BALANCE'] = buckets[li_dx].BALANCE
+									data['OFFER.ID'] = offers[idx].OFFER_ID
+									console.log('DIS004: '+JSON.stringify(data))
+									errorLog('DIS004', data, client)
+								}
+							}
+						}
+						//Storing the origin_id of all the non-quota buckets for raising exception later
+						if(buckets[li_dx].QUOTA === 'N') {
+							duplicate_bucket.push(buckets[li_dx].ORIGIN_ID)
+						}
+					}
+					//Check whether quota_id matched else ERR020 should be raised
+					if(duplicate_bucket.indexOf(offers[idx].ORIGIN_ID) < 0) {
+						console.log('Mismatch origin_id: '+offers[idx].ORIGIN_ID)
+						errFlag = true
+						let data = errorMap['ERR020'].Data
+						data['CLIENT_ID'] = offers[idx].CLIENT_ID
+						data['BUCKET.ID'] = key
+						data['BUCKET.BALANCE'] = 'NA'
+						data['BUCKET.ORIGIN_ID'] = 'NA'
+						data['OFFER.ID'] = offers[idx].OFFER_ID
+						data['OFFER.ORIGIN_ID'] = offers[idx].ORIGIN_ID
+						errorLog('ERR020', data, client)
+						//console.log(JSON.stringify(elog))
+						return {'error': {'error_code': 'ERR020'}}
+						
+					}
+					//Build the rollover data to be passed through bucket_id PO Franquia
+					switch (rollover_bucket) {
+					 case '-1':
+						rollover_data = {'BALANCE' : '0', 'LIMIT_VALUE' : '0'}
+						break;
+					 default:
+					    //rollover_data = {'BALANCE' : rollover_bucket-rollover_limit, 'LIMIT_VALUE' : '0'}
+						//rollover_data = {'BALANCE' : rollover_limit, 'LIMIT_VALUE' : rollover_bucket}
+						rollover_data = {'BALANCE' : rollover_limit, 'LIMIT_VALUE' : rollover_bucket}
+						break;
+					}
+					//reset the tmp variable which aggregates 2015,2115 and 2116 
+					rollover_bucket = 0
+					rollover_limit = 0
+					
+					
+					for (let jdx=0,ll=buckets.length;jdx<ll;jdx++) {
+						
+						//To support multivivo-multi purchase, we use PO_NAME:QUOTA:MSISDN
+						//let tmp_id = writeTocache('product',po["PO_Name"]+':'+buckets[jdx].QUOTA+':'+client.MSISDN)
+						//console.log('currentDate: '+new Date().toISOString() + ' ::bucket date: '+date(buckets[jdx].FINAL_DATE))
+						//console.log('offers[idx]: '+compare_dates(new Date().toISOString(), offers[idx].END_DATE));
+						
+						//bucket array is valid and matches bucket Id of mapping with source Extract record for the given MSISDN
+						if((buckets[jdx]) && buckets[jdx].BUCKET_ID === key) {
+							//Check whether the following conditions are fulfilled
+							//a. origin_id of bucket matches the origin_id of offers
+							//b. Only one origin_id of offer should match one bucket for subscription PO
+							//console.log('Bucket.Origin_id: '+buckets[jdx].ORIGIN_ID+' offer.Origin_id: '+offers[idx].ORIGIN_ID)
+							//if(buckets[jdx].hasOwnProperty('ORIGIN_ID') && offers[idx].hasOwnProperty('ORIGIN_ID') && buckets[jdx].ORIGIN_ID.includes(offers[idx].ORIGIN_ID) /*&& (!origin_id.includes(offers[idx].ORIGIN_ID))*/) {
+							if(buckets[jdx].hasOwnProperty('ORIGIN_ID') && offers[idx].hasOwnProperty('ORIGIN_ID') && buckets[jdx].ORIGIN_ID === offers[idx].ORIGIN_ID) {
+							//a. Check whether offer has end_date
+								//    Yes, compare the end_Date of bucket with current_date
+								//	   No, attach the offer and bucket as-is, we will handle the bucket value with update request to reset to zero				
+									bucketFlag = true
+									bucket_offer_match = true
+									//console.log('Bucket.Origin_id: '+buckets[jdx].ORIGIN_ID+' offer.Origin_id: '+offers[idx].ORIGIN_ID)
+							}
+							
+						}
+						//Commented on 26Sep2020
+						//if(bucketFlag === true && bucketId_flag === true) {
+						//Rules of the validation
+						//1. bucketFlag is true and bucketID_flag is true for all the offers and buckets valid for migration
+						//2. bucketFlag is true but bucketFlag is false indicates bucket is expired but we need to migrate the offers for those which have Recurrence flag is true
+						//2.a. Reset the bucket Information for the bucket expired scenario 
+						if(bucketFlag === true && 
+						   (bucketId_flag === true || 
+						   (bucketId_flag === false && po["RM_Scope"] === "yes" && po["isRecurrence"] === "yes" && buckets[jdx].QUOTA === 'N'))) {
+							var productBucket = []
+							var productOffering = { 'productOfferingId' : ''}
+							var resourceRef = {}
+							let add_po_instance = true
+							var validFor, poValidFor
+							
+							//validFor = validForDate(date(buckets[jdx].INITIAL_DATE),date(buckets[jdx].FINAL_DATE,client.TIMEZONE),'Default_PO',4,client.TIMEZONE)
+							//validFor = validForDate(date(offers[idx].START_DATE),undefined,'Default_PO',5,client.TIMEZONE)
+							//console.log('offer name: '+offers[idx].OFFER_ID)
+							validFor = validForDate(date(offers[idx].START_DATE),undefined,'Default_PO',5,client.TIMEZONE)
+							
+							switch (buckets[jdx].ROLLOVER) {
+								case 'YES' : 
+									poValidFor = validForDate(date(offers[idx].START_DATE),undefined,'Default_PO',4,client.TIMEZONE) 	
+									break;
+								case 'NO':
+									poValidFor = validForDate(date(offers[idx].START_DATE),date(offers[idx].END_DATE,client.TIMEZONE),'Default_PO',4,client.TIMEZONE)			
+									validFor = validForDate(date(offers[idx].START_DATE),date(offers[idx].END_DATE,client.TIMEZONE),'Default_PO',5,client.TIMEZONE)
+									break;
+							}
+							
+							//To support multivivo-multi purchase, we use PO_NAME:QUOTA:MSISDN
+							let tmp_id 
+
+							origin_id.push(offers[idx].ORIGIN_ID)
+							//console.log('Offer name : '+offers[idx].OFFER_ID+' ORIG: '+offers[idx].ORIGIN_ID)
+							//Validate the recurrenceValue of the limit value before constructing the PO characteristics
+							//console.log('Value: '+buckets[jdx].LIMIT_VALUE)
+							//strictValidationLimit(buckets[jdx].LIMIT_VALUE,buckets[jdx].CLIENT_ID,buckets[jdx].BUCKET_ID,offers[idx].OFFER_ID,client)
+							addSpecificPo(po, productBucket, value, buckets[jdx], validFor, productOffering,client)
+							
+							//Commenting on supporting PO for expired offers - 26Sep2020
+							if(productBucket.length > 0) {
+							//if(productBucket.length > 0 &&  bucketId_flag === true ) {
+						      let pbkey
+							  //Condition applicable only for individual offers
+							  if(client.PRODUCER === 'N' && po.Sharing_Scope === 'no') {
+								  pbkey = client.MSISDN+":" + getProducerCUSTID(sdata.client_info) + ":" + client.CONT_ID
+							  }
+							  //console.log('offer name: '+offers[idx].OFFER_ID)
+							  //console.log('pbkey construct: '+ pbkey)
+							  let pb_cacheInfo = [], tmp_pbBucket
+							  if(buckets[jdx].QUOTA === 'N') {
+								pb_cacheInfo = ret_PBSCache(setz,bucketId_flag,productBucket,buckets[jdx],offers[idx],client.TIMEZONE,rollover_data,ind_rb_data)
+								pbkey=client.MSISDN+":" + getProducerCUSTID(sdata.client_info) + ":" + client.CONT_ID
+						      //Add product for the pbBucket to correlate multi-purchase
+							    tmp_pbBucket = {"pbkey":pbkey, "pbValue":pb_cacheInfo, "products": po["PO_Name"]+':'+buckets[jdx].QUOTA+':'+client.MSISDN+':'+offers[idx].ORIGIN_ID}
+						      }
+							  //console.log('PBSCache info: '+ JSON.stringify(pb_cacheInfo))
+					
+							  /*for(let pbidx=0;pbidx<productBucket.length;pbidx++){
+									let tmp_bucket_startd = date((offers[idx].START_DATE).split(' ')[0]+' '+(offers[idx].START_DATE).split(' ')[1].split(':')[0]+":"+(parseInt((offers[idx].START_DATE).split(' ')[1].split(':')[1])+5) +':'+(offers[idx].START_DATE).split(' ')[1].split(':')[2])
+									tmp_bucket_startd = tmp_bucket_startd.split('.')[0]+'.000'+client.TIMEZONE
+									//set the bucket to zero but report the actual values for KPI delivery - 13/Sep/2020
+									//console.log('>> sp.Offer PBS : '+JSON.stringify(productBucket))
+									if(setz) {
+										switch(productBucket[pbidx].externalId.split('_')[1]) {
+										//console.log('setz info: '+parseInt(buckets[jdx].LIMIT_VALUE)+' balance: '+parseInt(buckets[jdx].BALANCE))
+											case 'Rollover':
+											case 'rollover':
+												//console.log(productBucket[pbidx].externalId+' Rollover set to right value')
+												let rbal = (productBucket[pbidx].externalId.includes(defaultMapping["bucket.rollover"].productBucket))? (parseInt(rollover_data.LIMIT_VALUE) - parseInt(rollover_data.BALANCE) === 0)?parseInt(rollover_data.BALANCE):0 : 0
+												let rlim =  (productBucket[pbidx].externalId.includes(defaultMapping["bucket.rollover"].productBucket))? (parseInt(rollover_data.LIMIT_VALUE) - parseInt(rollover_data.BALANCE) === 0)?parseInt(rollover_data.LIMIT_VALUE):0 : 0
+												pb_cacheInfo.push({
+													'tmpId' : productBucket[pbidx].tmpId,
+													'externalId' : productBucket[pbidx].externalId ,
+													'CLIENT_ID' : buckets[jdx].CLIENT_ID,
+													'BALANCE' : rbal,
+													'LIMIT_VALUE': rlim,
+													'BUCKET_TYPE':buckets[jdx].BUCKET_TYPE,
+													//'VALIDITY_INFO': {'start': date(buckets[jdx].INITIAL_DATE,client.TIMEZONE),'end': date(buckets[jdx].FINAL_DATE,client.TIMEZONE)},
+													'VALIDITY_INFO': {'start': tmp_bucket_startd,'end': date(buckets[jdx].FINAL_DATE,client.TIMEZONE)},
+													'WAY' : 'SET'
+													})
+												break;
+											default:
+												//console.log(productBucket[pbidx].externalId)
+												pb_cacheInfo.push({
+													'tmpId' : productBucket[pbidx].tmpId,
+													'externalId' : productBucket[pbidx].externalId ,
+													'CLIENT_ID' : buckets[jdx].CLIENT_ID,
+													'BALANCE' : (parseInt(buckets[jdx].LIMIT_VALUE) - parseInt(buckets[jdx].BALANCE) === 0)?parseInt(buckets[jdx].BALANCE):0,
+													'LIMIT_VALUE': (parseInt(buckets[jdx].LIMIT_VALUE) - parseInt(buckets[jdx].BALANCE) === 0)?parseInt(buckets[jdx].LIMIT_VALUE):0,
+													'BUCKET_TYPE':buckets[jdx].BUCKET_TYPE,
+													//'VALIDITY_INFO': {'start': date(buckets[jdx].INITIAL_DATE,client.TIMEZONE),'end': date(buckets[jdx].FINAL_DATE,client.TIMEZONE)},
+													'VALIDITY_INFO': {'start': tmp_bucket_startd,'end': date(buckets[jdx].FINAL_DATE,client.TIMEZONE)},
+													'WAY' : 'SET'
+													})
+												break;
+											
+										}
+									}
+									//console.log('bucket_id: '+ productBucket[pbidx].externalId + ' source bucket_id: '+buckets[jdx].BUCKET_ID)
+									if( (bucketId_flag === true) && (productBucket[pbidx].externalId.includes('Rollover') || productBucket[pbidx].externalId.includes('rollover')) && productBucket[pbidx].externalId.includes(defaultMapping["individualbucket.rollover"].productBucket)) {
+								
+										console.log('individual Rollover : '+JSON.stringify(ind_rb_data))
+										for(let ind_rb=0;ind_rb<ind_rb_data.length;ind_rb++){
+											if(ind_rb_data[ind_rb].ORIGIN_ID === offers[idx].ORIGIN_ID) {									
+												pb_cacheInfo.push({
+													'tmpId' : productBucket[pbidx].tmpId,
+													'externalId' : productBucket[pbidx].externalId,
+													'CLIENT_ID' : buckets[jdx].CLIENT_ID,
+													'BALANCE' : ind_rb_data[ind_rb].BALANCE,
+													'LIMIT_VALUE': ind_rb_data[ind_rb].LIMIT_VALUE,
+													'BUCKET_TYPE':buckets[jdx].BUCKET_TYPE,
+													//'VALIDITY_INFO':{'start': date(buckets[jdx].INITIAL_DATE,client.TIMEZONE),'end': date(buckets[jdx].FINAL_DATE,client.TIMEZONE)},
+													'VALIDITY_INFO':{'start': tmp_bucket_startd,'end': date(buckets[jdx].FINAL_DATE,client.TIMEZONE)},
+													'WAY' : buckets[jdx].WAY
+													})
+											}
+										}
+									}
+									if( (bucketId_flag === true) && (productBucket[pbidx].externalId.includes('Rollover') || productBucket[pbidx].externalId.includes('rollover')) && productBucket[pbidx].externalId.includes(defaultMapping["bucket.rollover"].productBucket) && (parseInt(rollover_data.LIMIT_VALUE) - parseInt(rollover_data.BALANCE)) > 0 && rollover_data.BALANCE!==null && rollover_data.LIMIT_VALUE!=='') {
+										//console.log('>> sp.Offer PBS First: ')
+										pb_cacheInfo.push({
+													'tmpId' : productBucket[pbidx].tmpId,
+													'externalId' : productBucket[pbidx].externalId,
+													'CLIENT_ID' : buckets[jdx].CLIENT_ID,
+													'BALANCE' : rollover_data.BALANCE,
+													'LIMIT_VALUE': rollover_data.LIMIT_VALUE,
+													'BUCKET_TYPE':buckets[jdx].BUCKET_TYPE,
+													'VALIDITY_INFO':{'start': tmp_bucket_startd,'end': date(buckets[jdx].FINAL_DATE,client.TIMEZONE)},
+													'WAY' : buckets[jdx].WAY
+													})
+									}
+									if( (bucketId_flag === true) && (productBucket[pbidx].externalId === buckets[jdx].BUCKET_ID) && buckets[jdx].ORIGIN_ID === offers[idx].ORIGIN_ID && parseInt(buckets[jdx].BALANCE) > -1 && (parseInt(buckets[jdx].LIMIT_VALUE) - parseInt(buckets[jdx].BALANCE) > 0)) {
+										//console.log('>> sp.Offer PBS : Second>>> Org_ID: '+buckets[jdx].ORIGIN_ID+' bucket_id: '+productBucket[pbidx].externalId+ ' balance: '+ parseInt(buckets[jdx].BALANCE))
+										pb_cacheInfo.push({
+													'tmpId' : productBucket[pbidx].tmpId,
+													'externalId' : productBucket[pbidx].externalId ,
+													'CLIENT_ID' : buckets[jdx].CLIENT_ID,
+													'BALANCE' : parseInt(buckets[jdx].BALANCE),
+													'LIMIT_VALUE': buckets[jdx].LIMIT_VALUE,
+													'BUCKET_TYPE':buckets[jdx].BUCKET_TYPE,
+													//'VALIDITY_INFO': {'start': date(buckets[jdx].INITIAL_DATE,client.TIMEZONE),'end': date(buckets[jdx].FINAL_DATE,client.TIMEZONE)},
+													'VALIDITY_INFO': {'start': tmp_bucket_startd,'end': date(buckets[jdx].FINAL_DATE,client.TIMEZONE)},
+													'WAY' : buckets[jdx].WAY
+													})
+										
+									
+									}
+							  }*/
+							  
+							  //pbkey=client.MSISDN+":" + getProducerCUSTID(sdata.client_info) + ":" + client.CONT_ID
+							  //let pbBucket = {"pbkey":pbkey, "pbValue": pb_cacheInfo}
+						      //Add product for the pbBucket to correlate multi-purchase
+							  //let tmp_pbBucket = {"pbkey":pbkey, "pbValue":pb_cacheInfo, "products": po["PO_Name"]+':'+buckets[jdx].QUOTA+':'+client.MSISDN+':'+offers[idx].ORIGIN_ID}
+							  //console.log('>> sp.Offer PBS : '+JSON.stringify(tmp_pbBucket))
+							  //Saving the array of elements to be fetched in update
+							  //Rules for the PO provisioning
+							  //1. bucket with non-quota and dates are valid
+							  //2. No non-quota bucket but reset of bucket for the subscription bucket expired. It's expected to be migrated 
+							  //3. Flag to check whether PO of expired bucket will be provisioned which are unlimited
+							  //let PO_bucket_expired_flag = 'limited'
+							  let PO_bucket_expired_flag = (defaultMapping["contract.po.scope"].Value)?defaultMapping["contract.po.scope"].Value:'limited'
+							  if((tmp_pbBucket!==undefined) && 
+							     ((buckets[jdx].QUOTA === 'N' && compare_dates(new Date().toISOString(), date(buckets[jdx].FINAL_DATE)) === true) || 
+								   (po["RM_Scope"] === "yes" && po["isRecurrence"] === "yes" && PO_bucket_expired_flag === 'unlimited'))) { 
+								add_po_instance = true
+								//poFlag = true
+								if(pb_cacheInfo.length > 0) {
+									//console.log('tmp_pbBucket; '+buckets[jdx].BUCKET_ID)
+									pbt.push(tmp_pbBucket)
+								}
+								tmp_id = writeTocache('product',po["PO_Name"]+':'+buckets[jdx].QUOTA+':'+client.MSISDN+':'+offers[idx].ORIGIN_ID)
+							  }
+							  else {
+								add_po_instance = false
+								//add_po_instance = (offers[idx].END_DATE)? false: true
+							  }
+						    }
+							
+							// adding product bucket
+							//let tmp_cprod = cproducts[po["PO_Name"].replace(/\s/gi, "_").trim()]
+							let tmp_cprod = po["PO_Name"].split(" ")
+							let v_cprod = ""
+						    for (let t_idx=0; t_idx< tmp_cprod.length; t_idx++) {
+								v_cprod = v_cprod + tmp_cprod[t_idx] + '_'
+							}
+							v_cprod = v_cprod.substr(0, v_cprod.length - 1)
+						
+							//Add the po Name into productList
+							ptt.push({'product_name' : po["PO_Name"]})
+							//Fetching billingAccount Id for baRefForBillCycleAlignedRecurrence->billingAccountLinkId
+							getBARefBCARecurrence(client.LUW_ID,po)
+							
+							let services = []
+							let cfs_info = 	getCFS_info(cproducts,'all')
+							
+							for(let cfs_infoIdx=0;cfs_infoIdx<cfs_info.length;cfs_infoIdx++){
+								//console.log('PO services: '+cfs_info[cfs_infoIdx].PO)
+								if(cfs_info[cfs_infoIdx].PO === po["External ID"]) {
+									for(let tmpIdx=0;tmpIdx<tmp_service_tracker.length;tmpIdx++) {
+										if(tmp_service_tracker[tmpIdx].tmpId.includes('tmpId_cfs') && tmp_service_tracker[tmpIdx].cfs_id === cfs_info[cfs_infoIdx].tmpcfsId && tmp_service_tracker[tmpIdx].rfs_id.includes('-')) {
+				  										services.push({'tmpId' : tmp_service_tracker[tmpIdx].tmpId })
+										}
+									}
+								}
+							}
+							//console.log('PO services: '+JSON.stringify(services))
+							//console.log ('Bucket info: '+JSON.stringify(chars_map.bucket.chars.individualLimit.Value))
+							//console.log('PO - PO_type: ' + po["PO_TYPE"])
+							//console.log('PO instance: '+add_po_instance)
+							
+							//Updated on 07-Aug-2020 - Differetiate individual vs. sharing specification for default PO introduction
+							if(po["PO_TYPE"] === "Individual") {
+								po_type = 1
+							}
+							//console.log('poValidFor: '+ JSON.stringify(poValidFor))
+							//console.log('productname: '+(offers[idx].ORIGIN_ID_DESC)? offers[idx].ORIGIN_ID_DESC:po["PO_Name"])
+							if(add_po_instance === true) {
+								switch (po["isBCAligned"]) {
+									case 'yes': 
+												tmp_pid_tracker.push({	't_id': tmp_id,
+																		'po_id': po["PO_Name"],
+																		'client_id' : client.MSISDN,
+																		'group' : client.LUW_ID 
+												})
+												let link_id1
+												if((sdata.client_info[0].cust_info) && sdata.client_info[0].cust_info.hasOwnProperty('cust_realId') === true) {
+													link_id1 = sdata.client_info[0].cust_info.bill_realId
+												}
+												products.push({
+																'tmpId' : tmp_id,
+																'productOffering' : productOffering,
+																//'name' : po["PO_Name"],
+																'poIntId' : {'PO_Name': po["PO_Name"], 'externalId': (offers[idx].ORIGIN_ID)? offers[idx].ORIGIN_ID:po["External_Name"]+new Date(offers[idx].START_DATE).getTime()},
+																'name' : (offers[idx].ORIGIN_ID_DESC)? offers[idx].ORIGIN_ID_DESC:po["PO_Name"],
+																'services' : services,
+																'productBuckets' : productBucket,
+																'validFor' : poValidFor,
+																'statuses' : [{'status' : 'ProductActive','validFor' : validFor}],
+																//'statuses' : [{'status' : 'ProductActive','validFor' : poValidFor}],
+																//'externalId' : po["External_Name"]+new Date(offers[idx].START_DATE).getTime(), 
+																//'externalId' : tmp_id,
+																'productPolicyRefs': getProductInfo('policy',poValidFor,po["PO_Name"]+'#'+offers[idx].ORIGIN_ID,client.MSISDN),
+																'productPrices': getProductInfo('price',poValidFor,po["PO_Name"]+'#'+offers[idx].ORIGIN_ID,client.MSISDN),
+																//'productPolicyRefs': getProductInfo('policy',poValidFor,po["PO_Name"]+'#'+offers[idx].ORIGIN_ID,client.MSISDN),
+																//'productPrices': getProductInfo('price',poValidFor,po["PO_Name"]+'#'+offers[idx].ORIGIN_ID,client.MSISDN),
+																'externalId' : (offers[idx].ORIGIN_ID)? offers[idx].ORIGIN_ID:po["External_Name"]+new Date(offers[idx].START_DATE).getTime(), 
+																'characteristicValues' : POCharacteristics,
+																'baRefForBillCycleAlignedRecurrence' : {'billingAccountLinkId' : (link_id1)?link_id1:writeTocache('billing_account',defaultMapping["customer.billingAccounts.externalId"].Value+ba_ref)}
+																//'baRefForBillCycleAlignedRecurrence' : ba_obj
+												})
+												break;
+									case 'no': 
+												products.push({
+																'tmpId' : tmp_id,
+																'productOffering' : productOffering,
+																//'name' : po["PO_Name"],
+																'poIntId' : {'PO_Name': po["PO_Name"], 'externalId': (offers[idx].ORIGIN_ID)? offers[idx].ORIGIN_ID:po["External_Name"]+new Date(offers[idx].START_DATE).getTime()},
+																'name' : (offers[idx].ORIGIN_ID_DESC)? offers[idx].ORIGIN_ID_DESC:po["PO_Name"],
+																'services' : services,
+																'productBuckets' : productBucket,
+																'validFor' : poValidFor,
+																'statuses' : [{'status' : 'ProductActive','validFor' : validFor}],
+																//'statuses' : [{'status' : 'ProductActive','validFor' : poValidFor}],
+																//'externalId' : po["External_Name"]+new Date(offers[idx].START_DATE).getTime(), 
+																//'externalId' : tmp_id,
+																'externalId' : (offers[idx].ORIGIN_ID)? offers[idx].ORIGIN_ID:po["External_Name"]+new Date(offers[idx].START_DATE).getTime(), 
+																'characteristicValues' : POCharacteristics
+												})
+												break;
+									//default should throw exception: 09/Jan/2019
+								}
+							}
+							
+							//poFlag = true
+						}
+						
+						//No bucket match is found fulfilling condition with origin_Id & multiple-match of origin Id
+						//reset bucketFlag 
+						bucketFlag = false
+						//origin_id_reject=''
+						//POCharacteristics = undefined
+					}
+					//When origin_id of offer does not match with any of the bucket, we raise an exception
+					if(bucket_offer_match === false) {
+						errFlag = true
+						//console.log('PO name:' +po["PO_Name"])
+						let data = errorMap['ERR020'].Data
+						data['CLIENT_ID'] = offers[idx].CLIENT_ID
+						data['BUCKET.ID'] = key
+						data['BUCKET.BALANCE'] = 'NA'
+						data['BUCKET.ORIGIN_ID'] = 'NA'
+						data['OFFER.ID'] = offers[idx].OFFER_ID
+						data['OFFER.ORIGIN_ID'] = offers[idx].ORIGIN_ID
+						errorLog('ERR020', data, client)
+						//console.log(JSON.stringify(elog))
+						return {'error': {'error_code': 'ERR020'}}
+					}
+					
+				}
+			}
+			//RM migration flag is not true
+			/*else if((po) && po.RM_Scope.includes("yes") && compare_dates(new Date().toISOString(), date(offers[idx].END_DATE)) === false){
+				let data = errorMap['DIS001'].Data
+				data['CLIENT_ID'] = client.CLIENT_ID
+				data['OFFERS.OFFER_ID'] = offers[idx].OFFER_ID
+				data['OFFERS.FINAL_DATE']= offers[idx].END_DATE
+				console.log('DIS001: '+JSON.stringify(data))
+				errorLog('DIS001', data, client)
+			}*/
+			else if((po) && po.RM_Scope.includes("no")) {
+				errFlag = true
+				let errData = errorMap['ERR012'].Data			//TODO: need to verify the data fields
+				errData['CLIENT_ID'] = client.CLIENT_ID
+				errData['CLIENT.MSISDN'] = client.MSISDN
+				errData['OFFERS.OFFER_ID'] = offers[idx].OFFER_ID		
+				errorLog('ERR012', errData, client)
+				//console.log(JSON.stringify(elog))
+				return {'error': {'error_code': 'ERR012'}}
+			}
+			else {
+				errFlag = true
+				let errData = errorMap['ERR013'].Data			//TODO: need to verify the data fields
+				errData['CLIENT_ID'] = client.CLIENT_ID
+				errData['CLIENT.MSISDN'] = client.MSISDN
+				errData['OFFERS.OFFER_ID'] = offers[idx].OFFER_ID		
+				errorLog('ERR013', errData, client)
+				//console.log(JSON.stringify(elog))
+				return {'error': {'error_code': 'ERR013'}}
+			}
+			//return {'error' : {'error_code': 'ERR010'}} //TODO: I am not returning error and marking it as WARN
+		}
+		
+	}
+	//Re-write the default PO - 02Jun2020
+	//All the subscriber will get individual TECHNICAL_I, EXCEDENTE_I
+	//Provider contract get EXCEDENTE, PROVIDER, CONSUMER_MV, SVA
+	//Consumer contract get EXCEDENTE, CONSUMER_MV, SVA
+	let link_id
+	if((sdata.client_info[0].cust_info) && sdata.client_info[0].cust_info.hasOwnProperty('cust_realId') === true) {
+		link_id = sdata.client_info[0].cust_info.bill_realId
+	}
+	for(var _dPO in defaultMapping){	
+			//console.log('_dPO name: '+defaultMapping[_dPO].Value)
+			let decision_flag = (typeof (defaultMapping[_dPO].Value) === 'string')?(defaultMapping[_dPO].Value).split('_'): undefined
+			//console.log('_dPO name: '+decision_flag)
+			switch(decision_flag!== undefined && decision_flag[0] === 'Default' && decision_flag[3]) {
+				case "Providers":
+					if(client.PRODUCER === 'Y' && po_type === 0){
+						//console.log('_dPO name: '+decision_flag)
+						let P_poId1 = getPoiD(_dPO, cproducts, client)
+						if(JSON.stringify(P_poId1).includes("error")){		
+							return P_poId1
+						}
+				
+						let P_pbId1 = getResourceRef(P_poId1, cproducts, client)
+						if(JSON.stringify(P_pbId1).includes("error")){		
+							return P_pbId1
+						}
+				
+						ptt.push({'product_name' :_dPO})
+						let P_pb_balance1
+						P_pb_balance1 = addDefaultPo(client.LUW_ID,client,defaultMapping[_dPO], buckets, products, _dPO, P_poId1, P_pbId1, defaultMapping["customer.billingAccounts.externalId"].Value+ba_ref,producer_custId,link_id)
+						if(P_pb_balance1 !==undefined ) {pbt.push(P_pb_balance1)}
+					}
+					break;
+				case "Groups":
+					if(po_type === 0) {
+						//console.log('_dPO name: '+decision_flag)
+						let _poId = getPoiD(_dPO, cproducts, client)
+						if(JSON.stringify(_poId).includes("error")){		
+							return _poId
+						}
+				
+						let _pbId = getResourceRef(_poId, cproducts, client)
+						if(JSON.stringify(_pbId).includes("error")){		
+							return _pbId
+						}
+				
+						ptt.push({'product_name' :_dPO})
+						let pb_balance
+						pb_balance = addDefaultPo(client.LUW_ID,client,defaultMapping[_dPO], buckets, products, _dPO, _poId, _pbId, defaultMapping["customer.billingAccounts.externalId"].Value+ba_ref,producer_custId,link_id)
+						if(pb_balance !==undefined ) {pbt.push(pb_balance)}
+					}
+					break;
+					
+				case "Individual":
+					if(po_type === 1) {
+						//console.log('_dPO name: '+decision_flag+ ' dpo name: '+_dPO )
+						//console.log('po_type supported: '+ po_type)
+						let ind_poId
+						ind_poId=getPoiD(_dPO, cproducts, client)
+						if(JSON.stringify(ind_poId).includes("error")){		
+							return ind_poId
+						}
+						let ind_pbId = getResourceRef(ind_poId, cproducts, client)
+						if(JSON.stringify(ind_pbId).includes("error")){		
+							return ind_pbId
+						}
+					
+						ptt.push({'product_name' :_dPO})
+					
+						let indpb_balance
+						indpb_balance = addDefaultPo(client.LUW_ID,client,defaultMapping[_dPO], buckets, products, _dPO, ind_poId, ind_pbId, defaultMapping["customer.billingAccounts.externalId"].Value+ba_ref,producer_custId,link_id)
+						if(indpb_balance !==undefined ) {pbt.push(indpb_balance)}
+					}
+					break;
+				
+				case "Common":
+						//console.log('_dPO name: '+decision_flag)
+						let P_poId = getPoiD(_dPO, cproducts, client)
+						if(JSON.stringify(P_poId).includes("error")){		
+							return P_poId
+						}
+				
+						let P_pbId = getResourceRef(P_poId, cproducts, client)
+						if(JSON.stringify(P_pbId).includes("error")){		
+							return P_pbId
+						}
+				
+						ptt.push({'product_name' :_dPO})
+						let P_pb_balance
+						P_pb_balance = addDefaultPo(client.LUW_ID,client,defaultMapping[_dPO], buckets, products, _dPO, P_poId, P_pbId, defaultMapping["customer.billingAccounts.externalId"].Value+ba_ref,producer_custId,link_id)
+						if(P_pb_balance !==undefined ) {pbt.push(P_pb_balance)}
+					break;
+			}			
+	}	
+	//writeLog.debug('product tmpId tracker: '+ client.MSISDN +' products: '+ JSON.stringify(ptt))
+	//console.log('Pb list: '+ JSON.stringify(pbt))
+	//It is saved to track the productList per subscriber when we perform the sharingProvider updateContract
+	saveIntoMap.invoke('productList', client.MSISDN, JSON.stringify(ptt))
+	if(pbt.length>0){
+		saveIntoMap.invoke('productBuckets', client.MSISDN, JSON.stringify(pbt))
+	}
+	////console.log(JSON.stringify(products))
+	//Raising DIS00x for those bucket which does not have any matching offers
+	if(errFlag === false) {
+		//console.log('Raise alert for the bucket ')
+		for (let exp_dx=0;exp_dx<buckets.length;exp_dx++) {
+			if(buckets[exp_dx].QUOTA === 'N') {
+				//console.log('Bucket info: '+ buckets[exp_dx].BUCKET_ID)
+				for(let exp_odx=0;exp_odx<Object.keys(offer).length;exp_odx++){
+					if((offer[Object.keys(offer)[exp_odx]].bucket[buckets[exp_dx].BUCKET_ID]) && offer[Object.keys(offer)[exp_odx]].RM_Scope==='no') {
+						let data = errorMap['DIS003'].Data
+						data['CLIENT_ID'] = client.CLIENT_ID
+						data['BUCKET.ID'] = buckets[exp_dx].BUCKET_ID
+						data['BUCKET.BALANCE']= buckets[exp_dx].BALANCE
+						data['BUCKET.LIMIT']= buckets[exp_dx].LIMIT_VALUE
+						//console.log('DIS003: '+JSON.stringify(data))
+						errorLog('DIS003', data, client)
+					}
+				}
+			}
+		}
+	}
+	
+	//lines for Date testing 21/Sep/2020
+	t1 = Date.now()
+	s1 = (((t1 - t0) % 60000) / 1000);
+	console.log('getProducts: END >>> LUW '+ client.CLIENT_ID+' processing took ' + (t1 - t0) + ' (millseconds)/ '+ s1+ ' (seconds)')
+	//end of lines for Date testing 21/Sep/2020
+	
+	return {'result': products}
+			
+}
+
+function getResourceRef(po_id, cat, client) {
+   for (var idx=0;idx < Object.keys(cat).length;idx++) {
+	   ////console.log("<><><><> Catalog:: " + cat[Object.keys(cat)[idx]].poId)
+	  if(cat[Object.keys(cat)[idx]].poId === po_id){
+			var po = cat[Object.keys(cat)[idx]]
+			let pb_id_info=[]
+			if(po.pbsInfo !== undefined){
+			   for(let pbinfoIdx=0;pbinfoIdx<Object.keys(po.pbsInfo).length;pbinfoIdx++) {
+				   pb_id_info.push({'r_specId' : po.pbsInfo[Object.keys(po.pbsInfo)[pbinfoIdx]].id,
+									'r_external' : Object.keys(po.pbsInfo)[pbinfoIdx]
+						})
+			   }
+			}
+			   return pb_id_info
+		   }
+			//return pb_id;
+	   //}
+   }
+   var data = errorMap['ERR007'].Data
+	//data['SERVICES.Service_Id'] = status
+	errFlag = true
+	errorLog('ERR007', data, client)
+	return {'error' : {'error_code': 'ERR007'}}			//TODO: Need to cross check 
+}
+
+function getPoiD(dpo, cproducts1, client){
+	for(var ddpo in cproducts1){
+		if(cproducts1[ddpo].externalId === dpo ){	
+			//writeLog.debug('poid' + cproducts[ddpo].poId)
+			return cproducts1[ddpo].poId
+		}
+	}
+	errFlag = true
+	var data = errorMap['ERR008'].Data
+	//data['SERVICES.Service_Id'] = status				//Need to set Service_id
+	
+	errorLog('ERR008', data, client)
+	return {'error' : {'error_code': 'ERR008'}}			//TODO: Need to cross check 
+	//return undefined
+}
+
+function set_pbs_extName(bucket_id, InfoKey) {
+	let pbsExtName
+	pbsExtName = (wallet[bucket_id])? (wallet[bucket_id].RMCA_Name).replace(/\s/g, "_") : undefined
+	if(pbsExtName) {
+		if(pbsExtName!==InfoKey) {
+			pbsExtName = undefined
+		}
+	}
+	return pbsExtName
+}
+function addSpecificPo(po, productBucket, value, bucket, validFor, productOffering,client){
+	for(var pkey in cproducts){
+		if(cproducts[pkey].externalId === po["External ID"]) {
+			
+			productOffering['productOfferingId'] = cproducts[pkey].poId    //TODO Need to add ERR008
+			if(cproducts[pkey].poChars){
+				
+				//Validate the recurrenceValue of the limit value before constructing the PO characteristics
+				if (cproducts[pkey].poChars.values !== undefined){
+				let charVal = [];
+				let keys = defaultMapping["contract.po.key"].Value.split(":")
+				//Value for the Specific PO characteristics values
+				charVal = get_charValues(0,value,parseInt(bucket.LIMIT_VALUE * 80/100))
+				//Introduced limit_value on 07/Jun/2020 - Enforcing validation for limit
+				var res = chars(cproducts[pkey],keys,validFor,charVal, 'poChars')
+				productBucket.push({'characteristicValues' : res})
+				
+				}
+			}
+			if(cproducts[pkey].pbsInfo){
+				for(var pbsInfoKey in cproducts[pkey].pbsInfo){
+					//writeLog.debug(pbsInfoKey)
+					//console.log('pbsKey Info: ' + pbsInfoKey)
+					var cproducts_pbsInfo = cproducts[pkey].pbsInfo[pbsInfoKey]
+					if(cproducts_pbsInfo.id) {						
+						
+						let charVal = [];
+						let keys = defaultMapping["contract.pb.key"].Value.split(":")
+						
+						for(let kdx=0,kk=keys.length;kdx<kk;kdx++){
+							//writeLog.debug(keys[kdx])							
+							
+							if(keys[kdx] === 'quota' && cproducts_pbsInfo.chars.hasOwnProperty('quota')){
+								if(bucket.QUOTA === 'Y'){
+									//writeLog.debug('Yes' + JSON.stringify(cproducts_pbsInfo.chars.quota.values[1]))
+									charVal.push('1')
+								} else {
+									//writeLog.debug('No' + JSON.stringify(cproducts_pbsInfo.chars.quota.values[0]))
+									charVal.push('0')
+								}								
+							} else if(keys[kdx] === 'rollover' && cproducts_pbsInfo.chars.hasOwnProperty('rollover')){
+								
+								if(wallet[bucket.BUCKET_ID].NO === 'YES'){
+									
+									charVal.push('1')
+								} else {
+									
+									charVal.push('0')
+								}								
+							} else if(keys[kdx] === 'ThresholdValue' && cproducts_pbsInfo.chars.hasOwnProperty('ThresholdValue')){
+								
+								charVal.push(bucket.LIMIT_VALUE)
+								
+							}
+								
+							
+						}
+						//Loop to pass only the keys found on catalog
+						let keys2catalogue = []
+						for(var i=0;i<keys.length;i++){
+							if(Object.keys(cproducts_pbsInfo.chars).indexOf(keys[i]) !== -1){
+								keys2catalogue.push(keys[i]);
+							}
+						}
+						
+						res = chars(cproducts_pbsInfo,keys2catalogue,validFor,charVal)
+						if(cproducts_pbsInfo.name.includes('Rollover') || cproducts_pbsInfo.name.includes('rollover')) {
+							//console.log('Wallet id : '+ pbsInfoKey)
+							productBucket.push({ 'tmpId': (set_pbs_extName(bucket.BUCKET_ID+"_Rollover",pbsInfoKey))? writeTocache('product_bucket',po["PO_Name"]+':'+client.MSISDN+':'+bucket.BUCKET_ID+"_Rollover"+':'+bucket.ORIGIN_ID) : writeTocache('product_bucket',po["PO_Name"]+':'+client.MSISDN+':'+pbsInfoKey+':'+bucket.ORIGIN_ID),
+											 'externalId' : (set_pbs_extName(bucket.BUCKET_ID+"_Rollover",pbsInfoKey))? bucket.BUCKET_ID+"_Rollover": pbsInfoKey ,
+											 'validFor' : validFor,
+											 'resourceSpec' : {'resourceSpecId': cproducts_pbsInfo.id}
+							                 //'characteristicValues' : res
+							})
+						}							
+						else
+						{
+							productBucket.push({ 'tmpId': (set_pbs_extName(bucket.BUCKET_ID,pbsInfoKey))? writeTocache('product_bucket',po["PO_Name"]+':'+client.MSISDN+':'+bucket.BUCKET_ID+':'+bucket.ORIGIN_ID): writeTocache('product_bucket',po["PO_Name"]+':'+client.MSISDN+':'+pbsInfoKey+':'+bucket.ORIGIN_ID),
+											 'externalId' : (set_pbs_extName(bucket.BUCKET_ID,pbsInfoKey))? bucket.BUCKET_ID : pbsInfoKey,
+											 'validFor' : validFor,
+											 'resourceSpec' : {'resourceSpecId': cproducts_pbsInfo.id}
+							                 //'characteristicValues' : res
+							})
+						}
+					} else {
+						//writeLog.error(">>>product>>bucket>>ERROR")
+						/*let errData = errorMap['ERR011'].Data			//TODO: need to verify the data fields
+						errData['BUCKET.id'] = bucket.BUCKET_ID
+					
+						errorLog('ERR011', errData, client)
+						return {'error' : {'error_code': 'ERR011'}}*/
+						//poChars is not defined
+						//log('ERROR',cproducts[pkey].poChars)
+					}
+				}
+			}				
+			break;
+		}
+	}	
+}
+
+function addDefaultPo(GROUP_ID,client,defaultPO, buckets, products, dpo, poid, pbid, baId, Pcustid, link_id){
+		
+	var productBucket = []
+	let individualLimit = parseInt('0')
+	let balance = parseInt('0')
+	let consumed_balance = parseInt('0')
+	let limit = parseInt('0')
+	let POCharacteristics
+	
+	//productBucket date --- pbsStart date as on 20/Jun/2020
+	let tmp_dt = new Date()
+	let dt
+	//console.log('default:: end-date:: '+tmp_dt.getDate())
+	let offset = 3600000* parseInt(Object.keys(timezone))
+	let today = new Date((tmp_dt.getTime() + (tmp_dt.getTimezoneOffset() * 60000))+(offset));
+	dt = today.getFullYear()+'-'+(today.getMonth())+'-'+client.BILL_DAY;
+	if(client.BILL_DAY < tmp_dt.getDate() ) {
+		dt = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+client.BILL_DAY;
+	}
+	//console.log('default:: start-date:: '+dt)
+	let time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds()+"."+today.getMilliseconds();
+	let pb_startDate = new Date().strptime(dt+' '+time, format(dt+' '+time)).toISOString()
+	//console.log('pbstart before processing: '+pb_startDate)
+	pb_startDate = (compare_dates(pb_startDate,date(pcreation_date)) === true)? dt_set(date(pcreation_date), 'minute', 7,client.TIMEZONE):dt_set(pb_startDate, 'minute', 7,client.TIMEZONE)
+	
+	//Tune it with 7 minutes from the assigned logic to process the update balance in the balance adjustment 
+	//End of productBucket date --- pbsStart date as on 20/Jun/2020
+	//pb_startDate = (pb_startDate.split('.')[0]).split(':')[0]+':'+(parseInt((pb_startDate.split('.')[0]).split(':')[1])+7)+':'+(pb_startDate.split('.')[0]).split(':')[2]+'.000'+client.TIMEZONE
+	//console.log('pbstart after processing: '+pb_startDate)
+	dt = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+client.BILL_DAY;
+	if(client.BILL_DAY < tmp_dt.getDate() ) {
+		dt = today.getFullYear()+'-'+(today.getMonth()+2)+'-'+client.BILL_DAY;
+	}
+	//console.log('default:: end-date:: '+dt)
+	let pb_endDate = new Date().strptime(dt+' '+'23:59:59', format(dt+' '+'23:59:59')).toISOString().replace('Z',client.TIMEZONE)
+	let validFor = validForDate(date(pcreation_date),undefined,'Default_PO',6,client.TIMEZONE)
+	//var st_validFor = validForDate(date(client.CREATION_DATE),date('30/12/9999 23:59:59'))
+	let d = new Date(client.CREATION_DATE)
+	d.setMinutes(d.getMinutes() + 30);
+	
+	let tmp_pbBucket, quota_type
+	let pbbval=[]
+	switch (dpo) {
+		case 'CONSUMER_MV' :
+							//console.log('CONSUMER_MV: pbQinfo:: '+JSON.stringify(pbQinfo))
+							let total_consumption=parseInt('0')
+							for(let dpo_idx=0;dpo_idx<pbQinfo.length;dpo_idx++){
+								let allowed_bucket = chars_map['bucket']['chars']['individualLimit']['Value']
+								let validBucket = false
+								for(let b_id=0;b_id<allowed_bucket.split('#').length; b_id++) {
+									if(pbQinfo[dpo_idx].BUCKET_ID === allowed_bucket.split('#')[b_id]) {
+										validBucket = true
+									}
+								}
+								//console.log('validBucket: '+ validBucket)
+								if(client.CLIENT_ID === pbQinfo[dpo_idx].CLIENT_ID && validBucket === true) {
+									individualLimit = parseInt(individualLimit) + ((parseInt(pbQinfo[dpo_idx].LIMIT_VALUE) === -1)? 0 : parseInt(pbQinfo[dpo_idx].LIMIT_VALUE))
+									console.log('Bucket rollover qualified: '+ pbQinfo[dpo_idx].BUCKET_ID+' flag: '+allowed_bucket)
+									if(compare_dates(new Date().toISOString(), date(pbQinfo[dpo_idx].FINAL_DATE)) === true && compare_dates(new Date().toISOString(), pb_endDate) === true && parseInt(pbQinfo[dpo_idx].BALANCE) > 0) {
+										total_consumption = total_consumption + parseInt(pbQinfo[dpo_idx].BALANCE)
+									}
+									//if(compare_dates(new Date().toISOString(), date(pbQinfo[dpo_idx].FINAL_DATE)) === true && compare_dates(new Date().toISOString(), pb_endDate) === true && parseInt(pbQinfo[dpo_idx].BALANCE) > 0) {
+										//pbbval.push({
+										//	"externalId":(defaultMapping[dpo].productBucket).toString(),"CLIENT_ID":pbQinfo[dpo_idx].CLIENT_ID,"BALANCE":pbQinfo[dpo_idx].BALANCE,"LIMIT_VALUE": (individualLimit >0)?individualLimit:"-1","BUCKET_TYPE":"volume","VALIDITY_INFO": {'start': pb_startDate,'end': pb_endDate},"WAY":"DESC"
+										//})
+									//}
+								}
+							}
+							//console.log('CONSUMER_MV: total_consumption:: '+total_consumption)
+							//set zero for the consumer_mv before actual value
+							if(total_consumption > 0) {
+								pbbval.push({
+										"externalId":(defaultMapping[dpo].productBucket).toString(),"CLIENT_ID":client.CLIENT_ID,"BALANCE":0,"LIMIT_VALUE": -1,"BUCKET_TYPE":"volume","VALIDITY_INFO": {'start': pb_startDate,'end': pb_endDate},"WAY":"SET"
+								})
+								//set the actual value
+								pbbval.push({
+										"externalId":(defaultMapping[dpo].productBucket).toString(),"CLIENT_ID":client.CLIENT_ID,"BALANCE":total_consumption,"LIMIT_VALUE": (individualLimit >0)?individualLimit:"-1","BUCKET_TYPE":"volume","VALIDITY_INFO": {'start': pb_startDate,'end': pb_endDate},"WAY":"DESC"
+								})
+								quota_type = 'Y'
+							}
+							else if(total_consumption === 0 && individualLimit > 0) {
+								pbbval.push({
+										"externalId":(defaultMapping[dpo].productBucket).toString(),"CLIENT_ID":client.CLIENT_ID,"BALANCE":0,"LIMIT_VALUE": individualLimit,"BUCKET_TYPE":"volume","VALIDITY_INFO": {'start': pb_startDate,'end': pb_endDate},"WAY":"SET"
+								})
+								quota_type = 'Y'
+							}
+							break;
+		case 'PROVIDER_MV':
+							if(buckets !== undefined) {
+								for (let jdx=0,ll=buckets.length;jdx<ll;jdx++) {
+									if ((buckets[jdx]) && (buckets[jdx].BUCKET_ID.includes(defaultMapping["bucket.rollover"].Value)) && buckets[jdx].QUOTA === 'N' && compare_dates(new Date().toISOString(), date(buckets[jdx].FINAL_DATE)) === true && compare_dates(new Date().toISOString(), pb_endDate) === true && buckets[jdx].BALANCE > 0) {
+											consumed_balance = consumed_balance + parseInt(buckets[jdx].BALANCE)
+											//limit = limit + parseInt(buckets[jdx].LIMIT_VALUE)
+											/*pbbval.push({
+													"externalId":buckets[jdx].BUCKET_ID,"CLIENT_ID":buckets[jdx].CLIENT_ID,"BALANCE":parseInt(buckets[jdx].BALANCE),"LIMIT_VALUE":parseInt(buckets[jdx].LIMIT_VALUE),"BUCKET_TYPE":buckets[jdx].BUCKET_TYPE,"VALIDITY_INFO": {'start': pb_startDate,'end': pb_endDate},"WAY":"DESC"
+											})*/
+									}
+									else if ((buckets[jdx]) && (buckets[jdx].BUCKET_ID.includes(defaultMapping["bucket.rollover"].Value)) && buckets[jdx].QUOTA === 'Y' && compare_dates(new Date().toISOString(), date(buckets[jdx].FINAL_DATE)) === true && compare_dates(new Date().toISOString(), pb_endDate) === true && buckets[jdx].BALANCE > 0) {
+											//consumed_balance = consumed_balance + parseInt(buckets[jdx].BALANCE)
+											limit = limit + parseInt(buckets[jdx].LIMIT_VALUE)
+											/*pbbval.push({
+													"externalId":buckets[jdx].BUCKET_ID,"CLIENT_ID":buckets[jdx].CLIENT_ID,"BALANCE":parseInt(buckets[jdx].BALANCE),"LIMIT_VALUE":parseInt(buckets[jdx].LIMIT_VALUE),"BUCKET_TYPE":buckets[jdx].BUCKET_TYPE,"VALIDITY_INFO": {'start': pb_startDate,'end': pb_endDate},"WAY":"DESC"
+											})*/
+									}
+								}
+								//console.log('Consumed balance: ' +consumed_balance)
+								if(consumed_balance>0){	
+									//set zero for the provider_mv before actual value
+									pbbval.push({
+												"externalId":(defaultMapping["bucket.rollover"].Value).toString(),"CLIENT_ID":client.CLIENT_ID,"BALANCE":0,"LIMIT_VALUE":-1,"BUCKET_TYPE":"volume","VALIDITY_INFO": {'start': pb_startDate,'end': pb_endDate},"WAY":"SET"
+											})
+									//set the actual value of provider_mv counter
+									pbbval.push({
+												"externalId":(defaultMapping["bucket.rollover"].Value).toString(),"CLIENT_ID":client.CLIENT_ID,"BALANCE":consumed_balance,"LIMIT_VALUE":(limit > 0)?limit:-1,"BUCKET_TYPE":"volume","VALIDITY_INFO": {'start': pb_startDate,'end': pb_endDate},"WAY":"DESC"
+											})
+								}
+							}
+							quota_type = 'Y'
+							break;
+		case 'EXCEDENTE':
+							if(buckets !== undefined) {
+								//set zero for the excendente before actual value
+								//pbbval.push({
+								//					"externalId":defaultMapping[dpo].productBucket).toString(),"CLIENT_ID":client.CLIENT_ID,"BALANCE":0,"LIMIT_VALUE":-1,"BUCKET_TYPE":"volume","VALIDITY_INFO": {'start': pb_startDate,'end': pb_endDate},"WAY":"SET"
+								//			})
+								pbbval.push({
+													"externalId":(defaultMapping[dpo].productBucket).toString(),"CLIENT_ID":client.CLIENT_ID,"BALANCE":0,"LIMIT_VALUE":-1,"BUCKET_TYPE":"volume","VALIDITY_INFO": {'start': pb_startDate,'end': pb_endDate},"WAY":"SET"
+											})
+								for (let jdx=0,ll=buckets.length;jdx<ll;jdx++) {
+									if ((buckets[jdx]) && (buckets[jdx].BUCKET_ID.includes(defaultMapping[dpo].productBucket)) && buckets[jdx].QUOTA === 'N' && client.CLIENT_ID === buckets[jdx].CLIENT_ID && compare_dates(new Date().toISOString(), date(buckets[jdx].FINAL_DATE)) === true && compare_dates(new Date().toISOString(), pb_endDate) === true && buckets[jdx].BALANCE > 0) {
+											//set actual value of excedente
+											pbbval.push({
+													"externalId":buckets[jdx].BUCKET_ID,"CLIENT_ID":buckets[jdx].CLIENT_ID,"BALANCE":parseInt(buckets[jdx].BALANCE),"LIMIT_VALUE":parseInt(buckets[jdx].LIMIT_VALUE),"BUCKET_TYPE":buckets[jdx].BUCKET_TYPE,"VALIDITY_INFO": {'start': pb_startDate,'end': pb_endDate},"WAY":"DESC"
+											})
+									}
+								}
+							}
+							quota_type = 'N'
+							break;
+		case 'EXCEDENTE_I':
+							break;
+	}
+	
+	//console.log('individualLimit: client_id: '+client.CLIENT_ID+' IL: '+individualLimit)
+	//populate the individualLimit when it's greater than 'zero'
+	if(individualLimit > 0) {
+		POCharacteristics = getCharsSubscriptionPO(client.MSISDN,'PO Consumer',undefined,individualLimit,'ASC',client.TIMEZONE)
+	}
+	if(pbbval.length!==0) {
+		//console.log('pbbval.length: '+pbbval.length)
+		tmp_pbBucket = {
+						"pbkey": client.MSISDN+':'+Pcustid+':'+client.CONT_ID, 
+						"pbValue":pbbval,
+						//"products": dpo+':'+'Y'+':'+client.MSISDN
+						"products": dpo+':'+quota_type+':'+client.MSISDN
+					}
+	}
+	
+	let resourceSpec = {}
+	resourceSpec = {'resourceSpecId' : pbid}
+	//console.log('default PO: '+JSON.stringify(tmp_pbBucket))
+	
+	//writeLog.debug("Default PO: PBS: " + pbid + " rtrt::" + JSON.stringify(resourceSpec))
+	if(Array.isArray(pbid) === true) {
+		for(let arIdx=0;arIdx<pbid.length;arIdx++) {
+			//console.log('Array productBucket externalId: '+ set_pbs_extName(defaultMapping[dpo].productBucket,pbid[arIdx].r_external))
+			productBucket.push({'resourceSpec' : {'resourceSpecId' : pbid[arIdx].r_specId},
+								//'externalId' : pbid[arIdx].r_external,
+								'externalId' : (set_pbs_extName(defaultMapping[dpo].productBucket,pbid[arIdx].r_external))? (defaultMapping[dpo].productBucket).toString() : pbid[arIdx].r_external,
+								'tmpId' : writeTocache('product_bucket',dpo+':'+client.MSISDN+':'+defaultMapping[dpo].productBucket),
+								'validFor': validForDate(date(pcreation_date),undefined,'Default_PO',7,client.TIMEZONE),
+								
+			           })
+		}
+	}
+	else {
+	//console.log('productBucket externalId: '+ defaultPO.productBucket)
+	productBucket.push({'resourceSpec' : resourceSpec,
+						'externalId' : defaultPO.productBucket,
+						'tmpId' : writeTocache('product_bucket',dpo+':'+client.MSISDN+':'+defaultMapping[dpo].productBucket),
+						'validFor': validForDate(date(pcreation_date),undefined,'Default_PO',7,client.TIMEZONE),
+						
+			           })
+	}
+	
+	let tmp_id = writeTocache('product',dpo+':'+client.MSISDN)
+	
+	if(setGrouptmpId(dpo,client.MSISDN,client.LUW_ID) === undefined) {
+		//Tracking the tmp Id assigned to the products to be introduced in sharingConsumer
+		tmp_pid_tracker.push({'t_id': tmp_id,
+							 // 'po_id': dpo,
+							'po_id': defaultPO.PO_NAME,
+						      'client_id' : client.MSISDN,
+						      'group' : client.LUW_ID 
+	  				        })  
+	}
+	//Fetching billingAccount Id for baRefForBillCycleAlignedRecurrence->billingAccountLinkId
+	getBARefBCARecurrence(GROUP_ID,"defaultPO")		                
+	//fetching the tmpId from the services for CFS
+	let services = []
+	let cfs_info = 	getCFS_info(cproducts,'all')
+	
+	//billingAccount has to be empty for PO_SVA since it's not billingCycle aligned: Adding the exception
+	
+	for(let cfs_infoIdx=0;cfs_infoIdx<cfs_info.length;cfs_infoIdx++){
+		if(cfs_info[cfs_infoIdx].PO === dpo) {
+			//writeLog.debug('getDefaultPO-cfs_info-PO: '+ cfs_info[cfs_infoIdx].PO+' , '+dpo +' , '+JSON.stringify(cfs_info[cfs_infoIdx].tmpcfsId))
+			for(let tmpIdx=0;tmpIdx<tmp_service_tracker.length;tmpIdx++) {
+				if(tmp_service_tracker[tmpIdx].tmpId.includes('tmpId_cfs') && tmp_service_tracker[tmpIdx].cfs_id === cfs_info[cfs_infoIdx].tmpcfsId && tmp_service_tracker[tmpIdx].rfs_id.includes('-')) {
+				  //writeLog.debug('getDefaultPO-cfs_info-PO-tmpId: '+tmp_service_tracker[tmpIdx].tmpId)
+				  services.push({'tmpId' : tmp_service_tracker[tmpIdx].tmpId })
+				}
+			}
+		}
+	}
+	
+	if(dpo.includes('SVA') || dpo.includes('TECHNICAL_I')) {
+			products.push({
+					'tmpId' : tmp_id,
+					'productOffering' : { 'productOfferingId' : poid},
+					'services' :  services,
+					'name' : dpo,
+					'poIntId' : {'PO_Name': dpo, 'externalId': dpo},
+					'productBuckets': productBucket,
+					'productPolicyRefs': getProductInfo('policy',validFor,defaultPO.PO_NAME+'#'+dpo,client.MSISDN),
+					'productPrices': getProductInfo('price',validFor,defaultPO.PO_NAME+'#'+dpo,client.MSISDN),
+					//'validFor' : validFor,
+					'validFor' : validFor,
+					//'statuses' : [{'status' : 'ProductActive','validFor' : validFor}],
+					'statuses' : [{'status' : 'ProductActive','validFor' : validFor}],
+					'externalId' : dpo
+			})
+	}
+	else {
+		// adding product
+		products.push({
+					'tmpId' : tmp_id,
+					'productOffering' : { 'productOfferingId' : poid},
+					'services' :  services,
+					'name' : dpo,
+					'poIntId' : {'PO_Name': dpo, 'externalId': dpo},
+					'productBuckets': productBucket,
+					'productPolicyRefs': getProductInfo('policy',validFor,defaultPO.PO_NAME+'#'+dpo,client.MSISDN),
+					'productPrices': getProductInfo('price',validFor,defaultPO.PO_NAME+'#'+dpo,client.MSISDN),
+					//'validFor' : validFor,
+					'validFor' : validFor,
+					//'statuses' : [{'status' : 'ProductActive','validFor' : validFor}],
+					'statuses' : [{'status' : 'ProductActive','validFor' : validFor}],
+					'externalId' : dpo,
+					'characteristicValues': POCharacteristics,
+					'baRefForBillCycleAlignedRecurrence' : {'billingAccountLinkId' : (link_id)?link_id:writeTocache('billing_account',baId)}
+			})
+	}
+	//console.log('tmp_pbBucket: '+JSON.stringify(tmp_pbBucket))
+	return tmp_pbBucket
+}
+
+function getpartyInteractionRoles(source) {
+	if(errFlag === true) {
+		return {'result': ''}
+	}
+	var pir = []
+	let ir = defaultMapping["contract.interactionRole"].Value
+	let pri
+	//let validFor = validForDate(date(pcreation_date),date('9999/12/31 23:30:59',source[4]),'Default_PO',4,source[4])
+	//Need to handle multiple customer logic : It handles only multiple contract now
+	
+	let prod_id = getProducerCUSTID(JSON.parse(source[2]))
+	let cust_info = JSON.parse(source[2])
+	//console.log('partyInteractionRoles: '+JSON.stringify(id_tracker))
+	for (let idx =0;idx < id_tracker.length;idx++){
+		if(id_tracker[idx]["entity_type"].includes("CUSTOMER") && id_tracker[idx]["entity_resource"].includes(prod_id)) {
+	           ////console.log("Tracking keys :: " + JSON.stringify(id_tracker[idx]))
+			   pri = id_tracker[idx]["entity_key"]
+			   //writeLog.debug("Tracking keys :: " + pri)
+		}
+	}
+	
+	//console.log('getpartyInteractionRoles PRI: '+(cust_info[0]['cust_info']['cust_realId'])?cust_info[0]['cust_info']['cust_realId']:'NA')
+/*	if(!pri) {
+		//console.log('getpartyInteractionRoles PRI: '+JSON.parse(getFromMap.invoke("tmp_cust",prod_id)).callback_value)
+		//pri=JSON.parse(getFromMap.invoke("tmp_cust",prod_id)).callback_value
+		//console.log('pri: '+ JSON.str(source[2]))
+		pri = cust_info[0]['cust_info']['cust_realId']
+	} */
+	//console.log('getpartyInteractionRoles PRI: '+pri)
+	
+	pir.push({'interactionRole' : ir,
+			  'partyRoleId' : pri,
+			  //'validFor': validFor
+	         })
+	//commented out to verify with raghavendra why multiple entities are not getting mapped -06Nov2019
+	ir= undefined
+	pri = undefined
+	for (let idx =0;idx < id_tracker.length;idx++){
+	    if(id_tracker[idx]["entity_type"].includes("USER") && id_tracker[idx]["entity_resource"].includes(source[0])) {
+	          //console.log("Tracking keys :: " + JSON.stringify(id_tracker[idx]))
+			   pri = id_tracker[idx]["entity_key"]
+			   ir = 'ContractUser' 
+			   pir.push({'interactionRole' : ir,
+			  'partyRoleId' : pri,
+			  //'validFor': validFor
+	         })
+			   //writeLog.debug("Tracking keys :: " + pri)
+		}
+	}
+	return {'result' : pir}
+	
+}
+/*function getpartyInteractionRoles(source) {
+	if(errFlag === true) {
+		return {'result': ''}
+	}
+	var pir = []
+	let ir = defaultMapping["contract.interactionRole"].Value
+	let pri
+	let validFor = validForDate(date(source[3]),date('9999/12/31 23:30:59',source[4]),'Default_PO',4,source[4])
+	
+	//Need to handle multiple customer logic : It handles only multiple contract now
+	for (let idx =0;idx < id_tracker.length;idx++){
+	    if(id_tracker[idx]["entity_type"].includes("USER") && id_tracker[idx]["entity_resource"].includes(source[0])) {
+	          //console.log("Tracking keys :: " + JSON.stringify(id_tracker[idx]))
+			   pri = id_tracker[idx]["entity_key"]
+			   ir = 'ContractUser' 
+			   pir.push({'interactionRole' : ir,
+			  'partyRoleId' : pri,
+			  'validFor': validFor
+	         })
+			   //writeLog.debug("Tracking keys :: " + pri)
+		}
+	}
+	return {'result' : pir}
+	
+}*/
+//cleanup function after performing the LUW construct
+function cleantmpId() {
+	id_tracker=[]
+	tmp_acc_tracker=[]
+	tmp_pid_tracker=[]
+	tmp_service_tracker=[]
+	pbQinfo=[]
+	pcreation_date = undefined
+	//console.log('errFlag: '+ errFlag)
+	if(errFlag === false || errFlag === undefined) {
+		saveIntoMap.invoke('whiteList', luw_name, luw_name)
+	   //writeTocache('whiteList',luw_name);
+	   luw_name=undefined
+	   errFlag=undefined
+	}
+}
+
+function getNewState (source) {
+	if(errFlag === true) {
+		return {'result': ''}
+	}
+	return {'result' : (statusMapping[source[0]]) ? statusMapping[source[0]].PPLC_State : undefined}
+}
+
+function getValidTo (source) {
+	return date(JSON.parse(source[0]).CREATION_DATE)
+}
+
+function getServices(source) {
+	if(errFlag === true) {
+		return {'result': ''}
+	}
+	var services = []
+	//Build the cfs list for the services	
+	let cfs_info = 	getCFS_info(cproducts,'all')
+	////console.log('getService-cfsInfo: ' + JSON.stringify(cfs_info))
+	let rfs_info = getRFS_info(cfs_info)
+	////console.log('getService-rfsInfo: ' + JSON.stringify(rfs_info))
+	//construct RF specification
+	for(let gSIdx=0;gSIdx<rfs_info.length;gSIdx++){
+		let serviceSpecification = {}
+		let resourceReference = []
+		
+		let stmp_id
+		for (let srvtmpIdx=0;srvtmpIdx<tmp_service_tracker.length;srvtmpIdx++) {
+			if(tmp_service_tracker[srvtmpIdx].rfs_id === rfs_info[gSIdx].rfs_id){
+			  stmp_id = tmp_service_tracker[srvtmpIdx].tmpId
+			}
+		}
+		serviceSpecification = {'serviceSpecificationId' : rfs_info[gSIdx].rfs_id}
+		
+		for(let tmpIdx=0;tmpIdx<tmp_acc_tracker.length;tmpIdx++){
+			//MSISDN
+			if(tmp_acc_tracker[tmpIdx].tmp_res_msisdn_id !== undefined && tmp_acc_tracker[tmpIdx].MSISDN === source[0]) { 
+				
+				resourceReference.push({'tmpId': tmp_acc_tracker[tmpIdx].tmp_res_msisdn_id})
+			}
+		 
+			//IMSI
+			if(tmp_acc_tracker[tmpIdx].tmp_res_imsi_id !== undefined && tmp_acc_tracker[tmpIdx].MSISDN === source[1]) { 
+				////console.log('getServices-IMSI: '+ tmp_acc_tracker[tmpIdx].tmp_res_imsi_id)
+				resourceReference.push({'tmpId': tmp_acc_tracker[tmpIdx].tmp_res_imsi_id})
+			}
+		}
+		
+		let validFor = undefined
+		
+		//validFor = validForDate(date(pcreation_date),undefined,'Default_PO',5,source[3])
+		//Updating the delay to 0 considering services should start before product date -- 21/Oct/2020
+		validFor = validForDate(date(pcreation_date),undefined,'Default_PO',0,source[3])
+		services.push({'tmpId' : stmp_id,
+					   'validFor' : validFor,
+					   'serviceType' : 'RF',
+					   'serviceSpecification' : serviceSpecification,
+					   'statuses' : [{'status' : 'ServiceActive','validFor' : validFor}],
+					   'resourceReferences' : resourceReference
+		})
+	}
+	
+	//construct CF specification
+	for(let cfsIdx=0;cfsIdx<tmp_service_tracker.length;cfsIdx++){
+		if(tmp_service_tracker[cfsIdx].rfs_id === '-') {
+			
+		    let rfsServices = []
+			for(let rfsIdx=0;rfsIdx<tmp_service_tracker.length;rfsIdx++){
+				if(tmp_service_tracker[rfsIdx].cfs_id === tmp_service_tracker[cfsIdx].cfs_id && tmp_service_tracker[rfsIdx].cfs_id !== '-' && tmp_service_tracker[rfsIdx].tmpId.includes('rfs')) {
+					rfsServices.push({'tmpId': tmp_service_tracker[rfsIdx].tmpId})
+				}
+			}
+			
+			let validFor = undefined
+			//validFor = validForDate(date(pcreation_date),undefined,'Default_PO',5,source[3]) 
+			//Updating the delay to 0 considering services should start before product date -- 21/Oct/2020
+			validFor = validForDate(date(pcreation_date),undefined,'Default_PO',0,source[3]) 
+			services.push({ 'tmpId' : tmp_service_tracker[cfsIdx].tmpId,
+							'validFor' : validFor,
+							'serviceType' : 'CF',
+							'serviceSpecification' : {'serviceSpecificationId' : tmp_service_tracker[cfsIdx].cfs_id},
+							'statuses' : [{'status' : 'ServiceActive', 'validFor' : validFor}],
+							'rfServices' : rfsServices 
+						})
+		}
+	}
+	return{'result' : services}
+}
+
+function getpplcData () {
+	var pplcData = []
+	if(setPPLC(pplc,"Data") !==undefined) {
+	    pplcData.push(setPPLC(pplc,"Data"))
+	}
+	return {'result' : pplcData}
+}
+
+function getContractStatuses ( source  ) {
+	if(errFlag === true) {
+		return {'result': ''}
+	}
+	//Input receives CREATION_DATE, STATUS - 09Nov2019
+	let statuses = [];
+	//var validFor = validForDate(date(source[0]),undefined,'Default_PO',4,source[4])
+	//Modified as on 02/Jun/2020
+	//let validFor = validForDate(date(pcreation_date),undefined,'Default_PO',4,source[4])
+	//1970-01-01T23:32:59.00-03:00
+	//if((source[0].CUST_INFO) && clients.CUST_INFO.hasOwnProperty('cust_extId') === true) {
+	//	return {'result': entity_data};
+	//}
+	let tmp_date = ((JSON.parse(source[0])[0]['cust_info']) && JSON.parse(source[0])[0]['cust_info'].hasOwnProperty('start_date') === true)? date((JSON.parse(source[0])[0]['cust_info']['start_date']).split('T')[0]+' '+(JSON.parse(source[0])[0]['cust_info']['start_date']).split('T')[1].split('.')[0]):date('1970/01/01 23:30:59')
+	//console.log('cust_id: '+tmp_date)
+	//let validFor = validForDate(date('1970/01/01 23:30:59'),undefined,'Default_PO',4,source[4])
+	let validFor = validForDate(tmp_date,undefined,'Default_PO',4,source[4])
+	//console.log('cust_id: '+JSON.stringify(validFor))
+	var status = source[1]
+	////writeLog.debug("contract status"+status)
+	
+	if(status && statusMapping[status]){		
+		
+		statuses.push({'status' : statusMapping[status].Contract_State,'validFor' : validFor})
+		
+		return {'result' :	statuses}		
+	}else{
+		errFlag = true
+		var data = errorMap['ERR005'].Data
+		data['CLIENT.STATUS'] = st
+		
+		//errorLog('ERR005', data, client)
+		eLog('ERR005', data, source[2],source[3] )
+		return {'error' : {'error_code': 'ERR005'}}
+	}
+
+}
+
+function getResourceStatuses ( source, validDate,tz  ) {
+	/*"statuses": {
+					"rule" : {
+						"name": "getContractStatuses",
+						"source": [ "$.CLIENT[0].STATUS", "$.CLIENT[0].CREATION_DATE" ]
+						}
+				},
+	*/
+	
+//Input receives CREATION_DATE, STATUS - 27Jan2020
+	let statuses = [];
+	let validFor = validForDate(validDate,undefined,'Default_PO',5,tz)
+	let st = source
+	////writeLog.debug("contract status"+status)
+	
+	if(st && statusMapping[st]){
+		statuses.push({'status' : statusMapping[st].Resource_State,'validFor' : validFor})
+		//console.log('Resource status: '+ JSON.stringify(statuses))
+		////writeLog.debug("contract status::"+JSON.stringify(statuses))
+		return statuses
+	}else{
+		errFlag = true
+		var data = errorMap['ERR005'].Data
+		data['CLIENT.STATUS'] = status
+		
+		//errorLog('ERR005', data, client)
+		eLog('ERR005', data, source,'' )
+		return {'error' : {'error_code': 'ERR005'}}
+	}
+	
+}
+
+function getSchId(sch_list,type,additional_validation,bill_day) {
+	let sch_id
+	//console.log('schedule length: '+Object.keys(sch_list).length)
+	for(let sch_idx=0;sch_idx<Object.keys(sch_list).length;sch_idx++) {
+		//console.log('schedule id: '+Object.keys(sch_list)[sch_idx])
+		if(Object.keys(sch_list)[sch_idx].includes(type)) {
+			if(additional_validation === 'events') {
+				return sch_list[Object.keys(sch_list)[sch_idx]].events
+			}
+			//console.log('schedule id: '+Object.keys(sch_list)[sch_idx])
+			sch_id = sch_list[Object.keys(sch_list)[sch_idx]].id
+			if(bill_day !== undefined && Object.keys(sch_list)[sch_idx].split('_')[1].includes(bill_day)) {
+					//console.log('schedule id: '+Object.keys(sch_list)[sch_idx])
+					sch_id = sch_list[Object.keys(sch_list)[sch_idx]].id
+			}
+		}
+	}
+	return sch_id
+}
+function getEventIds(event_info,po) {
+	let eventIds=[]
+	let tmp_evt=[]
+	let policyRef=[]
+	for (let cp_idx=0;cp_idx<Object.keys(cproducts).length;cp_idx++) {
+		if(cproducts[Object.keys(cproducts)[cp_idx]].poPolicyRefs !==undefined && cproducts[Object.keys(cproducts)[cp_idx]].name === po) {
+			//console.log('PO Name: '+po)
+			policyRef.push(cproducts[Object.keys(cproducts)[cp_idx]].poPolicyRefs)
+		}
+	}
+	//console.log('PO Name-policyRefs: '+JSON.stringify(policyRef))
+	for(let et_idx=0;et_idx<Object.keys(event_info).length;et_idx++) {
+		//console.log('eventIds: '+event_info[Object.keys(event_info)[et_idx]].etd)
+		if(policyRef[0]){
+			for(let prs_idx=0;prs_idx<Object.keys(policyRef[0]).length;prs_idx++){
+				//console.log('policyRef: '+Object.keys(policyRef[0]))
+				if(event_info[Object.keys(event_info)[et_idx]].etd===policyRef[0][Object.keys(policyRef[0])[prs_idx]].etd) {
+					//console.log('PO Name-eventspolicy: '+event_info[Object.keys(event_info)[et_idx]].id)
+					tmp_evt.push(event_info[Object.keys(event_info)[et_idx]].id)
+				}
+			}
+		}
+	}
+	
+	for(let evt_ar=0;evt_ar<tmp_evt.length;evt_ar++) {
+			if(tmp_evt[evt_ar]!== tmp_evt[evt_ar+1]) {
+				eventIds.push(tmp_evt[evt_ar])
+			}
+	}
+	return eventIds
+}
+function getcalendarAssociations (source) {
+	let calAss=[]
+	let cInfo = JSON.parse(source[0])
+	let bill_day
+	//let ba_ref
+	for(let billIdx=0;billIdx<cInfo.length;billIdx++){
+		if(cInfo[billIdx].PRODUCER === 'Y') {
+			bill_day=cInfo[billIdx].BILL_DAY
+		}
+	}
+	calAss.push({
+                "tmpId": 'calAss_'+source[1]+'_'+bill_day,
+                "calendarRole": "DEFAULT",
+                "calendarReference": {"tmpId": source[1]+'_'+bill_day}
+            })
+	return {'result' : calAss}
+}
+function getContractCalender (source) {
+/*calenders: 
+	tmp
+    calendarEntries:
+	    personalSchedule:
+		    scheduleDefinitionId: */
+	let calender = []
+	let cal_entry= []
+	let bill_day
+	
+	let cInfo = JSON.parse(source[0])
+	for(let billIdx=0;billIdx<cInfo.length;billIdx++){
+		if(cInfo[billIdx].PRODUCER === 'Y') {
+			bill_day=cInfo[billIdx].BILL_DAY
+			//ba_ref=cInfo[billIdx].MSISDN
+		}
+	}
+
+	//console.log('schedule id: '+getSchId(schedule,undefined,'Billing'))
+	let cal_sch = getSchId(schedule,'Billing')
+	for(let t_lpidx=0;t_lpidx < tmp_pid_tracker.length; t_lpidx++){
+		let productPolicyRefLinks=[]
+		if(tmp_pid_tracker[t_lpidx].client_id === source[2]) {
+			 for (let ply_idx=0;ply_idx<id_tracker.length;ply_idx++) {
+				 if(id_tracker[ply_idx].entity_type === 'POLICY' && tmp_pid_tracker[t_lpidx].po_id === id_tracker[ply_idx].entity_key && tmp_pid_tracker[t_lpidx].client_id === id_tracker[ply_idx].entity_parent && id_tracker[ply_idx].entity_cat !== true) {
+					 //console.log('PO name:' + tmp_pid_tracker[t_lpidx].po_id + ' Id # '+ply_idx+' : '+id_tracker[ply_idx].entity_resource+' strategy: '+id_tracker[ply_idx].entity_cat)
+					productPolicyRefLinks.push({'tmpId': id_tracker[ply_idx].entity_resource})
+				 }
+			 }
+			 cal_entry.push({
+							//'validFor': validfor,
+							'product': {'tmpId': tmp_pid_tracker[t_lpidx].t_id},
+							'eventIds' : getEventIds(getSchId(schedule,'Billing','events'),tmp_pid_tracker[t_lpidx].po_id),
+							'productPolicyRefLinks': productPolicyRefLinks,
+							//'baRefForBillCycleAlignedRecurrence':{'billingAccountLinkId':writeTocache('billing_account',defaultMapping["customer.billingAccounts.externalId"].Value+ba_ref)},
+							'calendarEntryCategory': "ProductAction",
+							'personalSchedule' : {
+												'scheduleDefinitionId' : cal_sch,
+												//'commonName' : "personal schedule day: " + bill_day + " bill cycle"
+											}
+			 })
+		}
+	}
+	calender.push({'tmpId': source[1]+'_'+bill_day,
+					'calendarEntries': cal_entry
+		})	
+return {'result' : calender}
+}
+ 
+function getextParams(source) {
+	let extParams = {}
+	//writeLog.debug('Payload Header params ' + source)
+		extParams = {"genericInterfaceParameters" : {
+							"externalParameterSet" : {
+										//"reason" : "Migration"
+										"reason" : defaultMapping['header.reason'].Value
+									}
+							}
+						}
+						
+		return {'result' : extParams}
+}
+
+function getUserStatuses ( source  ) {
+	if(errFlag === true) {
+		return {'result': ''}
+	}
+	let statuses = [];
+	var client = JSON.parse(source[0])
+	var start_date = validForDate(date(client.CREATION_DATE),undefined,'Default_PO',2,client.TIMEZONE)
+	var status = client.STATUS
+	//console.log("status"+status)
+	
+	if(status && statusMapping[status]){		
+		statuses.push({'status' : statusMapping[status].User_State,'validFor' : start_date})
+		//console.log("status::"+JSON.stringify(statuses))
+		return {'result' :	statuses}		
+	}else{
+		errFlag = true
+		var data = errorMap['ERR005'].Data
+		data['CLIENT.STATUS'] = status
+		
+		errorLog('ERR005', data, client)
+		return {'error' : {'error_code': 'ERR005'}}
+	}
+	
+}
+
+function setBillDay(source) {
+	return {'result' : source[0]}
+}
+
+function setcustExtId(source) {
+    return {'result' : source[0]}
+}

@@ -1,0 +1,13 @@
+Name: CustomerMigration-LoadTargets
+Description: Define the flow to load the customer data into target systems.
+
+Initial-Step: workflow_context
+
+Flow-Definition:
+
+  workflow_context: !!com.ericsson.datamigration.bridging.converter.core.wfm.yaml.steps.WorkflowContextManager
+      input: []
+      attributes:
+          AttributeOne: 1
+          AttributeTwo: 2
+      nextStep: END

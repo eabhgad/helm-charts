@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+  
+  <!-- All the properties either mention in application.properties or set via environment variable-->
+
+  <property scope="context" name="tag.name" value="dmtool-app-services" />
+  <property scope="context" name="service.name" value="dmtool-app-services" />
+  <property scope="context" name="service.host.name" value="${HostName}" />
+  <property scope="context" name="service.port" value="8080" />
+  <property scope="context" name="service.instanceId" value="1" />
+  <property scope="context" name="addl.processing.require" value="false" />
+  <!-- This attribute is required if log is collected into a file system-->
+  <property scope="context" name="log.file.path" value="/storage/volume/logs/bridging" />
+  <!-- These two will be common in standalone fluentd configurations-->
+  <property scope="context" name="fluentd.host.name" value="localhost" />
+  <property scope="context" name="fluentd.port" value="24224" />
+  
+  
+  <!-- Fluend java asynchronous appender-->
+  <appender name="FLUENCY_ASYNC" class="com.ericsson.datamigration.log.AsyncDataMigrationLogAppender"> 
+	<!-- TAG required for fluentd routing -->
+    <tag>${tag.name}</tag>    
+    <useEventTime>true</useEventTime>
+    <!-- Host name/address and port number which Flentd placed -->
+    <remoteHost>${fluentd.host.name}</remoteHost>
+    <port>${fluentd.port}</port>
+	
+    <!-- [Optional] Additional fields(Pairs of key: value) for service information-->
+    <additionalField>
+      <key>service_name</key>
+      <value>${service.name}</value>
+    </additionalField>
+    <additionalField>
+      <key>service_host</key>
+      <value>${service.host.name}</value>
+    </additionalField>
+    <additionalField>
+      <key>service_port</key>
+      <value>${service.port}</value>
+    </additionalField>
+    <additionalField>
+      <key>service_instanceId</key>
+      <value>${service.instanceId}</value>
+    </additionalField>
+    <!--  [Optional] If true, Map Marker is expanded instead of nesting in the marker name -->
+    <flattenMapMarker>true</flattenMapMarker>
+    <addlProcessingRequire>${addl.processing.require}</addlProcessingRequire>
+    <useEventTime>true</useEventTime>
+    <encoder>
+      <pattern><![CDATA[%date{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %marker %-5level %logger{15}#%line %X{req.requestURI} %msg\n]]></pattern>   
+    </encoder>
+  </appender>
+  
+  <appender name="FLUENTD" class="ch.qos.logback.classic.AsyncAppender">
+    <!-- Max queue size of logs which is waiting to be sent (When it reach to the max size, the log will be disappeared). -->
+    <queueSize>999</queueSize>
+    <!-- Never block when the queue becomes full. -->
+    <neverBlock>true</neverBlock>
+    <!-- The default maximum queue flush time allowed during appender stop. 
+         If the worker takes longer than this time it will exit, discarding any remaining items in the queue.
+         10000 millis
+     -->
+    <maxFlushTime>10000</maxFlushTime>
+    <appender-ref ref="FLUENCY_ASYNC" />
+  </appender>
+  
+  
+  <!-- output stream logger -->
+  <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender" additivity="false">
+	<layout class="ch.qos.logback.classic.PatternLayout">
+		<Pattern>
+			%d{yyyy-MM-dd HH:mm:ss.SSS} [%15.15thread] %marker %-5level %logger{0}#%line - %msg%n
+		</Pattern>
+	</layout>
+  </appender>
+  
+  <!-- All the logger definitions -->
+  <logger name="com.ericsson" level="DEBUG" additivity="false">
+    <appender-ref ref="FLUENTD" />
+  </logger> 
+  
+  <logger name="org.eclipse.jetty" level="WARN" additivity="false">
+	 <appender-ref ref="FLUENTD" />
+  </logger>
+	
+  <logger name="org.apache.ignite" level="WARN" additivity="false">
+	<appender-ref ref="FLUENTD" />
+  </logger>
+	
+  <logger name="org.apache.ignite.internal.managers.discovery.GridDiscoveryManager" level="INFO" additivity="false">
+	 <appender-ref ref="FLUENTD" />
+  </logger>
+	
+  <logger name="com.datastax.driver" level="WARN" additivity="false">
+	 <appender-ref ref="FLUENTD" />
+  </logger>
+
+  <root level="INFO">
+   <appender-ref ref="FLUENTD" />
+   <appender-ref ref="STDOUT" />
+  </root>
+    
+</configuration>

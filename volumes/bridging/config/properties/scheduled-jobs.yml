@@ -1,0 +1,28 @@
+#metadata:
+#  jobName
+#    jobId:
+#    description:
+#    scheduleExpression:    Follows cron job pattern
+#    inputParams: optional
+#      <key1> :<value1>
+#	   <key2>:<value2>
+   
+job-definitions: 
+  CMP: !!com.ericsson.datamigration.bridging.dispatcher.core.scheduler.step.BatchJobScheduler 
+    jobId: cmpbatchjob 
+    jobDescription: cmp batch job handler 
+    scheduleExpression: 0 0/1 * 1/1 * ? *
+    groovyFileName: batchjob_executor.groovy
+    groovyMethodName: executeCmpBatchJob
+    inputParams:      
+      cmp_okapi_url: /v2/oauth/token
+      cmp_okapi_httpMethod: POST
+      cmp_okapi_groovyFileName: event_dispatcher_oauth_request.groovy
+      cmp_okapi_groovyFileMethod: prepareCMPOAuthRequest
+      cmp_okapi_contenttype: application/x-www-form-urlencoded
+      cmp_okapi_targetSystemId: OKAPI_TOKEN_CMP
+      cmp_event_routing_url: /CMPRoutingService/cmp/v1/BDSRoutingEvents
+      cmp_event_routing_contenttype: application/json
+      cmp.event_routing_token: $.access_token
+      cmp_event_routing_httpmethod: POST
+      cmp_event_routing_targetSystemId: CMP

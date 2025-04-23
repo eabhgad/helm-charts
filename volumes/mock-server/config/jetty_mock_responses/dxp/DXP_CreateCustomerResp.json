@@ -1,0 +1,9 @@
+{
+	"customerId": "cust1234",
+	"partyId": "8aec87a9-408c-41de-91e5-db952d442def",
+	"characteristics": [{
+			"name": "CustomerAccountId",
+			"value": "813a8c80-f5da-4b7b-93eb-6ad93d15fdef"
+		}
+	]
+}

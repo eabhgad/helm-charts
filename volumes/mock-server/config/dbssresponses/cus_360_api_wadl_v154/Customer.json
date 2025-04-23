@@ -1,0 +1,25 @@
+{
+	"Customer": {
+		"statuses":[{
+			"status":"customerStatus",
+			"validFor":{
+				"start": "2014-01-01T00:00:00.0000+02:00",
+				"end": "2099-12-31T00:00:00.0000+02:00"
+			},
+			"reason":"My reason"
+		}],
+		"contactMedia":[{
+				"role":"Notification",
+				"language":"en"
+		}],
+		"customerCharacteristics":[{
+				"name": "Super_VIP",
+				"value": "true"
+			},
+			{
+				"name": "Celebrity",
+				"value": "true"
+			}
+		]
+	}
+}

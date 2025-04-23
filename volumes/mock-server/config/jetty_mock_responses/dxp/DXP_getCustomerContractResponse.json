@@ -1,0 +1,196 @@
+{
+	"id":"updateContractId1234",
+	"products": [
+		{
+			"id": "OrderItem_1",
+			"productOffering": "BPO_C_MB_PRE_TP_TPPGB"
+		},
+		{
+			"id": "item2",
+			"productOffering": "PO_C_MB_PRE_O_NETACC_5G"			
+		},
+		{
+			"id": "item3",
+			"productOffering": "PO_B2A_MB_MSISDN"			
+		},
+		{
+			"id": "item4",
+			"productOffering": "BPO_C_MB_PRE_TP_BPP"			
+		},
+		{
+			"id": "item5",
+			"productOffering": "PO_C_MB_PRE_MSISDN"
+		},		
+		{
+			"id": "10868822",
+			"statuses": [
+				{
+					"status": "ACTIVE",
+					"validFor": {
+						"start": "2020-08-13T06:59:12.000Z",
+						"end": "2021-07-25T13:59:59.000Z"						
+					}
+				}
+			],
+			"name": "20GB Indirect Bonus or Promotion",
+			"description": "20GB Indirect Bonus or Promotion",
+			"offerType": "promotion",
+			"offerSubType": "reward",
+			"splitNumber": 7,
+			"productOffering": "PO_C_MB_PRE_SB_MIG_ND",
+			"services": [
+				{
+					"id": "10868823",
+					"statuses": [],
+					"name": "CFSS_C_MB_PRE_PR_RWDD"
+				}
+			],
+			"productPrices": [
+				{
+					"recurrenceFrequency": "U",
+					"recurrencePeriod": {
+						"periodType": "U"
+					},
+					"unitOfMeasure": {},
+					"price": {
+						"amount": 0.0,
+						"currency": "AUD"
+					},
+					"currency": "AUD"
+				}
+			],
+			"isBundled": false,
+			"productCharacteristics": [
+				{
+					"name": "lifecycleParameter",
+					"value": "trafficIndependent"
+				},
+				{
+					"name": "instance_state",
+					"value": "ACTIVE"
+				},
+				{
+					"name": "activePeriodLength",
+					"value": "7"
+				}
+			],
+			"bundled": false
+		},
+		{
+			"id": "13309917",
+			"statuses": [
+				{
+					"status": "ACTIVE",
+					"validFor": {
+						"start": "2020-08-14T17:24:25.000Z",
+						"end": "2020-08-21T13:59:59.000Z"
+					}
+				}
+			],
+			"name": "$5 Data Pack",
+			"description": "1GB Data to use within Australia\n7 days expiry",
+			"offerType": "addOn",
+			"offerSubType": "dataNat",
+			"splitNumber": 7,
+			"productOffering": "PO_C_MB_PRE_SB_MIG_ND",
+			"services": [
+				{
+					"id": "13309918",
+					"statuses": [],
+					"name": "CFSS_C_MB_PRE_ADD_ND"
+				}
+			],
+			"productPrices": [
+				{
+					"validFor": {},
+					"priceType": "ONETIME",
+					"recurrenceFrequency": "U",
+					"recurrencePeriod": {
+						"periodType": "U"
+					},
+					"unitOfMeasure": {},
+					"price": {
+						"amount": 5,
+						"currency": "AUD",
+						"percentage": 0.0
+					},
+					"currency": "AUD"
+				}
+			],
+			"isBundled": true,
+			"productCharacteristics": [
+				{
+					"name": "lifecycleParameter",
+					"value": "trafficIndependent"
+				},
+				{
+					"name": "compensationCode",
+					"value": "1"
+				},
+				{
+					"name": "instance_state",
+					"value": "ACTIVE"
+				}
+			],
+			"bundled": true
+		},
+		{
+			"id": "13315093",
+			"statuses": [
+				{
+					"status": "ACTIVE",
+					"validFor": {
+						"start": "2020-08-14T18:34:21.000Z",
+						"end": "2021-01-21T13:59:59.000Z"
+					}
+				}
+			],
+			"name": "$20 Data Pack",
+			"description": "$20 Data Pack gives you\n4GB included data\n28 days expiry\nNote: Unused data from this Data Pack will not rollover",
+			"offerType": "addOn",
+			"offerSubType": "dataNat",
+			"splitNumber": 7,
+			"productOffering": "PO_C_MB_PRE_SB_MIG_NM_UNL",
+			"services": [
+				{
+					"id": "13315094",
+					"statuses": [],
+					"name": "CFSS_C_MB_PRE_ADD_ND"
+				}
+			],
+			"productPrices": [
+				{
+					"validFor": {},
+					"priceType": "ONETIME",
+					"recurrenceFrequency": "U",
+					"recurrencePeriod": {
+						"periodType": "U"
+					},
+					"unitOfMeasure": {},
+					"price": {
+						"amount": 20,
+						"currency": "AUD",
+						"percentage": 0.0
+					},
+					"currency": "AUD"
+				}
+			],
+			"isBundled": true,
+			"productCharacteristics": [
+				{
+					"name": "lifecycleParameter",
+					"value": "trafficIndependent"
+				},
+				{
+					"name": "compensationCode",
+					"value": "1"
+				},
+				{
+					"name": "instance_state",
+					"value": "ACTIVE"
+				}
+			],
+			"bundled": true
+		}
+		]
+}

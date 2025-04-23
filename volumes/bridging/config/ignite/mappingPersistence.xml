@@ -1,0 +1,25 @@
+<persistence keyspace="dmtool_dev" table="mapping">
+    <keyspaceOptions>
+        REPLICATION = { 'class' : 'SimpleStrategy',  'replication_factor': 3}
+        AND DURABLE_WRITES = true
+    </keyspaceOptions>
+    <tableOption>
+        comment = 'Cache mapping'
+        AND read_repair_chance = 0.2
+    </tableOption>
+    <keyPersistence class="com.ericsson.datamigration.bridging.commons.core.model.database.MappingId" strategy="POJO"/>
+    
+    <!-- Partition key fields if POJO strategy used -->
+        <partitionKey>
+            <!-- Mapping from POJO field to Cassandra table column -->
+            <field name="source" 	column="source" />
+            <field name="resource" 	column="resource" />
+        </partitionKey>
+                       
+    <valuePersistence class="com.ericsson.datamigration.bridging.commons.core.model.database.Mapping" strategy="POJO" serializer="org.apache.ignite.cache.store.cassandra.serializer.KryoSerializer">
+    	    <field name="source" 	column="source" />
+            <field name="resource" 	column="resource" />
+            <field name="data" 	    column="data"/>
+    </valuePersistence>
+</persistence>
+

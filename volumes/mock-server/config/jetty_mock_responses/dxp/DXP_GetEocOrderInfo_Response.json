@@ -1,0 +1,53 @@
+{
+	"id": "eoc123",
+	"version": 1,
+	"relatedParties": [
+		{
+			"role": "creator",
+			"party": {
+				"partyDescription": "party created 1"
+			}
+		},
+		{
+			"role": "moderator",
+			"party": {
+				"partyDescription": "party created 2"
+			}
+		}
+	],
+	"orderItems": [
+		{
+			"id": "item1",
+			"item": {
+				"productOffering": {
+					"product": {
+						"productId": "OrderItem_1"
+					},
+					"id": "BPO_B2C_MB_PREP_BOOST_AB_0"
+				}
+			}
+		},
+		{
+			"id": "item2",
+			"item": {
+				"productOffering": {
+					"product": {
+						"productId": "OrderItem_2"
+					},
+					"id": "BPO_B2C_MB_PREP_BOOST_AB_0"
+				}
+			}
+		},
+		{
+			"id": "item3",
+			"item": {
+				"productOffering": {
+					"product": {
+						"productId": "OrderItem_3"
+					},
+					"id": "BPO_C_MB_PRE_AB_BPP_0"
+				}
+			}
+		}
+	]
+}

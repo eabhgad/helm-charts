@@ -1,0 +1,22 @@
+Name: BRIDGING Workflow
+Description: BRIDGING Workflow description
+
+Input: !!com.ericsson.datamigration.bridging.converter.core.wfm.input.ConverterWorkflowInputData {}
+
+Workflow-Definition: !conditional_wf
+  Input: !!com.ericsson.datamigration.bss.wfm.yaml.transformation.mapping.MappingEntry
+    InputFormat: !!com.ericsson.datamigration.bridging.converter.core.yaml.input.ConverterInput
+      elements:
+        - !!com.ericsson.datamigration.bridging.converter.core.yaml.input.ConverterInterfaceIdElement
+            {}
+        - !!com.ericsson.datamigration.bridging.converter.core.yaml.input.ConverterOperationIdElement
+            {}            
+    MappingInformation: !!com.ericsson.datamigration.bss.wfm.yaml.transformation.mapping.JoinForStringMappingAction
+      validations: []
+      separator: "|"
+  
+  Cases:
+    SoapReadDbLookup|LookupServiceDBLookupReadRequest: !simple_wf
+      Path: ${configurationfiles.path}/interfaces/SoapReadDbLookup/SoapReadDbLookup-Dummy-flow.yaml
+    MigrationService|MigrateCustomer: !simple_wf
+      Path: ${configurationfiles.path}/interfaces/MigrateCustomer/Migration_Workflow_Simple.yaml

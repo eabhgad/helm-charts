@@ -1,0 +1,24 @@
+<persistence keyspace="dmtool_dev" table="brauthentication">
+    <keyspaceOptions>
+        REPLICATION = { 'class' : 'SimpleStrategy',  'replication_factor': 3}
+        AND DURABLE_WRITES = true
+    </keyspaceOptions>
+    <tableOption>
+        comment = 'Cache authentication'
+        AND read_repair_chance = 0.2
+    </tableOption>
+    <keyPersistence class="com.ericsson.datamigration.bridging.commons.core.model.database.AuthenticationId" strategy="POJO"/>
+    
+    <!-- Partition key fields if POJO strategy used -->
+        <partitionKey>
+            <!-- Mapping from POJO field to Cassandra table column -->
+            <field name="user" 	column="user" />
+            <field name="pass" 	column="user" />
+        </partitionKey>
+                       
+    <valuePersistence class="com.ericsson.datamigration.bridging.commons.core.model.database.Authentication" strategy="POJO" serializer="org.apache.ignite.cache.store.cassandra.serializer.KryoSerializer">
+    	    <field name="user" 	column="user" />
+            <field name="pass" 	column="user" />
+    </valuePersistence>
+</persistence>
+

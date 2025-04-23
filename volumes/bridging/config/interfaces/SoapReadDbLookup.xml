@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<tns:interface id="SoapReadDbLookup" version="6.0" status="RUNNING" bridging_function="LOOKUP" min_threads_dispatcher="50" max_threads_dispatcher="75" min_threads_proxy="50" max_threads_proxy="75" protocol="SOAP" method="POST" cc="" xmlns:tns="http://www.ericsson.com/datamigration/bridging/dispatcher/core/interfaceconfig" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.ericsson.com/datamigration/bridging/dispatcher/core/interfaceconfig interfaces.xsd "  >
+  <tns:operations>
+	<tns:operation host="0.0.0.0" id="LookupServiceDBLookupReadRequest" port="1010" urlPattern="\bLookupServiceDBLookupReadRequest\b" route="/bridging/accountlookup">
+      <tns:parameters>
+		<tns:parameter name="subscriberId" value="/soapenv:Envelope/soapenv:Body/dbl:LookupServiceDBLookupReadRequest/dbl:ACCOUNT_ID/dbl:IDENTIFIER/text()" namespaces="soapenv=http://schemas.xmlsoap.org/soap/envelope/;dbl=http://bss.bridging.ericsson.com/soap/dbLookup" mandatory="true" />
+		<tns:parameter name="subscriberType" value="/soapenv:Envelope/soapenv:Body/dbl:LookupServiceDBLookupReadRequest/dbl:ACCOUNT_ID/dbl:TYPE_OF_IDENTIFIER/text()" namespaces="soapenv=http://schemas.xmlsoap.org/soap/envelope/;dbl=http://bss.bridging.ericsson.com/soap/dbLookup" mandatory="true" />
+      </tns:parameters>
+    </tns:operation>
+  </tns:operations>
+  <tns:providers>
+  	<tns:provider id="INTERNAL"/>
+  </tns:providers>
+</tns:interface>

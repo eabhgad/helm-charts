@@ -1,0 +1,884 @@
+{
+  "productOfferings": [
+    {
+      "id": "38e381683e5c6b67a7b5c3c9d9f823a3",
+      "humanReadableId": "FollowMePO",
+      "href": "/cpi/discovery/v1/catalog/default/productOffering/38e381683e5c6b67a7b5c3c9d9f823a4",
+      "name": "FollowMeFDWOffer",
+      "description": "product description",
+      "validFor": {
+        "start": "2017-11-11T05:00:00.000Z"
+      },
+      "bundledProductOfferingsRef": ["/cpi/discovery/v1/catalog/default/productOffering/38e381683e5c6b67a7b5c3c9d9f823a4"],
+      "offerType": "plan",
+      "offerSubType": "genericBundle",
+      "productCategory": [
+        {
+          "id": "resMobPrePlan",
+          "isRoot": false,
+          "parentId": "resMobPrepaid",
+          "name": "Plan",
+          "description": "Plan",
+          "validFor": {
+            "start": "2017-11-05T04:00:00.000Z"
+          }
+        }
+      ],
+      "isBundle": false,
+      "productOfferingPrices": [
+        {
+          "id": "pricingstrategyforCFSSVo0781",
+          "humanReadableId": "pricing_strategy_for_CFSS_Voice_FollowMeEveryWhere_82495",
+          "name": "pricing strategy for CFSS Voice FollowMeEveryWhere",
+          "type": "CHARGE",
+          "priceType": "USAGE",
+          "isCalculated": true,
+          "isExternal": false,
+          "description": "price description",
+          "price": {
+            "amount": 0.5,
+            "currency": "usd",
+            "percentage": 0
+          },
+          "recurrencePeriod": {
+            
+          },
+          "unitOfMeasure": {
+            "amount": 0
+          },
+          "allowanceUnit": {
+            "amount": 0
+          },
+          "productOfferingPriceCharacteristics": [
+            {
+              "name": "External Identifier",
+              "value": {
+                "displayValue": "pricingstrategyforCFSSVo0781",
+                "isDefault": "true",
+                "valueType": "string",
+                "value": "pricingstrategyforCFSSVo0781"
+              }
+            },
+            {
+              "name": "effectiveStrategy",
+              "value": {
+                "displayValue": "true",
+                "isDefault": "true",
+                "valueType": "boolean",
+                "value": "1"
+              }
+            },
+            {
+              "name": "Payment Context",
+              "value": {
+                "isDefault": "true",
+                "value": "PREPAID"
+              }
+            },
+            {
+              "name": "popType",
+              "value": {
+                "displayValue": "Usage",
+                "isDefault": "true",
+                "valueType": "string",
+                "value": "Usage"
+              }
+            }
+          ]
+        },
+        {
+          "id": "productchargestrategyfor4274",
+          "humanReadableId": "product_charge_strategy_for_purchase_27103",
+          "name": "product charge strategy for purchase",
+          "type": "CHARGE",
+          "priceType": "ONETIME",
+          "priceSubType": "PURCHASE",
+          "isCalculated": false,
+          "isExternal": false,
+          "price": {
+            "amount": 3.5,
+            "currency": "USD",
+            "percentage": 0
+          },
+          "recurrencePeriod": {
+            
+          },
+          "unitOfMeasure": {
+            "amount": 0
+          },
+          "allowanceUnit": {
+            "amount": 0
+          },
+          "productOfferingPriceCharacteristics": [
+            {
+              "name": "Price Sub Type",
+              "value": {
+                "isDefault": "true",
+                "value": "PURCHASE"
+              }
+            },
+            {
+              "name": "External Identifier",
+              "value": {
+                "displayValue": "productchargestrategyfor4274",
+                "isDefault": "true",
+                "valueType": "string",
+                "value": "productchargestrategyfor4274"
+              }
+            },
+            {
+              "name": "effectiveStrategy",
+              "value": {
+                "displayValue": "true",
+                "isDefault": "true",
+                "valueType": "boolean",
+                "value": "1"
+              }
+            },
+            {
+              "name": "Payment Context",
+              "value": {
+                "isDefault": "true",
+                "value": "PREPAID"
+              }
+            },
+            {
+              "name": "popType",
+              "value": {
+                "displayValue": "One-Time",
+                "isDefault": "true",
+                "valueType": "string",
+                "value": "One-Time"
+              }
+            }
+          ]
+        }
+      ],
+      "productSpecification": {
+        "id": "d6d6697d-0a47-444d-9e31-8d51194e63a8",
+        "humanReadable": "PS_FollowMeEveryWhere",
+        "name": "PS FollowMeEveryWhere",
+        "description": "FollowMeEveryWhere",
+        "validFor": {
+          "start": "2017-11-09T05:00:00.000Z"
+        },
+        "productSpecCharacteristics": [{
+          "id": "activeStartMethod",
+          "humanReadableId": "activeTriggerMethod",
+          "name": "ActiveTriggerMethod",
+          "valueType": "STRING",
+          "maxCardinality": 1,
+          "minCardinality": 0,
+          "purpose": "ACTIVE_TRIGGER_METHOD",
+          "isCalculated": false,
+          "canBeOverriden": false,
+          "configurable": false,
+          "mandatory": true,
+          "valueRegulator": "NO_PERSONALIZATION",
+          "characteristicValues": [
+            {
+              "id": "firsttraffic",
+              "displayValue": "Traffic Activated",
+              "isDefault": false,
+              "valueType": "referenceList",
+              "value": "firstTraffic"
+            },
+            {
+              "id": "promotionreward",
+              "displayValue": "Promotion Reward",
+              "isDefault": false,
+              "valueType": "referenceList",
+              "value": "promotionReward"
+            },
+            {
+              "id": "trafficindependent",
+              "displayValue": "Traffic Independent",
+              "isDefault": true,
+              "valueType": "referenceList",
+              "value": "trafficIndependent"
+            }
+          ],
+          "characteristicRelationships": [
+            {
+              "relationType": "mapTo",
+              "targetCharacteristicLink": {
+                "charSpecId": "activeStartMethod",
+                "entitySpecRef": "d6d6697d0a47444d9e318d51194e63a8",
+                "entitySpecType": "ProductSpecification"
+              }
+            }
+          ]
+        }],
+        "serviceSpecifications": [
+          {
+            "id": "a5cda541-e424-420c-8adf-efa0a9b8e3c1",
+            "href": "/cpi/discovery/v1/catalog/default/serviceSpecification/a5cda541-e424-420c-8adf-efa0a9b8e3c1",
+            "relationType": "optionalServiceFor",
+            "targetCardinality": {
+              "min": 1,
+              "max": 2147483647
+            }
+          },
+          {
+            "id": "a3f2315f-be04-4849-bccf-884235711959",
+            "href": "/cpi/discovery/v1/catalog/default/serviceSpecification/a3f2315f-be04-4849-bccf-884235711959",
+            "relationType": "optionalServiceFor",
+            "targetCardinality": {
+              "min": 1,
+              "max": 2147483647
+            }
+          },
+          {
+            "id": "ae621083-0860-4dbf-877f-688935747fb2",
+            "href": "/cpi/discovery/v1/catalog/default/serviceSpecification/ae621083-0860-4dbf-877f-688935747fb2",
+            "relationType": "requires",
+            "targetCardinality": {
+              "min": 1,
+              "max": 2147483647
+            }
+          },
+          {
+            "id": "9284db6f-bbc3-4689-a03a-2ec83d66d5bc",
+            "href": "/cpi/discovery/v1/catalog/default/serviceSpecification/9284db6f-bbc3-4689-a03a-2ec83d66d5bc",
+            "relationType": "optionalServiceFor",
+            "targetCardinality": {
+              "min": 1,
+              "max": 2147483647
+            }
+          },
+          {
+            "id": "71f019c4-3556-49b5-82c6-c18a9f8c4406",
+            "href": "/cpi/discovery/v1/catalog/default/serviceSpecification/71f019c4-3556-49b5-82c6-c18a9f8c4406",
+            "relationType": "optionalServiceFor",
+            "targetCardinality": {
+              "min": 1,
+              "max": 2147483647
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "38e381683e5c6b67a7b5c3c9d9f823a4",
+      "humanReadableId": "FollowMePO",
+      "href": "/cpi/discovery/v1/catalog/default/productOffering/38e381683e5c6b67a7b5c3c9d9f823a4",
+      "name": "FollowMeFDWOffer",
+      "description": "product description",
+      "validFor": {
+        "start": "2017-11-11T05:00:00.000Z"
+      },
+      "bundledProductOfferingsRef": ["/cpi/discovery/v1/catalog/default/productOffering/38e381683e5c6b67a7b5c3c9d9f823a4"],
+      "offerType": "plan",
+      "offerSubType": "primaryBundle",
+      "productCategory": [
+        {
+          "id": "resMobPrePlan",
+          "isRoot": false,
+          "parentId": "resMobPrepaid",
+          "name": "Plan",
+          "description": "Plan",
+          "validFor": {
+            "start": "2017-11-05T04:00:00.000Z"
+          }
+        }
+      ],
+           "productSpecification": {
+        "id": "d6d6697d-0a47-444d-9e31-8d51194e63a8",
+        "humanReadable": "PS_FollowMeEveryWhere",
+        "name": "PS FollowMeEveryWhere",
+        "description": "FollowMeEveryWhere",
+        "validFor": {
+          "start": "2017-11-09T05:00:00.000Z"
+        },
+        "productSpecCharacteristics": [{
+          "id": "activeStartMethod",
+          "humanReadableId": "usrChr_Quota",
+          "name": "ActiveTriggerMethod",
+          "valueType": "STRING",
+          "maxCardinality": 1,
+          "minCardinality": 0,
+          "purpose": "ACTIVE_TRIGGER_METHOD",
+          "isCalculated": false,
+          "canBeOverriden": false,
+          "configurable": false,
+          "mandatory": true,
+          "valueRegulator": "NO_PERSONALIZATION",
+          "characteristicValues": [
+            {
+              "id": "firsttraffic",
+              "displayValue": "Traffic Activated",
+              "isDefault": false,
+              "valueType": "referenceList",
+              "value": "Unlimited",
+              "humanReadableId": "Amt"
+            },
+            {
+              "id": "promotionreward",
+              "displayValue": "Promotion Reward",
+              "isDefault": false,
+              "valueType": "referenceList",
+              "value": "promotionReward"
+            },
+            {
+              "id": "trafficindependent",
+              "displayValue": "Traffic Independent",
+              "isDefault": true,
+              "valueType": "referenceList",
+              "value": "trafficIndependent"
+            }
+          ],
+          "characteristicRelationships": [
+            {
+              "relationType": "mapTo",
+              "targetCharacteristicLink": {
+                "charSpecId": "activeStartMethod",
+                "entitySpecRef": "d6d6697d0a47444d9e318d51194e63a8",
+                "entitySpecType": "ProductSpecification"
+              }
+            }
+          ]
+        }],
+        "serviceSpecifications": [
+          {
+            "id": "a5cda541-e424-420c-8adf-efa0a9b8e3c1",
+            "href": "/cpi/discovery/v1/catalog/default/serviceSpecification/a5cda541-e424-420c-8adf-efa0a9b8e3c1",
+            "relationType": "optionalServiceFor",
+            "targetCardinality": {
+              "min": 1,
+              "max": 2147483647
+            }
+          },
+          {
+            "id": "a3f2315f-be04-4849-bccf-884235711959",
+            "href": "/cpi/discovery/v1/catalog/default/serviceSpecification/a3f2315f-be04-4849-bccf-884235711959",
+            "relationType": "optionalServiceFor",
+            "targetCardinality": {
+              "min": 1,
+              "max": 2147483647
+            }
+          },
+          {
+            "id": "ae621083-0860-4dbf-877f-688935747fb2",
+            "href": "/cpi/discovery/v1/catalog/default/serviceSpecification/ae621083-0860-4dbf-877f-688935747fb2",
+            "relationType": "requires",
+            "targetCardinality": {
+              "min": 1,
+              "max": 2147483647
+            }
+          },
+          {
+            "id": "9284db6f-bbc3-4689-a03a-2ec83d66d5bc",
+            "href": "/cpi/discovery/v1/catalog/default/serviceSpecification/9284db6f-bbc3-4689-a03a-2ec83d66d5bc",
+            "relationType": "optionalServiceFor",
+            "targetCardinality": {
+              "min": 1,
+              "max": 2147483647
+            }
+          },
+          {
+            "id": "71f019c4-3556-49b5-82c6-c18a9f8c4406",
+            "href": "/cpi/discovery/v1/catalog/default/serviceSpecification/71f019c4-3556-49b5-82c6-c18a9f8c4406",
+            "relationType": "optionalServiceFor",
+            "targetCardinality": {
+              "min": 1,
+              "max": 2147483647
+            }
+          }
+        ]
+      },
+      "isBundle": false,
+      "productOfferingPrices": [
+        {
+          "id": "pricingstrategyforCFSSVo0781",
+          "humanReadableId": "pricing_strategy_for_CFSS_Voice_FollowMeEveryWhere_82495",
+          "name": "pricing strategy for CFSS Voice FollowMeEveryWhere",
+          "type": "CHARGE",
+          "priceType": "USAGE",
+          "isCalculated": true,
+          "isExternal": false,
+          "description": "price description",
+          "price": {
+            "amount": 0.5,
+            "currency": "usd",
+            "percentage": 0
+          },
+          "recurrencePeriod": {
+            
+          },
+          "unitOfMeasure": {
+            "amount": 0
+          },
+          "allowanceUnit": {
+            "amount": 0
+          },
+          "productOfferingPriceCharacteristics": [
+            {
+              "name": "External Identifier",
+              "value": {
+                "displayValue": "pricingstrategyforCFSSVo0781",
+                "isDefault": "true",
+                "valueType": "string",
+                "value": "pricingstrategyforCFSSVo0781"
+              }
+            },
+            {
+              "name": "effectiveStrategy",
+              "value": {
+                "displayValue": "true",
+                "isDefault": "true",
+                "valueType": "boolean",
+                "value": "1"
+              }
+            },
+            {
+              "name": "Payment Context",
+              "value": {
+                "isDefault": "true",
+                "value": "PREPAID"
+              }
+            },
+            {
+              "name": "popType",
+              "value": {
+                "displayValue": "Usage",
+                "isDefault": "true",
+                "valueType": "string",
+                "value": "Usage"
+              }
+            }
+          ]
+        },
+        {
+          "id": "productchargestrategyfor4274",
+          "humanReadableId": "product_charge_strategy_for_purchase_27103",
+          "name": "product charge strategy for purchase",
+          "type": "CHARGE",
+          "priceType": "ONETIME",
+          "priceSubType": "PURCHASE",
+          "isCalculated": false,
+          "isExternal": false,
+          "offerSubType": "genericBundle",
+          "price": {
+            "amount": 3.5,
+            "currency": "USD",
+            "percentage": 0
+          },
+          "recurrencePeriod": {
+            
+          },
+          "unitOfMeasure": {
+            "amount": 0
+          },
+          "allowanceUnit": {
+            "amount": 0
+          },
+          "productOfferingPriceCharacteristics": [
+            {
+              "name": "Price Sub Type",
+              "value": {
+                "isDefault": "true",
+                "value": "PURCHASE"
+              }
+            },
+            {
+              "name": "External Identifier",
+              "value": {
+                "displayValue": "productchargestrategyfor4274",
+                "isDefault": "true",
+                "valueType": "string",
+                "value": "productchargestrategyfor4274"
+              }
+            },
+            {
+              "name": "effectiveStrategy",
+              "value": {
+                "displayValue": "true",
+                "isDefault": "true",
+                "valueType": "boolean",
+                "value": "1"
+              }
+            },
+            {
+              "name": "Payment Context",
+              "value": {
+                "isDefault": "true",
+                "value": "PREPAID"
+              }
+            },
+            {
+              "name": "popType",
+              "value": {
+                "displayValue": "One-Time",
+                "isDefault": "true",
+                "valueType": "string",
+                "value": "One-Time"
+              }
+            }
+          ]
+        }
+      ],
+      "productSpecification": {
+        "id": "d6d6697d-0a47-444d-9e31-8d51194e63a8",
+        "humanReadable": "PS_FollowMeEveryWhere",
+        "name": "PS FollowMeEveryWhere",
+        "description": "FollowMeEveryWhere",
+        "validFor": {
+          "start": "2017-11-09T05:00:00.000Z"
+        },
+        "productSpecCharacteristics": [{
+          "id": "activeStartMethod",
+          "humanReadableId": "usrChr_Quota_amount",
+          "name": "ActiveTriggerMethod",
+          "valueType": "STRING",
+          "maxCardinality": 1,
+          "minCardinality": 0,
+          "purpose": "ACTIVE_TRIGGER_METHOD",
+          "isCalculated": false,
+          "canBeOverriden": false,
+          "configurable": false,
+          "mandatory": true,
+          "valueRegulator": "NO_PERSONALIZATION",
+          "characteristicValues": [
+            {
+              "id": "firsttraffic",
+              "displayValue": "Traffic Activated",
+              "isDefault": false,
+              "valueType": "referenceList",
+              "value": "Unlimited",
+              "humanReadableId": "Amt"
+            },
+            {
+              "id": "promotionreward",
+              "displayValue": "Promotion Reward",
+              "isDefault": false,
+              "valueType": "referenceList",
+              "value": "promotionReward"
+            },
+            {
+              "id": "trafficindependent",
+              "displayValue": "Traffic Independent",
+              "isDefault": true,
+              "valueType": "referenceList",
+              "value": "Unlimited",
+              "humanReadableId": "Amt"
+            }
+          ],
+          "characteristicRelationships": [
+            {
+              "relationType": "mapTo",
+              "targetCharacteristicLink": {
+                "charSpecId": "activeStartMethod",
+                "entitySpecRef": "d6d6697d0a47444d9e318d51194e63a8",
+                "entitySpecType": "ProductSpecification"
+              }
+            }
+          ]
+        }],
+        "serviceSpecifications": [
+          {
+            "id": "a5cda541-e424-420c-8adf-efa0a9b8e3c1",
+            "href": "/cpi/discovery/v1/catalog/default/serviceSpecification/a5cda541-e424-420c-8adf-efa0a9b8e3c1",
+            "relationType": "optionalServiceFor",
+            "targetCardinality": {
+              "min": 1,
+              "max": 2147483647
+            }
+          },
+          {
+            "id": "a3f2315f-be04-4849-bccf-884235711959",
+            "href": "/cpi/discovery/v1/catalog/default/serviceSpecification/a3f2315f-be04-4849-bccf-884235711959",
+            "relationType": "optionalServiceFor",
+            "targetCardinality": {
+              "min": 1,
+              "max": 2147483647
+            }
+          },
+          {
+            "id": "ae621083-0860-4dbf-877f-688935747fb2",
+            "href": "/cpi/discovery/v1/catalog/default/serviceSpecification/ae621083-0860-4dbf-877f-688935747fb2",
+            "relationType": "requires",
+            "targetCardinality": {
+              "min": 1,
+              "max": 2147483647
+            }
+          },
+          {
+            "id": "9284db6f-bbc3-4689-a03a-2ec83d66d5bc",
+            "href": "/cpi/discovery/v1/catalog/default/serviceSpecification/9284db6f-bbc3-4689-a03a-2ec83d66d5bc",
+            "relationType": "optionalServiceFor",
+            "targetCardinality": {
+              "min": 1,
+              "max": 2147483647
+            }
+          },
+          {
+            "id": "71f019c4-3556-49b5-82c6-c18a9f8c4406",
+            "href": "/cpi/discovery/v1/catalog/default/serviceSpecification/71f019c4-3556-49b5-82c6-c18a9f8c4406",
+            "relationType": "optionalServiceFor",
+            "targetCardinality": {
+              "min": 1,
+              "max": 2147483647
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "38e381683e5c6b67a7b5c3c9d9f823a3",
+      "humanReadableId": "FollowMePO",
+      "href": "/cpi/discovery/v1/catalog/default/productOffering/38e381683e5c6b67a7b5c3c9d9f823a4",
+      "name": "FollowMeFDWOffer",
+      "description": "product description",
+      "validFor": {
+        "start": "2017-11-11T05:00:00.000Z"
+      },
+      "bundledProductOfferingsRef": ["/cpi/discovery/v1/catalog/default/productOffering/38e381683e5c6b67a7b5c3c9d9f823a3"],
+      "offerType": "primaryBundle",
+      "productCategory": [
+        {
+          "id": "resMobPrePlan",
+          "isRoot": false,
+          "parentId": "resMobPrepaid",
+          "name": "Plan",
+          "description": "Plan",
+          "validFor": {
+            "start": "2017-11-05T04:00:00.000Z"
+          }
+        }
+      ],
+      "isBundle": false,
+      "productOfferingPrices": [
+        {
+          "id": "pricingstrategyforCFSSVo0781",
+          "humanReadableId": "pricing_strategy_for_CFSS_Voice_FollowMeEveryWhere_82495",
+          "name": "pricing strategy for CFSS Voice FollowMeEveryWhere",
+          "type": "CHARGE",
+          "priceType": "USAGE",
+          "isCalculated": true,
+          "isExternal": false,
+          "description": "price description",
+          "price": {
+            "amount": 0.5,
+            "currency": "usd",
+            "percentage": 0
+          },
+          "recurrencePeriod": {
+            
+          },
+          "unitOfMeasure": {
+            "amount": 0
+          },
+          "allowanceUnit": {
+            "amount": 0
+          },
+          "productOfferingPriceCharacteristics": [
+            {
+              "name": "External Identifier",
+              "value": {
+                "displayValue": "pricingstrategyforCFSSVo0781",
+                "isDefault": "true",
+                "valueType": "string",
+                "value": "pricingstrategyforCFSSVo0781"
+              }
+            },
+            {
+              "name": "effectiveStrategy",
+              "value": {
+                "displayValue": "true",
+                "isDefault": "true",
+                "valueType": "boolean",
+                "value": "1"
+              }
+            },
+            {
+              "name": "Payment Context",
+              "value": {
+                "isDefault": "true",
+                "value": "PREPAID"
+              }
+            },
+            {
+              "name": "popType",
+              "value": {
+                "displayValue": "Usage",
+                "isDefault": "true",
+                "valueType": "string",
+                "value": "Usage"
+              }
+            }
+          ]
+        },
+        {
+          "id": "productchargestrategyfor4274",
+          "humanReadableId": "product_charge_strategy_for_purchase_27103",
+          "name": "product charge strategy for purchase",
+          "type": "CHARGE",
+          "priceType": "ONETIME",
+          "priceSubType": "PURCHASE",
+          "isCalculated": false,
+          "isExternal": false,
+          "price": {
+            "amount": 3.5,
+            "currency": "USD",
+            "percentage": 0
+          },
+          "recurrencePeriod": {
+            
+          },
+          "unitOfMeasure": {
+            "amount": 0
+          },
+          "allowanceUnit": {
+            "amount": 0
+          },
+          "productOfferingPriceCharacteristics": [
+            {
+              "name": "Price Sub Type",
+              "value": {
+                "isDefault": "true",
+                "value": "PURCHASE"
+              }
+            },
+            {
+              "name": "External Identifier",
+              "value": {
+                "displayValue": "productchargestrategyfor4274",
+                "isDefault": "true",
+                "valueType": "string",
+                "value": "productchargestrategyfor4274"
+              }
+            },
+            {
+              "name": "effectiveStrategy",
+              "value": {
+                "displayValue": "true",
+                "isDefault": "true",
+                "valueType": "boolean",
+                "value": "1"
+              }
+            },
+            {
+              "name": "Payment Context",
+              "value": {
+                "isDefault": "true",
+                "value": "PREPAID"
+              }
+            },
+            {
+              "name": "popType",
+              "value": {
+                "displayValue": "One-Time",
+                "isDefault": "true",
+                "valueType": "string",
+                "value": "One-Time"
+              }
+            }
+          ]
+        }
+      ],
+      "productSpecification": {
+        "id": "d6d6697d-0a47-444d-9e31-8d51194e63a8",
+        "humanReadable": "PS_FollowMeEveryWhere",
+        "name": "PS FollowMeEveryWhere",
+        "description": "FollowMeEveryWhere",
+        "validFor": {
+          "start": "2017-11-09T05:00:00.000Z"
+        },
+        "productSpecCharacteristics": [{
+          "id": "activeStartMethod",
+          "humanReadableId": "usrChr_Quota_amount",
+          "name": "usrChr_Quota_amount",
+          "valueType": "STRING",
+          "maxCardinality": 1,
+          "minCardinality": 0,
+          "purpose": "ACTIVE_TRIGGER_METHOD",
+          "isCalculated": false,
+          "canBeOverriden": false,
+          "configurable": false,
+          "mandatory": true,
+          "valueRegulator": "NO_PERSONALIZATION",
+          "characteristicValues": [
+            {
+              "id": "firsttraffic",
+              "displayValue": "Traffic Activated",
+              "isDefault": false,
+              "valueType": "referenceList",
+              "value": "firstTraffic"
+            },
+            {
+              "id": "promotionreward",
+              "displayValue": "Promotion Reward",
+              "isDefault": false,
+              "valueType": "referenceList",
+              "value": "promotionReward"
+            },
+            {
+              "id": "trafficindependent",
+              "displayValue": "Traffic Independent",
+              "isDefault": true,
+              "valueType": "referenceList",
+              "value": "trafficIndependent"
+            }
+          ],
+          "characteristicRelationships": [
+            {
+              "relationType": "mapTo",
+              "targetCharacteristicLink": {
+                "charSpecId": "activeStartMethod",
+                "entitySpecRef": "d6d6697d0a47444d9e318d51194e63a8",
+                "entitySpecType": "ProductSpecification"
+              }
+            }
+          ]
+        }],
+        "serviceSpecifications": [
+          {
+            "id": "a5cda541-e424-420c-8adf-efa0a9b8e3c1",
+            "href": "/cpi/discovery/v1/catalog/default/serviceSpecification/a5cda541-e424-420c-8adf-efa0a9b8e3c1",
+            "relationType": "optionalServiceFor",
+            "targetCardinality": {
+              "min": 1,
+              "max": 2147483647
+            }
+          },
+          {
+            "id": "a3f2315f-be04-4849-bccf-884235711959",
+            "href": "/cpi/discovery/v1/catalog/default/serviceSpecification/a3f2315f-be04-4849-bccf-884235711959",
+            "relationType": "optionalServiceFor",
+            "targetCardinality": {
+              "min": 1,
+              "max": 2147483647
+            }
+          },
+          {
+            "id": "ae621083-0860-4dbf-877f-688935747fb2",
+            "href": "/cpi/discovery/v1/catalog/default/serviceSpecification/ae621083-0860-4dbf-877f-688935747fb2",
+            "relationType": "requires",
+            "targetCardinality": {
+              "min": 1,
+              "max": 2147483647
+            }
+          },
+          {
+            "id": "9284db6f-bbc3-4689-a03a-2ec83d66d5bc",
+            "href": "/cpi/discovery/v1/catalog/default/serviceSpecification/9284db6f-bbc3-4689-a03a-2ec83d66d5bc",
+            "relationType": "optionalServiceFor",
+            "targetCardinality": {
+              "min": 1,
+              "max": 2147483647
+            }
+          },
+          {
+            "id": "71f019c4-3556-49b5-82c6-c18a9f8c4406",
+            "href": "/cpi/discovery/v1/catalog/default/serviceSpecification/71f019c4-3556-49b5-82c6-c18a9f8c4406",
+            "relationType": "optionalServiceFor",
+            "targetCardinality": {
+              "min": 1,
+              "max": 2147483647
+            }
+          }
+        ]
+      }
+    }
+  ]
+}

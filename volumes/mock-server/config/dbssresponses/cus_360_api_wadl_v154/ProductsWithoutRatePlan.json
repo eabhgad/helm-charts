@@ -1,0 +1,59 @@
+{
+	"products": [{
+		"validFor": {
+			"start": "2014-01-01T00:00:00.0000+02:00",
+			"end": "2099-12-31T00:00:00.0000+02:00"
+		},
+		"statuses": [{
+			"status": "ProductActive",
+			"validFor": {
+				"start": "2014-01-01T00:00:00.0000+02:00",
+				"end": "2099-12-31T00:00:00.0000+02:00"
+			},
+			"reason": "My Reason"
+		}],
+		"name": "productName",
+		"description": "productDescription",
+		"productOfferings": [{
+			"offerType": "Voice",
+			"productSpecification": {
+				"productSpecCharacteristics": {
+					"name": "usrChr_Quota_amount",
+					"characteristicValues": [{
+						"value": "Unlimited"
+					}]
+				}
+			},
+			"id": "1"
+		},
+		{
+			"offerType": "Voice",
+			"productSpecification": {
+				"productSpecCharacteristics": {
+					"name": "usrChr_Quota_UoM",
+					"characteristicValues": [{
+						"value": "value2"
+					}]
+				}
+			},
+			"id": "2"
+		}],
+		"productBuckets": [{
+			"id": "productBucketId1"
+		}],
+		"productPrices": [{
+			"productOfferingPrice": {
+				"name": "name1",
+				"description": "description1",
+				"priceType": "ONETIME",
+				"priceSubType": "PURCHASE",
+				"price": {
+					"amount": 1.1
+				},
+				"recurrencePeriod": {
+					"periodType": "periodType1"
+				}
+			}
+		}]
+	}]
+}

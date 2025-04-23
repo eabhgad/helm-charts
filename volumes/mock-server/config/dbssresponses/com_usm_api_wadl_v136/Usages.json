@@ -1,0 +1,434 @@
+{
+		"usages": [
+			{
+				"date": "2018-02-09 20:00:00",
+				"customerId": "123456789",
+				"contractId": "111111111",
+				"id": "99999999",
+				"type": "usageEvent",
+				"status": "status1",
+				"externalId": "externalId1",
+				"usageCharacteristics": [{
+						"name": "name1",
+						"value": "value1"
+					}, {
+						"name": "name2",
+						"value": "value2"
+					}
+				],
+				"usageSpecification": {
+					"name": "nameUsageSpecification",
+					"validFor": {
+						"start": "2018-02-09 15:00:00",
+						"end": "2018-12-31 23:59:59"
+					}
+				},
+				"serviceUsages": [{
+					"serviceType": "RFS",
+					"serviceId": "serviceId1",
+					"serviceSpecifications": [{
+							"id": "id1",
+							"humanReadableId": "humanReadableId",
+							"href": "href",
+							"name": "customerFacingServiceSpecificationId",
+							"description": "description1",
+							"serviceType": "serviceType1",
+							"serviceSubType": "serviceSubType1",
+							"serviceSpecificationCharacteristics": [{
+									"name": "Terminating",
+									"value": "value1"
+								}, {
+									"name": "name",
+									"value": "Ro-SMS"
+								}
+							],
+							"relationType": "relationType1",
+							"targetCardinality": {
+								"min": 0,
+								"max": 1
+							},
+							"validFor": {
+								"start": "2018-02-09 15:00:00",
+								"end": "2018-12-31 23:59:59"
+							},
+							"lifeCycleStatus": "lifeCycleStatus1",
+							"serviceSpecificationRelationship": [{
+									"id": "id1",
+									"href": "href1",
+									"role": "role1",
+									"name": "name1",
+									"type": "type1",
+									"value": "value1",
+									"action": "action1",
+									"reason": "reason1",
+									"idType": "E.164"
+								}
+							]
+						}
+					]
+				}],
+				"refillResults": [
+					{
+						"refilledAmount": {
+							"amount": 500,
+							"units": "unitsBalance",
+							"precision": 0.0
+						},
+						"refillActions": {
+							"refillActionId": "refillActionId_One",
+							"refillActionType": "refillActionType_One"
+						}
+					},
+					{
+						"refilledAmount": {
+							"amount": 1000,
+							"units": "unitsBalance",
+							"precision": 200.0
+						},
+						"refillActions": {
+							"refillActionId": "refillActionId_Two",
+							"refillActionType": "refillActionType_Two"
+						}
+					}					
+				],
+				"ratedProductUsages": [{
+						"currencyCode": "currencyCode1",
+						"productRef": "productRef1",
+						"ratedUnits": {
+							"amount": 1000,
+							"units": "unitsRated",
+							"precision": 0.0
+						},
+						"chargedUnits": {
+							"amount": 1000,
+							"units": "unitsCharged",
+							"precision": 0.0
+						},
+						"ratedCost": {
+							"amount": 1001,
+							"units": "unitsRated",
+							"precision": 0.0
+						},
+						"baseCost": {
+							"amount": 1002,
+							"units": "unitsBase",
+							"precision": 0.0
+						},
+						"balance": {
+							"amount": 1003,
+							"units": "unitsBalance",
+							"precision": 0.0
+						}
+					}
+				]
+			}, 
+			{
+				"date": "2018-02-10 20:00:00",
+				"customerId": "987654321",
+				"contractId": "000000000",
+				"id": "11111111",
+				"type": "purchaseChargeEvent",
+				"status": "status2",
+				"externalId": "externalId2",
+				"usageCharacteristics": [{
+						"name": "name2",
+						"value": "value2"
+					}, {
+						"name": "name3",
+						"value": "value3"
+					}
+				],
+				"usageSpecification": {
+					"name": "nameUsageSpecification",
+					"validFor": {
+						"start": "2018-02-09 15:00:00",
+						"end": "2018-12-31 23:59:59"
+					}
+				},
+				"serviceUsages": [{
+					"serviceType": "serviceType1",
+					"serviceId": "serviceId1",
+					"serviceSpecifications": [{
+							"id": "id1",
+							"humanReadableId": "humanReadableId",
+							"href": "href",
+							"name": "customerFacingServiceSpecificationId",
+							"description": "description1",
+							"serviceType": "serviceType1",
+							"serviceSubType": "serviceSubType1",
+							"serviceSpecificationCharacteristics": [{
+									"name": "Terminating",
+									"value": "value1"
+								}, {
+									"name": "uk",
+									"value": "uk"
+								}, {
+									"name": "otherPartyId",
+									"value": "opponentName1"
+								}
+							],
+							"relationType": "relationType1",
+							"targetCardinality": {
+								"min": 0,
+								"max": 1
+							},
+							"validFor": {
+								"start": "2018-02-09 15:00:00",
+								"end": "2018-12-31 23:59:59"
+							},
+							"lifeCycleStatus": "lifeCycleStatus1",
+							"serviceSpecificationRelationship": [{
+									"id": "id1",
+									"href": "href1",
+									"role": "role1",
+									"name": "name1",
+									"type": "type1",
+									"value": "value1",
+									"action": "action1",
+									"reason": "reason1",
+									"idType": "E.164"
+								}
+							]
+						}
+					]
+				}],
+				"refillResults": [
+					{
+						"refilledAmount": {
+							"amount": 1500,
+							"units": "unitsBalance",
+							"precision": 0.0
+						},
+						"refillActions": {
+							"refillActionId": "refillActionId_One",
+							"refillActionType": "refillActionType_One"
+						}
+					},
+					{
+						"refilledAmount": {
+							"amount": 10000,
+							"units": "unitsBalance",
+							"precision": 200.0
+						},
+						"refillActions": {
+							"refillActionId": "refillActionId_Two",
+							"refillActionType": "refillActionType_Two"
+						}
+					}					
+				],
+				"ratedProductUsages": [{
+						"currencyCode": "currencyCode1",
+						"productRef": "productRef1",
+						"ratedUnits": {
+							"amount": 1000,
+							"units": "unitsRated",
+							"precision": 0.0
+						},
+						"chargedUnits": {
+							"amount": 1000,
+							"units": "unitsCharged",
+							"precision": 0.0
+						},
+						"ratedCost": {
+							"amount": 1100,
+							"units": "unitsRated",
+							"precision": 0.0
+						},
+						"baseCost": {
+							"amount": 1002,
+							"units": "unitsBase",
+							"precision": 0.0
+						},
+						"balance": {
+							"amount": 1003,
+							"units": "unitsBalance",
+							"precision": 0.0
+						}
+					},
+					{
+						"currencyCode": "currencyCode2",
+						"productRef": "productRef2",
+						"ratedUnits": {
+							"amount": 500,
+							"units": "unitsRated2",
+							"precision": 0.0
+						},
+						"chargedUnits": {
+							"amount": 200,
+							"units": "unitsCharged",
+							"precision": 0.0
+						},
+						"ratedCost": {
+							"amount": 300,
+							"units": "unitsRated",
+							"precision": 0.0
+						},
+						"baseCost": {
+							"amount": 400,
+							"units": "unitsBase",
+							"precision": 0.0
+						},
+						"balance": {
+							"amount": 500,
+							"units": "unitsBalance",
+							"precision": 0.0
+						}
+					}
+				]
+			},
+			{
+				"date": "2018-02-10 20:00:00",
+				"customerId": "987654321",
+				"contractId": "000000000",
+				"id": "22222222",
+				"type": "refillEvent",
+				"status": "status2",
+				"externalId": "externalId2",
+				"usageCharacteristics": [{
+						"name": "name2",
+						"value": "value2"
+					}, {
+						"name": "name3",
+						"value": "value3"
+					}
+				],
+				"usageSpecification": {
+					"name": "nameUsageSpecification",
+					"validFor": {
+						"start": "2018-02-09 15:00:00",
+						"end": "2018-12-31 23:59:59"
+					}
+				},
+				"serviceUsages": [{
+					"serviceType": "serviceType1",
+					"serviceId": "serviceId1",
+					"serviceSpecifications": [{
+							"id": "id1",
+							"humanReadableId": "humanReadableId",
+							"href": "href",
+							"name": "customerFacingServiceSpecificationId",
+							"description": "description1",
+							"serviceType": "serviceType1",
+							"serviceSubType": "serviceSubType1",
+							"serviceSpecificationCharacteristics": [{
+									"name": "Terminating",
+									"value": "value1"
+								}, {
+									"name": "uk",
+									"value": "uk"
+								}, {
+									"name": "otherPartyId",
+									"value": "opponentName1"
+								}
+							],
+							"relationType": "relationType1",
+							"targetCardinality": {
+								"min": 0,
+								"max": 1
+							},
+							"validFor": {
+								"start": "2018-02-09 15:00:00",
+								"end": "2018-12-31 23:59:59"
+							},
+							"lifeCycleStatus": "lifeCycleStatus1",
+							"serviceSpecificationRelationship": [{
+									"id": "id1",
+									"href": "href1",
+									"role": "role1",
+									"name": "name1",
+									"type": "type1",
+									"value": "value1",
+									"action": "action1",
+									"reason": "reason1",
+									"idType": "E.164"
+								}
+							]
+						}
+					]
+				}],
+				"refillResults": [
+					{
+						"refilledAmount": {
+							"amount": 1500,
+							"units": "unitsBalance",
+							"precision": 0.0
+						},
+						"refillActions": {
+							"refillActionId": "refillActionId_One",
+							"refillActionType": "refillActionType_One"
+						}
+					},
+					{
+						"refilledAmount": {
+							"amount": 10000,
+							"units": "unitsBalance",
+							"precision": 200.0
+						},
+						"refillActions": {
+							"refillActionId": "refillActionId_Two",
+							"refillActionType": "refillActionType_Two"
+						}
+					}					
+				],
+				"ratedProductUsages": [{
+						"currencyCode": "currencyCode1",
+						"productRef": "productRef1",
+						"ratedUnits": {
+							"amount": 1000,
+							"units": "unitsRated",
+							"precision": 0.0
+						},
+						"chargedUnits": {
+							"amount": 1000,
+							"units": "unitsCharged",
+							"precision": 0.0
+						},
+						"ratedCost": {
+							"amount": 1100,
+							"units": "unitsRated",
+							"precision": 0.0
+						},
+						"baseCost": {
+							"amount": 1002,
+							"units": "unitsBase",
+							"precision": 0.0
+						},
+						"balance": {
+							"amount": 1003,
+							"units": "unitsBalance",
+							"precision": 0.0
+						}
+					},
+					{
+						"currencyCode": "currencyCode2",
+						"productRef": "productRef2",
+						"ratedUnits": {
+							"amount": 500,
+							"units": "unitsRated2",
+							"precision": 0.0
+						},
+						"chargedUnits": {
+							"amount": 200,
+							"units": "unitsCharged",
+							"precision": 0.0
+						},
+						"ratedCost": {
+							"amount": 300,
+							"units": "unitsRated",
+							"precision": 0.0
+						},
+						"baseCost": {
+							"amount": 400,
+							"units": "unitsBase",
+							"precision": 0.0
+						},
+						"balance": {
+							"amount": 500,
+							"units": "unitsBalance",
+							"precision": 0.0
+						}
+					}
+				]
+			}
+		]
+}

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<methodResponse>
+	<params>
+		<param>
+			<value>
+				<struct>
+					<member>
+						<name>originTransactionID</name>
+						<value>
+							<string>2020012107291411</string>
+						</value>
+					</member>
+					<member>
+						<name>responseCode</name>
+						<value>
+							<i4>102</i4>
+						</value>
+					</member>		
+				</struct>
+			</value>
+		</param>
+	</params>
+</methodResponse>

@@ -1,0 +1,45 @@
+[{
+	"id": "cust1234",
+	"role": "",
+	"statuses": [{
+			"status": "string",
+			"reason": "string",
+			"validFor": {
+				"start": "2020-01-14T03:03:16.824Z",
+				"end": "2020-01-14T03:03:16.824Z"
+			}
+		}
+	],
+	"engagedParty": [{
+			"givenName": "string",
+			"familyName": "String",
+			"tradingName": "string"
+		}
+	],
+	"engagedPartyContactMedia": [{
+			"id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+			"contactMediumValue": [{
+					"value": "string",
+					"purpose": "string"
+				}
+			],
+			"statuses": [{
+					"status": "string",
+					"reason": "string",
+					"validFor": {
+						"start": "2020-01-14T03:03:16.824Z",
+						"end": "2020-01-14T03:03:16.824Z"
+					}
+				}
+			],
+			"contactMediumType": "string"
+		}
+	],
+	"characteristics": [{
+			"name": "",
+			"values": ""
+		}
+	],
+	"customerType": "string"
+}
+]

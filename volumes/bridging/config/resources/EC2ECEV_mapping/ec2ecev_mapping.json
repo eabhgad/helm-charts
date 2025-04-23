@@ -1,0 +1,1183 @@
+{
+    "char": {
+        "PO_FnF_Discount": {
+            "char": {
+                "char1": {
+                    "char_spec_external_id": "FnFList",
+                    "char_type": "FNF",
+                    "entity_type": "product"
+                }
+            }
+        }
+    },
+    "common": {
+        "ba_spec": "BAS_ExternalId_Prepaid",
+        "bab_decimal_places": "6",
+        "bab_spec_external_id": "BABS_ExternalId_Prepaid",
+        "bab_unit_of_measure": "euro",
+        "cm_char_sms_channel_type": "CHANNEL_TYPE",
+        "cm_char_sms_channel_type_value": "SMS",
+        "cm_char_sms_comm_id": "COMMUNICATION_ID",
+        "cm_sms": "CMS_ExtId_SMS",
+        "cont_spec": "Prepaid_ContractSpec_Test",
+        "country_code": "46",
+        "cust_spec": "ERAGARG_Customer_Spec",
+        "default_disconnect_period": "10",
+        "language": "en",
+        "lrs_imsi": "LrsExtId_IMSI",
+        "lrs_msisdn": "LrsExtId_MSISDN",
+        "msisdn_length": "10",
+        "timezone": "Asia/Kolkata",
+        "version": "1.0.5"
+    },
+    "lookup": {
+        "baStatus": {
+            "mapping": {
+                "SDP_Active_ba": "BillingAccountActive",
+                "SDP_BillingAccountCreated": "BillingAccountCreated",
+                "SDP_BillingAccountInactive": "BillingAccountInactive",
+                "SDP_BillingAccountTerminated": "BillingAccountTerminated",
+                "SDP_Installed_ba": "BillingAccountActive",
+                "SDP_ServiceEx_ba": "BillingAccountActive",
+                "SDP_SupervisionEx_ba": "BillingAccountActive",
+                "SDP_Tempblock_ba": "BillingAccountActive"
+            }
+        },
+        "orgCustomerStatus": {
+            "mapping": {
+                "SDP_Active_Customer": "CustomerActive",
+                "SDP_CustomerTerminated": "CustomerTerminated",
+                "SDP_Installed_CustomerCreated": "CustomerActive",
+                "SDP_ServiceEx_Customer": "CustomerActive",
+                "SDP_SupervisionEx_Customer": "CustomerActive",
+                "SDP_Tempblock_Customer": "CustomerActive"
+            }
+        },
+        "statusContract": {
+            "mapping": {
+                "SDP_Active_Contract": "ContractActive",
+                "SDP_Contract_Created": "ContractCreated",
+                "SDP_Disconnect_Contract": "ContractTerminated",
+                "SDP_Installed_Contract": "ContractAvailable",
+                "SDP_ServiceEx_Contract": "ContractInactive",
+                "SDP_SupervisionEx_Contract": "ContractHalt",
+                "SDP_TempblockContract": "ContractSuspended"
+            }
+        },
+        "statusIndParty": {
+            "mapping": {
+                "SDP_Active_Party": "PartyActive",
+                "SDP_Installed_Party": "PartyActive",
+                "SDP_PartyTerminated": "PartyTerminated",
+                "SDP_ServiceEx_Party": "PartyActive",
+                "SDP_SupervisionEx_Party": "PartyActive",
+                "SDP_Tempblock_Party": "PartyActive"
+            }
+        },
+        "statusProduct": {
+            "mapping": {
+                "SDP_Active_Product": "ProductActive",
+                "SDP_Installed_Product": "ProductAvailable",
+                "SDP_Product_Created": "ProductCreated",
+                "SDP_Product_Installed": "ProductInstalled",
+                "SDP_ProductPromotionAvailable": "ProductPromotionAvailable",
+                "SDP_ProductTerminated": "ProductTerminated",
+                "SDP_ServiceEx_Product": "ProductInactive",
+                "SDP_SupervisionEx_Product": "ProductActive",
+                "SDP_Tempblock_Product": "ProductSuspend"
+            }
+        },
+        "statusUser": {
+            "mapping": {
+                "SDP_UserActive": "UserCreated",
+                "SDP_UserCreated": "UserCreated",
+                "SDP_UserInactive": "UserCreated",
+                "SDP_UserTerminated": "UserTerminated"
+            }
+        }
+    },
+    "offer": {
+        "10010": {
+            "offer_definition": {
+                "offer_definition1": {
+                    "has_sharing": "true",
+                    "is_base_offer": "false",
+                    "offer_type": "account",
+                    "provider_source_offer_id": "20010",
+                    "sharing_entity": "consumer"
+                }
+            },
+            "product": {
+                "product1": {
+                    "bucket": {
+                        "bucket1": {
+                            "pb_action": "Set",
+                            "pb_decimal_places": "0",
+                            "pb_needs_validfor": "false",
+                            "pb_po_external_id": "PO_Shared_Data_Consumer",
+                            "pb_reset_amount": "false",
+                            "pb_spec_external_id": "PBS_IL_Data_Bucket",
+                            "pb_type": "counter",
+                            "pb_unit_of_measure": "byte",
+                            "pb_with_current_triggertime": "false",
+                            "source_bucket_id": "20010",
+                            "source_bucket_type": "UC",
+                            "source_offer_id": "10010"
+                        }
+                    },
+                    "has_char": "false",
+                    "has_recurrence": "true",
+                    "is_sharing_provider": "true",
+                    "po_external_id": "PO_Shared_Data_Consumer"
+                }
+            }
+        },
+        "111": {
+            "offer_definition": {
+                "offer_definition1": {
+                    "has_sharing": "false",
+                    "is_base_offer": "false",
+                    "offer_type": "timer"
+                }
+            },
+            "product": {
+                "product1": {
+                    "has_char": "true",
+                    "has_recurrence": "true",
+                    "is_sharing_provider": "false",
+                    "po_external_id": "PO_FnF_Discount",
+                    "po_price_external_id": "Prod_charge"
+                }
+            }
+        },
+        "20010": {
+            "offer_definition": {
+                "offer_definition1": {
+                    "has_sharing": "true",
+                    "is_base_offer": "false",
+                    "offer_type": "account",
+                    "sharing_entity": "provider"
+                }
+            },
+            "product": {
+                "product1": {
+                    "bucket": {
+                        "bucket1": {
+                            "pb_action": "Relative",
+                            "pb_decimal_places": "0",
+                            "pb_needs_validfor": "true",
+                            "pb_po_external_id": "PO_Shared_Data_Provider",
+                            "pb_reset_amount": "true",
+                            "pb_spec_external_id": "PBS_Shared_Data_Bucket",
+                            "pb_type": "account",
+                            "pb_unit_of_measure": "byte",
+                            "pb_with_current_triggertime": "true",
+                            "source_bucket_id": "20010",
+                            "source_bucket_type": "DA",
+                            "source_offer_id": "20010"
+                        }
+                    },
+                    "has_char": "false",
+                    "has_recurrence": "true",
+                    "is_sharing_provider": "true",
+                    "po_external_id": "PO_Shared_Data_Provider",
+                    "po_price_external_id": "Purchase_Strategy"
+                }
+            }
+        },
+        "21": {
+            "offer_definition": {
+                "offer_definition1": {
+                    "has_sharing": "false",
+                    "is_base_offer": "false",
+                    "offer_type": "timer"
+                }
+            },
+            "product": {
+                "product1": {
+                    "bucket": {
+                        "bucket1": {
+                            "pb_action": "Relative",
+                            "pb_decimal_places": "0",
+                            "pb_needs_validfor": "true",
+                            "pb_po_external_id": "PODataAddon_5GB",
+                            "pb_reset_amount": "true",
+                            "pb_spec_external_id": "PBS_DataAddon",
+                            "pb_type": "account",
+                            "pb_unit_of_measure": "byte",
+                            "pb_with_current_triggertime": "true",
+                            "source_bucket_id": "21",
+                            "source_bucket_type": "DA",
+                            "source_offer_id": "21"
+                        }
+                    },
+                    "has_char": "false",
+                    "has_recurrence": "true",
+                    "is_sharing_provider": "false",
+                    "po_external_id": "PODataAddon_5GB",
+                    "po_price_external_id": "Prod_charge"
+                }
+            }
+        },
+        "2101": {
+            "offer_definition": {
+                "offer_definition1": {
+                    "has_sharing": "false",
+                    "is_base_offer": "false",
+                    "offer_type": "timer"
+                }
+            },
+            "product": {
+                "product1": {
+                    "bucket": {
+                        "bucket1": {
+                            "pb_action": "Relative",
+                            "pb_decimal_places": "0",
+                            "pb_needs_validfor": "true",
+                            "pb_po_external_id": "PO_UC1_DataGold",
+                            "pb_reset_amount": "true",
+                            "pb_spec_external_id": "PBS_Data_10GiB_UC1",
+                            "pb_type": "account",
+                            "pb_unit_of_measure": "byte",
+                            "pb_with_current_triggertime": "true",
+                            "source_bucket_id": "2101",
+                            "source_bucket_type": "DA",
+                            "source_offer_id": "2101"
+                        },
+                        "bucket2": {
+                            "pb_action": "Set",
+                            "pb_decimal_places": "0",
+                            "pb_needs_validfor": "false",
+                            "pb_po_external_id": "PO_UC1_DataGold",
+                            "pb_reset_amount": "false",
+                            "pb_spec_external_id": "PBS_Data_Counter_UC1",
+                            "pb_type": "counter",
+                            "pb_unit_of_measure": "quantity",
+                            "pb_with_current_triggertime": "false",
+                            "source_bucket_id": "21011",
+                            "source_bucket_type": "UC",
+                            "source_offer_id": "2101"
+                        },
+                        "bucket3": {
+                            "pb_action": "Set",
+                            "pb_decimal_places": "0",
+                            "pb_needs_validfor": "false",
+                            "pb_po_external_id": "PO_UC1_DataGold",
+                            "pb_reset_amount": "false",
+                            "pb_spec_external_id": "UC1_Promotion_Event_Flag",
+                            "pb_type": "counter",
+                            "pb_unit_of_measure": "quantity",
+                            "pb_with_current_triggertime": "false",
+                            "source_bucket_id": "21002",
+                            "source_bucket_type": "UC",
+                            "source_offer_id": "2101"
+                        }
+                    },
+                    "has_char": "false",
+                    "has_recurrence": "true",
+                    "is_sharing_provider": "false",
+                    "po_external_id": "PO_UC1_DataGold",
+                    "po_price_external_id": "UC1_Activation_Price"
+                }
+            }
+        },
+        "2102": {
+            "offer_definition": {
+                "offer_definition1": {
+                    "has_sharing": "false",
+                    "is_base_offer": "false",
+                    "offer_type": "timer"
+                }
+            },
+            "product": {
+                "product": {
+                    "bucket": {
+                    },
+                    "comprised_of": {
+                    }
+                },
+                "product1": {
+                    "bucket": {
+                        "bucket1": {
+                            "pb_action": "Relative",
+                            "pb_decimal_places": "0",
+                            "pb_needs_validfor": "true",
+                            "pb_po_external_id": "PO_UC1_DataSilver",
+                            "pb_reset_amount": "true",
+                            "pb_spec_external_id": "PBS_Data_10GiB_UC1",
+                            "pb_type": "account",
+                            "pb_unit_of_measure": "byte",
+                            "pb_with_current_triggertime": "true",
+                            "source_bucket_id": "2102",
+                            "source_bucket_type": "DA",
+                            "source_offer_id": "2102"
+                        }
+                    },
+                    "has_char": "false",
+                    "has_recurrence": "true",
+                    "is_sharing_provider": "false",
+                    "po_external_id": "PO_UC1_DataSilver",
+                    "po_price_external_id": "UC1_SILVER_FEE"
+                }
+            }
+        },
+        "22": {
+            "offer_definition": {
+                "offer_definition1": {
+                    "has_sharing": "false",
+                    "is_base_offer": "false",
+                    "offer_type": "timer"
+                }
+            },
+            "product": {
+                "product1": {
+                    "bucket": {
+                        "bucket1": {
+                            "pb_action": "Relative",
+                            "pb_decimal_places": "0",
+                            "pb_needs_validfor": "true",
+                            "pb_po_external_id": "PO_DataAddon_10GB",
+                            "pb_reset_amount": "true",
+                            "pb_spec_external_id": "PBS_DataAddon",
+                            "pb_type": "account",
+                            "pb_unit_of_measure": "byte",
+                            "pb_with_current_triggertime": "true",
+                            "source_bucket_id": "22",
+                            "source_bucket_type": "DA",
+                            "source_offer_id": "22"
+                        }
+                    },
+                    "has_char": "false",
+                    "has_recurrence": "true",
+                    "is_sharing_provider": "false",
+                    "po_external_id": "PO_DataAddon_10GB",
+                    "po_price_external_id": "Purchase_Strategy"
+                }
+            }
+        },
+        "24": {
+            "offer_definition": {
+                "offer_definition1": {
+                    "has_sharing": "false",
+                    "is_base_offer": "true",
+                    "offer_type": "account"
+                }
+            },
+            "product": {
+                "product1": {
+                    "has_char": "false",
+                    "has_recurrence": "false",
+                    "is_sharing_provider": "true",
+                    "po_external_id": "PO_Technical"
+                },
+                "product2": {
+                    "bucket": {
+                        "bucket1": {
+                            "pb_action": "Set",
+                            "pb_decimal_places": "6",
+                            "pb_needs_validfor": "false",
+                            "pb_po_external_id": "BPO_Prepaid_Dongle",
+                            "pb_reset_amount": "false",
+                            "pb_spec_external_id": "PBS_Daily_Data_Spending_Counter",
+                            "pb_type": "counter",
+                            "pb_unit_of_measure": "euro",
+                            "pb_with_current_triggertime": "true",
+                            "source_bucket_id": "101",
+                            "source_bucket_type": "UC",
+                            "source_offer_id": "24"
+                        }
+                    },
+                    "comprised_of": {
+                        "child1": {
+                            "has_char": "false",
+                            "po_external_id": "PO_SMS_MO_National"
+                        },
+                        "child2": {
+                            "has_char": "false",
+                            "po_external_id": "PO_Data_National_Dongle"
+                        }
+                    },
+                    "has_char": "false",
+                    "has_recurrence": "false",
+                    "is_sharing_provider": "false",
+                    "po_external_id": "BPO_Prepaid_Dongle"
+                }
+            }
+        },
+        "26": {
+            "offer_definition": {
+                "offer_definition1": {
+                    "has_sharing": "false",
+                    "is_base_offer": "false",
+                    "offer_type": "account"
+                }
+            },
+            "product": {
+                "product1": {
+                    "bucket": {
+                        "bucket1": {
+                            "pb_action": "Relative",
+                            "pb_decimal_places": "0",
+                            "pb_needs_validfor": "true",
+                            "pb_po_external_id": "PO_Data_National_Dongle_Bonus",
+                            "pb_reset_amount": "true",
+                            "pb_spec_external_id": "PBS_Data_Bonus",
+                            "pb_type": "account",
+                            "pb_unit_of_measure": "byte",
+                            "pb_with_current_triggertime": "true",
+                            "source_bucket_id": "126",
+                            "source_bucket_type": "DA",
+                            "source_offer_id": "26"
+                        }
+                    },
+                    "has_char": "false",
+                    "has_recurrence": "false",
+                    "is_sharing_provider": "false",
+                    "po_external_id": "PO_Data_National_Dongle_Bonus"
+                }
+            }
+        },
+        "29": {
+            "offer_definition": {
+                "offer_definition1": {
+                    "has_sharing": "false",
+                    "is_base_offer": "false",
+                    "offer_type": "account"
+                }
+            },
+            "product": {
+                "product1": {
+                    "bucket": {
+                        "bucket1": {
+                            "pb_action": "Relative",
+                            "pb_decimal_places": "0",
+                            "pb_needs_validfor": "true",
+                            "pb_po_external_id": "PO_Data_National_Dongle_Bonus",
+                            "pb_reset_amount": "true",
+                            "pb_spec_external_id": "PBS_Data_Bonus",
+                            "pb_type": "account",
+                            "pb_unit_of_measure": "byte",
+                            "pb_with_current_triggertime": "true",
+                            "source_bucket_id": "126",
+                            "source_bucket_type": "DA",
+                            "source_offer_id": "29"
+                        }
+                    },
+                    "has_char": "false",
+                    "has_recurrence": "false",
+                    "is_sharing_provider": "false",
+                    "po_external_id": "PO_Data_National_Dongle_Bonus"
+                }
+            }
+        },
+        "370": {
+            "offer_definition": {
+                "offer_definition1": {
+                    "has_sharing": "false",
+                    "is_base_offer": "false",
+                    "offer_type": "timer"
+                }
+            },
+            "product": {
+                "product1": {
+                    "has_char": "false",
+                    "has_recurrence": "false",
+                    "is_sharing_provider": "false",
+                    "po_external_id": "PO_Refill_Promotion"
+                },
+                "product2": {
+                    "bucket": {
+                        "bucket1": {
+                            "pb_action": "Set",
+                            "pb_decimal_places": "0",
+                            "pb_needs_validfor": "false",
+                            "pb_po_external_id": "PO_Promotion_RuleAndReward",
+                            "pb_reset_amount": "false",
+                            "pb_spec_external_id": "PBS_RefillEvent",
+                            "pb_type": "counter",
+                            "pb_unit_of_measure": "quantity",
+                            "pb_with_current_triggertime": "false",
+                            "source_bucket_id": "371",
+                            "source_bucket_type": "UA",
+                            "source_offer_id": "370"
+                        },
+                        "bucket2": {
+                            "pb_action": "Relative",
+                            "pb_decimal_places": "0",
+                            "pb_needs_validfor": "true",
+                            "pb_po_external_id": "PO_Promotion_RuleAndReward",
+                            "pb_reset_amount": "true",
+                            "pb_spec_external_id": "PBS_Promotion_SMS",
+                            "pb_type": "account",
+                            "pb_unit_of_measure": "sms",
+                            "pb_with_current_triggertime": "true",
+                            "source_bucket_id": "371",
+                            "source_bucket_type": "DA",
+                            "source_offer_id": "370"
+                        }
+                    },
+                    "has_char": "false",
+                    "has_recurrence": "false",
+                    "is_sharing_provider": "false",
+                    "po_external_id": "PO_Promotion_RuleAndReward1",
+                    "po_price_external_id": "PromotionStrategy"
+                },
+                "product3": {
+                    "has_char": "false",
+                    "has_recurrence": "false",
+                    "is_sharing_provider": "false",
+                    "po_external_id": "PO_Promotion1_National_SMS"
+                }
+            }
+        },
+        "372": {
+            "offer_definition": {
+                "offer_definition1": {
+                    "has_sharing": "false",
+                    "is_base_offer": "false",
+                    "offer_type": "timer"
+                }
+            },
+            "product": {
+                "product1": {
+                    "has_char": "false",
+                    "has_recurrence": "false",
+                    "is_sharing_provider": "false",
+                    "po_external_id": "PO_Refill_Promotion"
+                },
+                "product2": {
+                    "bucket": {
+                        "bucket1": {
+                            "pb_action": "Set",
+                            "pb_decimal_places": "0",
+                            "pb_needs_validfor": "false",
+                            "pb_po_external_id": "PO_Promotion_RuleAndReward",
+                            "pb_reset_amount": "false",
+                            "pb_spec_external_id": "PBS_RefillEvent",
+                            "pb_type": "counter",
+                            "pb_unit_of_measure": "quantity",
+                            "pb_with_current_triggertime": "false",
+                            "source_bucket_id": "371",
+                            "source_bucket_type": "UA",
+                            "source_offer_id": "372"
+                        }
+                    },
+                    "has_char": "false",
+                    "has_recurrence": "false",
+                    "is_sharing_provider": "false",
+                    "po_external_id": "PO_Promotion_RuleAndReward1",
+                    "po_price_external_id": "PromotionStrategy"
+                }
+            }
+        },
+        "380": {
+            "offer_definition": {
+                "offer_definition1": {
+                    "has_sharing": "false",
+                    "is_base_offer": "false",
+                    "offer_type": "timer"
+                }
+            },
+            "product": {
+                "product1": {
+                    "bucket": {
+                        "bucket1": {
+                            "pb_action": "Set",
+                            "pb_decimal_places": "6",
+                            "pb_needs_validfor": "false",
+                            "pb_po_external_id": "PO_Promotion_RuleandReward_OnRefillValue",
+                            "pb_reset_amount": "false",
+                            "pb_spec_external_id": "PBS_Accumulate_RefillAmount",
+                            "pb_type": "counter",
+                            "pb_unit_of_measure": "euro",
+                            "pb_with_current_triggertime": "false",
+                            "source_bucket_id": "381",
+                            "source_bucket_type": "DA",
+                            "source_offer_id": "380"
+                        },
+                        "bucket2": {
+                            "pb_action": "Relative",
+                            "pb_decimal_places": "0",
+                            "pb_needs_validfor": "true",
+                            "pb_po_external_id": "PO_Promotion_RuleandReward_OnRefillValue",
+                            "pb_reset_amount": "true",
+                            "pb_spec_external_id": "PBS_Promotion_National_SMS",
+                            "pb_type": "account",
+                            "pb_unit_of_measure": "sms",
+                            "pb_with_current_triggertime": "true",
+                            "source_bucket_id": "380",
+                            "source_bucket_type": "DA",
+                            "source_offer_id": "380"
+                        }
+                    },
+                    "has_char": "false",
+                    "has_recurrence": "false",
+                    "is_sharing_provider": "false",
+                    "po_external_id": "PO_Promotion_RuleandReward_OnRefillValue1",
+                    "po_price_external_id": "PromotionStrategy"
+                },
+                "product2": {
+                    "has_char": "false",
+                    "has_recurrence": "false",
+                    "is_sharing_provider": "false",
+                    "po_external_id": "PO_Refill_Promotion"
+                },
+                "product3": {
+                    "has_char": "false",
+                    "has_recurrence": "false",
+                    "is_sharing_provider": "false",
+                    "po_external_id": "PO_Promotion_National_SMS_RefillValue"
+                }
+            }
+        },
+        "381": {
+            "offer_definition": {
+                "offer_definition1": {
+                    "has_sharing": "false",
+                    "is_base_offer": "false",
+                    "offer_type": "timer"
+                }
+            },
+            "product": {
+                "product1": {
+                    "bucket": {
+                        "bucket1": {
+                            "pb_action": "Set",
+                            "pb_decimal_places": "6",
+                            "pb_needs_validfor": "false",
+                            "pb_po_external_id": "PO_Promotion_RuleandReward_OnRefillValue",
+                            "pb_reset_amount": "false",
+                            "pb_spec_external_id": "PBS_Accumulate_RefillAmount",
+                            "pb_type": "counter",
+                            "pb_unit_of_measure": "euro",
+                            "pb_with_current_triggertime": "false",
+                            "source_bucket_id": "381",
+                            "source_bucket_type": "DA",
+                            "source_offer_id": "381"
+                        }
+                    },
+                    "has_char": "false",
+                    "has_recurrence": "false",
+                    "is_sharing_provider": "false",
+                    "po_external_id": "PO_Promotion_RuleandReward_OnRefillValue1",
+                    "po_price_external_id": "PromotionStrategy"
+                },
+                "product2": {
+                    "has_char": "false",
+                    "has_recurrence": "false",
+                    "is_sharing_provider": "false",
+                    "po_external_id": "PO_Refill_Promotion"
+                }
+            }
+        },
+        "4": {
+            "offer_definition": {
+                "offer_definition1": {
+                    "has_sharing": "false",
+                    "is_base_offer": "false",
+                    "offer_type": "account"
+                }
+            },
+            "product": {
+                "product1": {
+                    "bucket": {
+                        "bucket1": {
+                            "pb_action": "Relative",
+                            "pb_decimal_places": "0",
+                            "pb_needs_validfor": "true",
+                            "pb_po_external_id": "PO_UC4_Resurrection",
+                            "pb_reset_amount": "true",
+                            "pb_spec_external_id": "PBS_10MinsVoice_UC4",
+                            "pb_type": "account",
+                            "pb_unit_of_measure": "second",
+                            "pb_with_current_triggertime": "true",
+                            "source_bucket_id": "1",
+                            "source_bucket_type": "DA",
+                            "source_offer_id": "4"
+                        },
+                        "bucket2": {
+                            "pb_action": "Relative",
+                            "pb_decimal_places": "0",
+                            "pb_needs_validfor": "true",
+                            "pb_po_external_id": "PO_UC4_Resurrection",
+                            "pb_reset_amount": "true",
+                            "pb_spec_external_id": "PBS_5GiBData_UC4",
+                            "pb_type": "account",
+                            "pb_unit_of_measure": "byte",
+                            "pb_with_current_triggertime": "true",
+                            "source_bucket_id": "2",
+                            "source_bucket_type": "DA",
+                            "source_offer_id": "4"
+                        },
+                        "bucket3": {
+                            "pb_action": "Relative",
+                            "pb_decimal_places": "0",
+                            "pb_needs_validfor": "true",
+                            "pb_po_external_id": "PO_UC4_Resurrection",
+                            "pb_reset_amount": "true",
+                            "pb_spec_external_id": "PBS_100SMS_UC4",
+                            "pb_type": "account",
+                            "pb_unit_of_measure": "sms",
+                            "pb_with_current_triggertime": "true",
+                            "source_bucket_id": "3",
+                            "source_bucket_type": "DA",
+                            "source_offer_id": "4"
+                        },
+                        "bucket4": {
+                            "pb_action": "Relative",
+                            "pb_decimal_places": "0",
+                            "pb_needs_validfor": "true",
+                            "pb_po_external_id": "PO_UC4_Resurrection",
+                            "pb_reset_amount": "true",
+                            "pb_spec_external_id": "PBS_SMSCarryOver_UC4",
+                            "pb_type": "account",
+                            "pb_unit_of_measure": "sms",
+                            "pb_with_current_triggertime": "true",
+                            "source_bucket_id": "5",
+                            "source_bucket_type": "DA",
+                            "source_offer_id": "4"
+                        },
+                        "bucket5": {
+                            "pb_action": "Relative",
+                            "pb_decimal_places": "0",
+                            "pb_needs_validfor": "true",
+                            "pb_po_external_id": "PO_UC4_Resurrection",
+                            "pb_reset_amount": "true",
+                            "pb_spec_external_id": "PBS_100MMS_UC4",
+                            "pb_type": "account",
+                            "pb_unit_of_measure": "quantity",
+                            "pb_with_current_triggertime": "true",
+                            "source_bucket_id": "4",
+                            "source_bucket_type": "DA",
+                            "source_offer_id": "4"
+                        }
+                    },
+                    "has_char": "false",
+                    "has_recurrence": "true",
+                    "is_sharing_provider": "false",
+                    "po_external_id": "PO_UC4_Resurrection"
+                }
+            }
+        },
+        "5002": {
+            "offer_definition": {
+                "offer_definition1": {
+                    "has_sharing": "false",
+                    "is_base_offer": "false",
+                    "offer_type": "timer"
+                }
+            },
+            "product": {
+                "product1": {
+                    "bucket": {
+                        "bucket1": {
+                            "pb_action": "Relative",
+                            "pb_decimal_places": "0",
+                            "pb_needs_validfor": "true",
+                            "pb_po_external_id": "PO_Voice_MONational_Bundle",
+                            "pb_reset_amount": "true",
+                            "pb_spec_external_id": "PBS_NationalVoice",
+                            "pb_type": "account",
+                            "pb_unit_of_measure": "second",
+                            "pb_with_current_triggertime": "true",
+                            "source_bucket_id": "811",
+                            "source_bucket_type": "DA",
+                            "source_offer_id": "5002"
+                        },
+                        "bucket2": {
+                            "pb_action": "Relative",
+                            "pb_decimal_places": "0",
+                            "pb_needs_validfor": "true",
+                            "pb_po_external_id": "PO_Voice_MONational_OnnetBundle",
+                            "pb_reset_amount": "true",
+                            "pb_spec_external_id": "PBS_OnnetVoice",
+                            "pb_type": "account",
+                            "pb_unit_of_measure": "second",
+                            "pb_with_current_triggertime": "true",
+                            "source_bucket_id": "812",
+                            "source_bucket_type": "DA",
+                            "source_offer_id": "5003"
+                        },
+                        "bucket3": {
+                            "pb_action": "Relative",
+                            "pb_decimal_places": "0",
+                            "pb_needs_validfor": "true",
+                            "pb_po_external_id": "PO_SMS_MO_National_Bundle",
+                            "pb_reset_amount": "true",
+                            "pb_spec_external_id": "PBS_SMS_MO_National",
+                            "pb_type": "account",
+                            "pb_unit_of_measure": "sms",
+                            "pb_with_current_triggertime": "true",
+                            "source_bucket_id": "821",
+                            "source_bucket_type": "DA",
+                            "source_offer_id": "5004"
+                        },
+                        "bucket4": {
+                            "pb_action": "Relative",
+                            "pb_decimal_places": "0",
+                            "pb_needs_validfor": "true",
+                            "pb_po_external_id": "PO_Data_National_Bundle",
+                            "pb_reset_amount": "true",
+                            "pb_spec_external_id": "PBS_NationalData300MB",
+                            "pb_type": "account",
+                            "pb_unit_of_measure": "byte",
+                            "pb_with_current_triggertime": "true",
+                            "source_bucket_id": "831",
+                            "source_bucket_type": "DA",
+                            "source_offer_id": "5005"
+                        }
+                    },
+                    "comprised_of": {
+                        "child1": {
+                            "has_char": "false",
+                            "po_external_id": "PO_Voice_MONational_Bundle"
+                        },
+                        "child2": {
+                            "has_char": "false",
+                            "po_external_id": "PO_Voice_MONational_OnnetBundle"
+                        },
+                        "child3": {
+                            "has_char": "false",
+                            "po_external_id": "PO_SMS_MO_National_Bundle"
+                        },
+                        "child4": {
+                            "has_char": "false",
+                            "po_external_id": "PO_Data_National_Bundle"
+                        }
+                    },
+                    "has_char": "false",
+                    "has_recurrence": "false",
+                    "is_sharing_provider": "false",
+                    "po_external_id": "BPONationalBundle",
+                    "po_price_external_id": "Prod_charge"
+                }
+            }
+        },
+        "506": {
+            "offer_definition": {
+                "offer_definition1": {
+                    "has_sharing": "false",
+                    "is_base_offer": "false",
+                    "offer_type": "timer"
+                }
+            },
+            "product": {
+                "product1": {
+                    "bucket": {
+                        "bucket1": {
+                            "pb_action": "Relative",
+                            "pb_decimal_places": "0",
+                            "pb_needs_validfor": "true",
+                            "pb_po_external_id": "PO_2GB_FastnFurious",
+                            "pb_reset_amount": "true",
+                            "pb_spec_external_id": "PBS_2GB_FastnFuriuos",
+                            "pb_type": "account",
+                            "pb_unit_of_measure": "byte",
+                            "pb_with_current_triggertime": "true",
+                            "source_bucket_id": "602",
+                            "source_bucket_type": "UC",
+                            "source_offer_id": "506"
+                        }
+                    },
+                    "has_char": "false",
+                    "has_recurrence": "false",
+                    "is_sharing_provider": "false",
+                    "po_external_id": "PO_2GB_FastnFurious",
+                    "po_price_external_id": "OTC_2GBFastnFurious"
+                }
+            }
+        },
+        "6001": {
+            "offer_definition": {
+                "offer_definition1": {
+                    "has_sharing": "false",
+                    "is_base_offer": "false",
+                    "offer_type": "timer"
+                }
+            },
+            "product": {
+                "product1": {
+                    "bucket": {
+                        "bucket1": {
+                            "pb_action": "Relative",
+                            "pb_decimal_places": "0",
+                            "pb_needs_validfor": "true",
+                            "pb_po_external_id": "PO_Voice_MONational_Bundle",
+                            "pb_reset_amount": "true",
+                            "pb_spec_external_id": "PBS_NationalVoice",
+                            "pb_type": "account",
+                            "pb_unit_of_measure": "second",
+                            "pb_with_current_triggertime": "true",
+                            "source_bucket_id": "501",
+                            "source_bucket_type": "UC",
+                            "source_offer_id": "6001"
+                        },
+                        "bucket2": {
+                            "pb_action": "Relative",
+                            "pb_decimal_places": "0",
+                            "pb_needs_validfor": "true",
+                            "pb_po_external_id": "PO_Voice_MONational_OnnetBundle",
+                            "pb_reset_amount": "true",
+                            "pb_spec_external_id": "PBS_OnnetVoice",
+                            "pb_type": "account",
+                            "pb_unit_of_measure": "second",
+                            "pb_with_current_triggertime": "true",
+                            "source_bucket_id": "502",
+                            "source_bucket_type": "UC",
+                            "source_offer_id": "6001"
+                        },
+                        "bucket3": {
+                            "pb_action": "Relative",
+                            "pb_decimal_places": "0",
+                            "pb_needs_validfor": "true",
+                            "pb_po_external_id": "PO_SMS_MO_National_Bundle",
+                            "pb_reset_amount": "true",
+                            "pb_spec_external_id": "PBS_SMS_MO_National",
+                            "pb_type": "account",
+                            "pb_unit_of_measure": "sms",
+                            "pb_with_current_triggertime": "true",
+                            "source_bucket_id": "504",
+                            "source_bucket_type": "UC",
+                            "source_offer_id": "6001"
+                        },
+                        "bucket4": {
+                            "pb_action": "Relative",
+                            "pb_decimal_places": "0",
+                            "pb_needs_validfor": "true",
+                            "pb_po_external_id": "PO_Data_National_Bundle",
+                            "pb_reset_amount": "true",
+                            "pb_spec_external_id": "PBS_NationalData300MB",
+                            "pb_type": "account",
+                            "pb_unit_of_measure": "byte",
+                            "pb_with_current_triggertime": "true",
+                            "source_bucket_id": "505",
+                            "source_bucket_type": "UC",
+                            "source_offer_id": "6001"
+                        }
+                    },
+                    "comprised_of": {
+                        "child1": {
+                            "has_char": "false",
+                            "po_external_id": "PO_Voice_MONational_Bundle"
+                        },
+                        "child2": {
+                            "has_char": "false",
+                            "po_external_id": "PO_Voice_MONational_OnnetBundle"
+                        },
+                        "child3": {
+                            "has_char": "false",
+                            "po_external_id": "PO_SMS_MO_National_Bundle"
+                        },
+                        "child4": {
+                            "has_char": "false",
+                            "po_external_id": "PO_Data_National_Bundle"
+                        }
+                    },
+                    "has_char": "false",
+                    "has_recurrence": "false",
+                    "is_sharing_provider": "false",
+                    "po_external_id": "BPONationalBundle",
+                    "po_price_external_id": "Prod_charge"
+                }
+            }
+        },
+        "910": {
+            "offer_definition": {
+                "offer_definition1": {
+                    "has_sharing": "false",
+                    "is_base_offer": "true",
+                    "offer_type": "account"
+                }
+            },
+            "product": {
+                "product1": {
+                    "has_char": "false",
+                    "has_recurrence": "false",
+                    "is_sharing_provider": "true",
+                    "po_external_id": "PO_Technical"
+                },
+                "product2": {
+                    "bucket": {
+                        "bucket1": {
+                            "pb_action": "Set",
+                            "pb_decimal_places": "6",
+                            "pb_needs_validfor": "false",
+                            "pb_po_external_id": "BPOPrepaid1",
+                            "pb_reset_amount": "false",
+                            "pb_spec_external_id": "PBS_Daily_Data_Spending_Counter",
+                            "pb_type": "counter",
+                            "pb_unit_of_measure": "euro",
+                            "pb_with_current_triggertime": "true",
+                            "source_bucket_id": "101",
+                            "source_bucket_type": "UC",
+                            "source_offer_id": "910"
+                        }
+                    },
+                    "comprised_of": {
+                        "child1": {
+                            "has_char": "false",
+                            "po_external_id": "PO_MMS_MO_Roaming"
+                        },
+                        "child2": {
+                            "has_char": "false",
+                            "po_external_id": "PO_SMS_MO_National"
+                        },
+                        "child3": {
+                            "has_char": "false",
+                            "po_external_id": "POVoiceMONational"
+                        },
+                        "child4": {
+                            "has_char": "false",
+                            "po_external_id": "PO_Data_Roaming"
+                        },
+                        "child5": {
+                            "has_char": "false",
+                            "po_external_id": "PO_Data_National"
+                        },
+                        "child6": {
+                            "has_char": "false",
+                            "po_external_id": "PO_MMS_MO_National"
+                        },
+                        "child7": {
+                            "has_char": "false",
+                            "po_external_id": "POVoiceMORoaming"
+                        },
+                        "child8": {
+                            "has_char": "false",
+                            "po_external_id": "PO_SMS_MO_Roaming"
+                        },
+                        "child9": {
+                            "has_char": "false",
+                            "po_external_id": "POVoiceMTRoaming"
+                        }
+                    },
+                    "has_char": "false",
+                    "has_recurrence": "false",
+                    "is_sharing_provider": "false",
+                    "po_external_id": "BPOPrepaid1"
+                }
+            }
+        }
+    },
+    "service_class": {
+        "10": {
+            "product": {
+                "product1": {
+                    "has_char": "false",
+                    "is_sharing_provider": "true",
+                    "po_external_id": "TECHNICAL_PO_PREPAID"
+                }
+            }
+        },
+        "1000": {
+            "product": {
+                "product1": {
+                    "has_char": "false",
+                    "is_sharing_provider": "true",
+                    "po_external_id": "PO_Technical"
+                },
+                "product2": {
+                    "bucket": {
+                        "bucket1": {
+                            "pb_action": "Set",
+                            "pb_decimal_places": "6",
+                            "pb_needs_validfor": "false",
+                            "pb_po_external_id": "BPOPrepaid1",
+                            "pb_reset_amount": "false",
+                            "pb_spec_external_id": "PBS_Daily_Data_Spending_Counter",
+                            "pb_type": "counter",
+                            "pb_unit_of_measure": "euro",
+                            "pb_with_current_triggertime": "true",
+                            "source_bucket_id": "101",
+                            "source_bucket_type": "UC",
+                            "source_default_quota": "1000",
+                            "source_thresfold_id": "1011"
+                        }
+                    },
+                    "comprised_of": {
+                        "child1": {
+                            "has_char": "false",
+                            "po_external_id": "PO_MMS_MO_Roaming"
+                        },
+                        "child2": {
+                            "has_char": "false",
+                            "po_external_id": "PO_SMS_MO_National"
+                        },
+                        "child3": {
+                            "has_char": "false",
+                            "po_external_id": "POVoiceMONational"
+                        },
+                        "child4": {
+                            "has_char": "false",
+                            "po_external_id": "PO_Data_Roaming"
+                        },
+                        "child5": {
+                            "has_char": "false",
+                            "po_external_id": "PO_Data_National"
+                        },
+                        "child6": {
+                            "has_char": "false",
+                            "po_external_id": "PO_MMS_MO_National"
+                        },
+                        "child7": {
+                            "has_char": "false",
+                            "po_external_id": "POVoiceMORoaming"
+                        },
+                        "child8": {
+                            "has_char": "false",
+                            "po_external_id": "PO_SMS_MO_Roaming"
+                        },
+                        "child9": {
+                            "has_char": "false",
+                            "po_external_id": "POVoiceMTRoaming"
+                        }
+                    },
+                    "has_char": "false",
+                    "is_sharing_provider": "false",
+                    "po_external_id": "BPOPrepaid1"
+                }
+            }
+        },
+        "3000": {
+            "product": {
+                "product1": {
+                    "has_char": "false",
+                    "is_sharing_provider": "true",
+                    "po_external_id": "PO_Technical"
+                },
+                "product2": {
+                    "bucket": {
+                        "bucket1": {
+                            "pb_action": "Set",
+                            "pb_decimal_places": "6",
+                            "pb_needs_validfor": "false",
+                            "pb_po_external_id": "BPO_Prepaid_Dongle",
+                            "pb_reset_amount": "false",
+                            "pb_spec_external_id": "PBS_Daily_Data_Spending_Counter",
+                            "pb_type": "counter",
+                            "pb_unit_of_measure": "euro",
+                            "pb_with_current_triggertime": "true",
+                            "source_bucket_id": "101",
+                            "source_bucket_type": "UC",
+                            "source_default_quota": "1000",
+                            "source_thresfold_id": "1011"
+                        }
+                    },
+                    "comprised_of": {
+                        "child1": {
+                            "has_char": "false",
+                            "po_external_id": "PO_SMS_MO_National"
+                        },
+                        "child2": {
+                            "has_char": "false",
+                            "po_external_id": "PO_Data_National_Dongle"
+                        }
+                    },
+                    "has_char": "false",
+                    "is_sharing_provider": "false",
+                    "po_external_id": "BPO_Prepaid_Dongle"
+                }
+            }
+        }
+    }
+}

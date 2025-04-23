@@ -1,0 +1,53 @@
+{
+  "usageaggregations": [
+    {
+      "usageAggregationTotals": [
+        {
+          "CFSSSubTypeId": "SMS",
+          "serviceByCFSSSubTypeAndMeasures": [
+            {
+              "measure": "SMS",
+              "usedUnitsUoM": "3",
+              "sumOfUsedUnits": "3",
+              "chargedUnitsUoM": "",
+              "sumOfChargedUnits": "5",
+              "chargedCostUoM": "UAH",
+              "sumOfChargedCost": "7"
+            }
+          ]
+        }
+      ],
+      "dailyUsageAggregations": [
+        {
+          "dateId": 123456789,
+          "serviceByDayAndCFSSSubTypes": [
+            {
+              "serviceByCFSSSubTypeAndMeasures": [
+                {
+                  "measure": "Data",
+                  "sumOfUsedUnits": "11",
+                  "sumOfChargedUnits": "33",
+                  "sumOfChargedCost": "55"
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "recurringAggregationTotal": {
+        "chargedCostUoM": "UAH",
+        "sumOfChargedCost": "77"
+      },
+      "productAdministrativeChargeAggregationTotal": {
+        "sumOfChargedCost": "99"
+      },
+      "purchaseChargeAggregationTotal": {
+        "chargedCostUoM": "UAH",
+        "sumOfChargedCost": "111"
+      },
+      "serviceChargeAggregationSummaryTotal": {
+        "sumOfChargedCost": "333"
+      }
+    }
+  ]
+}

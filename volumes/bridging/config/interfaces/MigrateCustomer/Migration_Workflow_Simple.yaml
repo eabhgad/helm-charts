@@ -1,0 +1,86 @@
+Name: CustomerMigration-LoadTargets
+Description: Define the flow to load the customer data into target systems.
+
+Initial-Step: workflow_context
+ErrorManager-Step: workflow_failure_reponse
+
+Flow-Definition:
+
+  workflow_context: !!com.ericsson.datamigration.bridging.converter.core.wfm.yaml.steps.WorkflowContextManager
+      input: []
+      attributes:          
+          UpdateServiceClass@CS_TARGET: 0        
+          EDOAuthTokenRequest@EVENT_DISPATCHER: 0
+      nextStep: ED_Notification_Request_Params
+      
+      
+     
+  ###########################################################################################################################
+  # Event Dispatcher - Notify Migration Started
+  ###########################################################################################################################
+  ED_Notification_Request_Params: !!com.ericsson.datamigration.bridging.converter.core.wfm.yaml.steps.WorkflowContextManager
+      input: []
+      attributes:
+          notifURN: /v1/generic/resource
+          ContentTypeJson: application/json; charset=utf-8
+      nextStep: ED_Notifcation_PrepareInput
+      nextErrorStep: update_account_migration_failed_status
+  ED_Notifcation_PrepareInput: !!com.ericsson.datamigration.bridging.converter.core.wfm.yaml.steps.GroovyExecutorStep
+      scriptFileName: event_dispatcher_started_event_request.groovy
+      method: prepareStartedEventRequest
+      input: [sourceData]
+      nextStep: ED_Notify_Migration_Started
+      nextErrorStep: update_account_migration_failed_status
+  ED_Notify_Migration_Started: !!com.ericsson.datamigration.bridging.converter.core.wfm.yaml.steps.ProcessGenericHttpRequestWithAuthUsingConPool
+      input: [sourceData, ED_Notification_Request_Params,ED_Notifcation_PrepareInput]
+      httpMethod: POST
+      requestTimeout: 120
+      authentication:
+          token: EVENT_DISPATCHER_TOKEN
+      httpHeaders:
+          Content-Type: ContentTypeJson
+      targetSystemId: GENERIC_API
+      url: notifURN
+      tokenParams:
+          #tokenHttpMethodType: POST (default) | GET
+          tokenSystemId: GENERIC_TOKEN_API
+          tokenRequestUri: /v2/oauth/token
+          tokenRequestContentType: application/json
+          groovySript: token_request_generator.groovy
+          method: prepareAuthRequest
+          tokenKey: $.access_token
+          tokenExpiryKey: $.expires_in
+          #tokenExpTimeUnit: hour | minute | second(default)
+          expectedTokenStatusCodes: 200
+          tokenRetryParams:
+             retryCodes: ALL
+             retryInerval: 5000
+             retryCount: 3
+      retryParams:
+          retryCodes: ALL
+          retryInerval: 5000
+          retryCount: 3
+      nextStep: ED_Notify_Migration_Started_ProcessResponse
+      nextErrorStep: update_account_migration_failed_status      
+  ED_Notify_Migration_Started_ProcessResponse: !!com.ericsson.datamigration.bridging.converter.core.wfm.yaml.steps.ProcessHttpResponseNew
+      input: [ED_Notify_Migration_Started]
+      nextStep: workflow_success_reponse
+      nextErrorStep: workflow_failure_reponse
+      
+  ##########################################
+  # Set Workflow Response Code
+  ##########################################       
+  workflow_success_reponse: !!com.ericsson.datamigration.bridging.converter.core.wfm.yaml.steps.CreateWorkflowResponse      
+      input: []
+      workflowStatus: SUCCESS
+      message: 'Workflow Completed Successfully'
+      nextStep: END
+      
+  ##########################################
+  # Error path : Default error handler
+  ##########################################
+  workflow_failure_reponse: !!com.ericsson.datamigration.bridging.converter.core.wfm.yaml.steps.CreateWorkflowResponse      
+      input: [lastError]
+      workflowStatus: FAILED
+      message: 'Workflow Execution Failed'
+      nextStep: END

@@ -1,0 +1,350 @@
+{
+  "Error": {
+    "ERR001": {
+      "error_desc": "Missing/Length Mismatch MSISDN",
+      "Data": {
+        "CLIENT_ID": "",
+        "CLIENT.MSISDN": "",
+        "": ""
+      }
+    },
+    "ERR002": {
+      "error_desc": "Missing/Length Mismatch IMSI",
+      "Data": {
+        "CLIENT_ID": "",
+        "CLIENT.IMSI": "",
+        "": ""
+      }
+    },
+    "ERR003": {
+      "error_desc": "Missing language definition",
+      "Data": {
+        "CLIENT_ID": "",
+        "CLIENT.MSISDN": "",
+        "": ""
+      }
+    },
+    "ERR004": {
+      "error_desc": "Missing provider in LUW/Groups",
+      "Data": {
+        "CLIENT_ID": "",
+        "CLIENT.LUW_ID": "",
+        "": ""
+      }
+    },
+    "ERR005": {
+      "error_desc": "Billing Account not mapped",
+      "Data": {
+        "CLIENT_ID": "",
+        "CLIENT.MSISDN": "",
+        "CLIENT.BILL_DAY": "",
+        "": ""
+      }
+    },
+    "ERR006": {
+      "error_desc": "Billing Account not defined",
+      "Data": {
+        "CLIENT_ID": "",
+        "CLIENT.MSISDN": "",
+        "CLIENT.BILL_DAY": "",
+        "": ""
+      }
+    },
+    "ERR007": {
+      "error_desc": "Status mismatch/not mapped",
+      "Data": {
+        "CLIENT_ID": "",
+        "CLIENT.MSISDN": "",
+        "CLIENT.STATUS": "",
+        "": ""
+      }
+    },
+    "ERR008": {
+      "error_desc": "Mismatched sharingSpecification (Update)",
+      "Data": {
+        "CLIENT_ID": "",
+        "CLIENT.MSISDN": "",
+        "": ""
+      }
+    },
+    "ERR009": {
+      "error_desc": "Home timezone not mapped",
+      "Data": {
+        "CLIENT_ID": "",
+        "CLIENT.MSISDN": "",
+        "CLIENT.TZ": "",
+        "": ""
+      }
+    },
+    "ERR010": {
+      "error_desc": "Home timezone not defined in catalog",
+      "Data": {
+        "CLIENT_ID": "",
+        "CLIENT.MSISDN": "",
+        "CLIENT.TZ": "",
+        "": ""
+      }
+    },
+    "ERR011": {
+      "error_desc": "CREATION DATE missing/mismatch",
+      "Data": {
+        "CLIENT_ID": "",
+        "CLIENT.MSISDN": "",
+        "CLIENT.CREATION_DATE": "",
+        "": ""
+      }
+    },
+    "ERR012": {
+      "error_desc": "Product ID/Offer not mapped in Catalog",
+      "Data": {
+        "CLIENT_ID": "",
+        "CLIENT.MSISDN": "",
+        "OFFERS.OFFER_ID": "",
+        "": ""
+      }
+    },
+    "ERR013": {
+      "error_desc": "Product ID is not listed in Catalog mapping",
+      "Data": {
+        "CLIENT_ID": "",
+        "CLIENT.MSISDN": "",
+        "OFFERS.OFFER_ID": "",
+        "": ""
+      }
+    },
+    "ERR014": {
+      "error_desc": "Bucket ID is not listed in Catalog mapping",
+      "Data": {
+        "CLIENT_ID": "",
+        "CLIENT.MSISDN": "",
+        "BUCKET.ID": "",
+        "": ""
+      }
+    },
+    "ERR015": {
+      "error_desc": "contactMedia key not found",
+      "Data": {
+        "CLIENT_ID": "",
+        "": ""
+      }
+    },
+    "ERR016": {
+      "error_desc": "contactMedia characteristic key not found",
+      "Data": {
+        "CLIENT_ID": "",
+        "": ""
+      }
+    },
+    "ERR017": {
+      "error_desc": "ValidFor missing parameters",
+      "Data": {
+        "CLIENT_ID": "",
+        "": ""
+      }
+    },
+    "ERR018": {
+      "error_desc": "billingAccount default key not found",
+      "Data": {
+        "CLIENT_ID": "",
+        "": ""
+      }
+    },
+    "ERR019": {
+      "error_desc": "billingCycleSpecId not mapped/mismatch",
+      "Data": {
+        "CLIENT_ID": "",
+        "": ""
+      }
+    },
+    "ERR020": {
+      "error_desc": "Origin Id mismatched between Offer and bucket instance",
+      "Data": {
+        "CLIENT_ID": "",
+        "BUCKET.ID": "",
+        "BUCKET.BALANCE": "",
+        "BUCKET.ORIGIN_ID": "",
+        "OFFER.ID": "",
+        "OFFER.ORIGIN_ID": ""
+      }
+    },
+    "ERR021": {
+      "error_desc": "Bucket ID is not present in source data for the OFFER",
+      "Data": {
+        "CLIENT_ID": "",
+        "BUCKET.ID": "",
+        "BUCKET.BALANCE": "",
+        "OFFER.ID": "",
+        "": ""
+      }
+    },
+    "ERR022": {
+      "error_desc": "Bucket ID not mapped in Catalog",
+      "Data": {
+        "CLIENT_ID": "",
+        "BUCKET.ID": "",
+        "BUCKET.BALANCE": "",
+        "": ""
+      }
+    },
+    "ERR023": {
+      "error_desc": "Duplicate bucket present",
+      "Data": {
+        "CLIENT_ID": "",
+        "BUCKET.ID": "",
+        "BUCKET.BALANCE": "",
+        "": ""
+      }
+    },
+    "ERR024": {
+      "error_desc": "Consumption balance more than limit",
+      "Data": {
+        "CLIENT_ID": "",
+        "BUCKET.ID": "",
+        "BUCKET.BALANCE": "",
+        "": ""
+      }
+    },
+    "ERR025": {
+      "error_desc": "Recurrence mismatch between source and target recurrence configuration",
+      "Data": {
+        "CLIENT_ID": "",
+        "BUCKET.ID": "",
+        "BUCKET.LIMIT": "",
+        "OFFER.ID": "",
+        "": ""
+      }
+    },
+    "ERR026": {
+      "error_desc": "Entity already existing",
+      "Data": {
+        "ENTITY.TYPE": "",
+        "ENTITY.CODE": "",
+        "ENTITY.VALUE": "",
+        "": ""
+      }
+    },
+    "ERR027": {
+      "error_desc": "Socket read timeout",
+      "Data": {
+        "ENTITY.TYPE": "",
+        "ENTITY.CODE": "",
+        "ENTITY.VALUE": "",
+        "": ""
+      }
+    },
+    "ERR028": {
+      "error_desc": "Duplicate offer present",
+      "Data": {
+        "CLIENT_ID": "",
+        "OFFERS.ID": "",
+        "OFFERS.ORIGIN_ID": "",
+        "": ""
+      }
+    },
+    "ERR999": {
+      "error_desc": "Exception reported by RM/BEAM",
+      "Data": {
+        "ENTITY.TYPE": "",
+        "ENTITY.CODE": "",
+        "ENTITY.VALUE": "",
+        "": ""
+      }
+    },
+    "DIS001": {
+      "error_desc": "Product ID expired",
+      "Data": {
+        "CLIENT_ID": "",
+        "OFFERS.OFFER_ID": "",
+        "OFFERS.FINAL_DATE": "",
+        "": ""
+      }
+    },
+    "DIS002": {
+      "error_desc": "Bucket ID not mapped in Catalog",
+      "Data": {
+        "CLIENT_ID": "",
+        "OFFERS.OFFER_ID": "",
+        "OFFERS.FINAL_DATE": "",
+        "BUCKET.ID": "",
+        "BUCKET.BALANCE": "",
+        "": ""
+      }
+    },
+    "DIS003": {
+      "error_desc": "Bucket not defined/Present",
+      "Data": {
+        "CLIENT_ID": "",
+        "BUCKET.ID": "",
+        "BUCKET.BALANCE": "",
+        "BUCKET.LIMIT": "",
+        "": ""
+      }
+    },
+    "DIS004": {
+      "error_desc": "Bucket Balance expired",
+      "Data": {
+        "CLIENT_ID": "",
+        "BUCKET.ID": "",
+        "BUCKET.FINAL_DATE": "",
+        "BUCKET.BALANCE": "",
+        "OFFER.ID": "",
+        "": ""
+      }
+    },
+    "DIS005": {
+      "error_desc": "Bucket Counter not defined",
+      "Data": {
+        "CLIENT_ID": "",
+        "BUCKET.id": "",
+        "BUCKET.BALANCE": "",
+        "": ""
+      }
+    },
+    "DIS006": {
+      "error_desc": "Bucket Counter expired",
+      "Data": {
+        "CLIENT_ID": "",
+        "BUCKET.end_date": "",
+        "BUCKET.BALANCE": "",
+        "": ""
+      }
+    },
+    "DIS007": {
+      "error_desc": "Bucket Counter missing in Source",
+      "Data": {
+        "CLIENT_ID": "",
+        "BUCKET.id": "",
+        "BUCKET.BALANCE": "",
+        "": ""
+      }
+    },
+    "DIS008": {
+      "error_desc": "Bucket discarded with no matching offer",
+      "Data": {
+        "CLIENT_ID": "",
+        "BUCKET.ID": "",
+        "BUCKET.ORIGIN_ID": "",
+        "BUCKET.BALANCE": "",
+        "": ""
+      }
+    },
+    "WAR001": {
+      "error_desc": "Product missing END_DATE",
+      "Data": {
+        "CLIENT_ID": "",
+        "OFFERS.OFFER_ID": "",
+        "OFFERS.FINAL_DATE": "",
+        "": ""
+      }
+    },
+    "WAR002": {
+      "error_desc": "Bucket missing END_DATE",
+      "Data": {
+        "CLIENT_ID": "",
+        "BUCKETS.ID": "",
+        "BUCKET.END_DATE": "",
+        "": ""
+      }
+    }
+  }
+}

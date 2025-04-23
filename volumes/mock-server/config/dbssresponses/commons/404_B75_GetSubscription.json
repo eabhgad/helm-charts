@@ -1,0 +1,7 @@
+{
+  "status": "404",
+  "code": "ResourceNotFound",
+  "message": "Not Found",
+  "details": "The requested resource does not exist - ID TRANSLATION v3_24",
+  "source": "CPM"
+}

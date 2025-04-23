@@ -1,0 +1,337 @@
+{
+	"products": [
+		{
+			"id": "02E5B089E74B493696B6EC8C24319994",
+			"validFor": {
+				"start": "2018-04-25T08:04:33.551Z"
+			},
+			"name": "productName",
+			"description": "productDescription",
+			"statuses": [{
+					"status": "Active",
+					"reason": "PRA",
+					"validFor": {
+						"start": "2018-04-25T08:04:33.551Z",
+						"end": "2018-09-29T21:00:00.000Z"
+					}
+				}, {
+					"status": "Inactive",
+					"reason": "PRD",
+					"validFor": {
+						"start": "2018-09-29T21:00:00.000Z"
+					}
+				}
+			],
+			"productOfferings": [{
+					"id": "48f4a575080b16ca96e9b5fbedecd9ea",
+					"humanReadableId": "Ace_Tb_plus_v9",
+					"href": "/cpi/discovery/v1/catalog/default/productOffering/48f4a575080b16ca96e9b5fbedecd9ea",
+					"name": "Kyivstar Tablet+",
+					"offerType": "TariffPlan",
+					"offerSubType": "genericBundle",
+					"isBundle": false,
+					"productSpecification": {
+						"productSpecCharacteristics": [{
+								"id": "usrChr_Quota_UoM",
+								"name": "Quota UoM",
+								"isCalculated": false,
+								"canBeOverriden": false,
+								"configurable": false,
+								"mandatory": false,
+								"characteristicValues": [{
+										"isDefault": false,
+										"valueType": "string"
+									}
+								]
+							} 
+						]
+					},
+					"productCategory": {
+						"id": "productOfferings_productCategory_id"
+					}	
+				}
+			],
+			"productPrices": [{
+				"productOfferingPrice": {
+					"priceType": "ONETIME",
+					"priceSubType": "PURCHASE",
+					"name": "productOfferingPrice_Name",
+					"description": "productOfferingPrice_Description",
+					"price": {
+						"amount": 100.0,
+						"currency": "UAH"
+					},
+					"recurrencePeriod": {
+						"periodType": "recurrencePeriod_periodType"
+					}
+				}
+				
+			}]
+			
+		}, 
+		{
+			"id": "E23154DCB0FD42D58894D451BE71A00D",
+			"validFor": {
+				"start": "2018-04-25T08:04:33.551Z"
+			},
+			"statuses": [{
+					"status": "Active",
+					"reason": "PRA",
+					"validFor": {
+						"start": "2018-04-25T08:04:33.551Z",
+						"end": "2018-10-29T21:00:00.000Z"
+					}
+				}, {
+					"status": "Inactive",
+					"reason": "PRD",
+					"validFor": {
+						"start": "2018-09-29T21:00:00.000Z"
+					}
+				}
+			],
+			"productOfferings": [{
+					"id": "aaad7f56fcda22778fdd6028d387ecd0",
+					"humanReadableId": "BPO_B2C_MPreP_TariffPlan_PrimaryTariff_Ace_Tb_plus_v5",
+					"href": "/cpi/discovery/v1/catalog/default/productOffering/aaad7f56fcda22778fdd6028d387ecd0",
+					"name": "BPO_B2C_MPreP_TariffPlan_PrimaryTariff_Ace_Tb_plus_v5",
+					"offerType": "TariffPlan",
+					"offerSubType": "primaryBundle",
+					"isBundle": false,
+					"productSpecification": {
+						"productSpecCharacteristics": [{
+								"id": "a4ed13c3a3fccaac6330442759e9d2be",
+								"name": "balanceAdditionalInformation",
+								"isCalculated": false,
+								"canBeOverriden": false,
+								"configurable": false,
+								"mandatory": false,
+								"characteristicValues": [{
+										"isDefault": false,
+										"valueType": "string"
+									}, {
+										"isDefault": false,
+										"valueType": "string"
+									}
+								]
+							}, {
+								"id": "longDescription",
+								"name": "Long Description",
+								"isCalculated": false,
+								"canBeOverriden": false,
+								"configurable": false,
+								"mandatory": false,
+								"characteristicValues": [{
+										"isDefault": false,
+										"valueType": "string"
+									}
+								]
+							}, {
+								"humanReadableId": "usrChr_Quota_UoM",
+								"id": "usrChr_Quota_UoM",
+								"name": "Quota UoM",
+								"isCalculated": false,
+								"canBeOverriden": false,
+								"configurable": false,
+								"mandatory": false,
+								"characteristicValues": [{
+										"humanReadableId": "Amt",
+										"value": "Unlimited",
+										"isDefault": false,
+										"valueType": "string"
+									}
+								]
+							}, {
+								"humanReadableId": "usrChr_Quota_UoM",
+								"id": "usrChr_Quota_UoM",
+								"name": "Quota UoM",
+								"isCalculated": false,
+								"canBeOverriden": false,
+								"configurable": false,
+								"mandatory": false,
+								"characteristicValues": [{
+										"humanReadableId": "UoM",
+										"value": "unit",
+										"isDefault": false,
+										"valueType": "string"
+									}
+								]
+							}, {
+								"id": "RequiresImmediateActivation",
+								"name": "Requires Immediate Activation",
+								"isCalculated": false,
+								"canBeOverriden": false,
+								"configurable": false,
+								"mandatory": false,
+								"characteristicValues": [{
+										"isDefault": false,
+										"valueType": "boolean",
+										"value": "0"
+									}, {
+										"isDefault": false,
+										"valueType": "boolean",
+										"value": "1"
+									}
+								]
+							}, {
+								"humanReadableId": "usrChr_Quota_amount",
+								"id": "usrChr_Quota_amount",
+								"name": "Quota Amount",
+								"isCalculated": false,
+								"canBeOverriden": false,
+								"configurable": false,
+								"mandatory": false,
+								"characteristicValues": [{
+										"humanReadableId": "Amt",
+										"value": "1",
+										"isDefault": false,
+										"valueType": "boolean"
+									}
+								]
+							}
+						]
+					},
+					"productCategory": {
+						"id": "resMobPreAddonVAS"
+					}
+				}
+			]
+		}, 
+		{
+			"id": "0038977F505E46C2AC9C6C5325B31E0F",
+			"name": "productName",
+			"description": "productDescription",
+			"validFor": {
+				"start": "2018-04-25T08:04:33.551Z"
+			},
+			"statuses": [{
+					"status": "Active",
+					"reason": "PRA",
+					"validFor": {
+						"start": "2018-04-25T08:04:33.551Z",
+						"end": "2018-09-29T21:00:00.000Z"
+					}
+				}, {
+					"status": "Inactive",
+					"reason": "PRD",
+					"validFor": {
+						"start": "2018-09-29T21:00:00.000Z"
+					}
+				}
+			],
+			"productOfferings": [{
+					"id": "b4d96da2107f1669bb3592ba9bf6035a",
+					"humanReadableId": "PO_B2C_MPreP_VAS_MFS_v9",
+					"href": "/cpi/discovery/v1/catalog/default/productOffering/b4d96da2107f1669bb3592ba9bf6035a",
+					"name": "PO_B2C_MPreP_VAS_MFS_v9",
+					"offerType": "addOn",
+					"offerSubType": "mobileMoney",
+					"isBundle": false,
+					"productSpecification": {
+						"productSpecCharacteristics": [{
+								"id": "RequiresImmediateActivation",
+								"name": "Requires Immediate Activation",
+								"isCalculated": false,
+								"canBeOverriden": false,
+								"configurable": false,
+								"mandatory": false,
+								"characteristicValues": [{
+										"isDefault": false,
+										"valueType": "boolean",
+										"value": "0"
+									}, {
+										"isDefault": false,
+										"valueType": "boolean",
+										"value": "1"
+									}
+								]
+							}, {
+								"humanReadableId": "usrChr_Quota_amount",
+								"id": "usrChr_Quota_amount",
+								"name": "Quota Amount",
+								"isCalculated": false,
+								"canBeOverriden": false,
+								"configurable": false,
+								"mandatory": false,
+								"characteristicValues": [{
+										"humanReadableId": "Amt",
+										"value": "Unlimited",
+										"isDefault": false,
+										"valueType": "boolean"
+									}
+								]
+							}
+						]
+					}
+				}
+			]
+		},
+		{
+			"id": "0A44345B089E74B493696B6EC8C2432018",
+			"validFor": {
+				"start": "2018-04-25T08:04:33.551Z"
+			},
+			"name": "productName",
+			"description": "productDescription",
+			"statuses": [{
+					"status": "Active",
+					"reason": "PRA",
+					"validFor": {
+						"start": "2018-04-25T08:04:33.551Z",
+						"end": "2018-09-29T21:00:00.000Z"
+					}
+				}, {
+					"status": "Inactive",
+					"reason": "PRD",
+					"validFor": {
+						"start": "2018-09-29T21:00:00.000Z"
+					}
+				}
+			],
+			"productOfferings": [{
+					"id": "productOfferingsId_96e9b5fbedecd9ea",
+					"humanReadableId": "FollowMePO",
+					"href": "/cpi/discovery/v1/catalog/default/productOffering/48f4a575080b16ca96e9b5fbedecd9ea",
+					"name": "Kyivstar Tablet+",
+					"offerType": "TariffPlan",
+					"offerSubType": "genericBundle",
+					"isBundle": false,
+					"productSpecification": {
+						"productSpecCharacteristics": [{
+								"id": "usrChr_Quota_UoM",
+								"name": "Quota UoM",
+								"isCalculated": false,
+								"canBeOverriden": false,
+								"configurable": false,
+								"mandatory": false,
+								"characteristicValues": [{
+										"isDefault": false,
+										"valueType": "string"
+									}
+								]
+							} 
+						]
+					},
+					"productCategory": {
+						"id": "resMobPreAddonVAS"
+					}	
+				}
+			],
+			"productPrices": [{
+				"productOfferingPrice": {
+					"priceType": "ONETIME",
+					"priceSubType": "PURCHASE",
+					"name": "productOfferingPrice_Name",
+					"description": "productOfferingPrice_Description",
+					"price": {
+						"amount": 100.0,
+						"currency": "UAH"
+					},
+					"recurrencePeriod": {
+						"periodType": "recurrencePeriod_periodType"
+					}
+				}
+				
+			}]
+		} 
+	]
+}

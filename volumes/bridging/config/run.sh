@@ -1,0 +1,1 @@
+sudo java -jar -XX:+UseG1GC -Xmx8192m -Xms8192m -DconfigDir=/home/dmtools/app/0 -DIGNITE_QUIET=false -Dspring.profiles.active=dev -Dlogging.config=/home/dmtools/app/0/logback/logback.xml -Dspring.config.location=/home/dmtools/app/0/properties/bridging-dev.properties /home/dmtools/app/0/dmtool

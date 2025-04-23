@@ -1,0 +1,1532 @@
+{
+  "Status": {
+    "2": {
+      "PPLC_State": "PPLCActive",
+      "Party_State": "PartyActive",
+      "User_State": "UserActive",
+      "Customer_State": "CustomerActive",
+      "Contract_State": "ContractActive",
+      "Product_State": "ProductActivate",
+      "Resource_State": "ResourceActive",
+      "Addn_State": "-"
+    },
+    "8": {
+      "PPLC_State": "PPLCDeactivate",
+      "Party_State": "PartyDeactivate",
+      "User_State": "UserActive",
+      "Customer_State": "CustomerInactive",
+      "Contract_State": "ContractTerminated",
+      "Product_State": "ProductInactive",
+      "Resource_State": "ResourceActive",
+      "Addn_State": "-"
+    },
+    "47": {
+      "PPLC_State": "PPLCActive",
+      "Party_State": "PartyActive",
+      "User_State": "UserActive",
+      "Customer_State": "CustomerActive",
+      "Contract_State": "ContractActive",
+      "Product_State": "ProductInactive",
+      "Resource_State": "ResourceActive",
+      "Addn_State": "blkPartial"
+    },
+    "48": {
+      "PPLC_State": "PPLCActive",
+      "Party_State": "PartyActive",
+      "User_State": "UserActive",
+      "Customer_State": "CustomerActive",
+      "Contract_State": "ContractActive",
+      "Product_State": "ProductInactive",
+      "Resource_State": "ResourceActive",
+      "Addn_State": "blkSms"
+    }
+  },
+  "Offer": {
+    "DATAPACK": {
+      "SubService_Id": "-",
+      "bucket": {
+        "1171": {
+          "productBucket": 1171
+        }
+      },
+      "RM_Scope": "yes",
+      "PO_TYPE": "Individual",
+      "Sharing_Scope": "no",
+      "PO_Name": "PO Oferta Funcionario",
+      "External ID": "FUNCIONARIO",
+      "isRecurrence": "yes",
+      "isBCAligned": "yes",
+      "Instance": "Multiple",
+      "External_Name": "FNCNR"
+    },
+    "AVULSO": {
+      "SubService_Id": "-",
+      "bucket": {
+        "1017": {
+          "productBucket": 1017
+        }
+      },
+      "RM_Scope": "no",
+      "PO_TYPE": "Individual",
+      "Sharing_Scope": "no",
+      "PO_Name": "PO Pacote Avulso Individual",
+      "External ID": "AVULSO_I",
+      "isRecurrence": "no",
+      "isBCAligned": "no",
+      "Instance": "Single",
+      "External_Name": "AVLSI"
+    },
+    "PACK_POS_AAVL1": {
+      "SubService_Id": "-",
+      "bucket": {
+        "1017": {
+          "productBucket": 1017
+        }
+      },
+      "RM_Scope": "no",
+      "PO_TYPE": "Individual",
+      "Sharing_Scope": "no",
+      "PO_Name": "PO Pacote Avulso Individual",
+      "External ID": "AVULSO_I",
+      "isRecurrence": "no",
+      "isBCAligned": "no",
+      "Instance": "Single",
+      "External_Name": "AVLSI"
+    },
+    "AVULSOCOMP": {
+      "SubService_Id": "-",
+      "bucket": {
+        "2017": {
+          "productBucket": 2017
+        }
+      },
+      "RM_Scope": "yes",
+      "PO_TYPE": "Groups",
+      "Sharing_Scope": "yes",
+      "PO_Name": "PO Pacote Avulso Compartilhado",
+      "External ID": "AVULSO",
+      "isRecurrence": "no",
+      "isBCAligned": "no",
+      "Instance": "Multiple",
+      "External_Name": "AVLS"
+    },
+    "PACK_POS_AAVL2": {
+      "SubService_Id": "",
+      "bucket": {
+        "2017": {
+          "productBucket": 2017
+        }
+      },
+      "RM_Scope": "yes",
+      "PO_TYPE": "Groups",
+      "Sharing_Scope": "yes",
+      "PO_Name": "PO Pacote Avulso Compartilhado",
+      "External ID": "AVULSO",
+      "isRecurrence": "no",
+      "isBCAligned": "no",
+      "Instance": "Multiple",
+      "External_Name": "AVLS"
+    },
+    "BONUSPACK": {
+      "SubService_Id": "-",
+      "bucket": {
+        "1016": {
+          "productBucket": 1016
+        }
+      },
+      "RM_Scope": "no",
+      "PO_TYPE": "Individual",
+      "Sharing_Scope": "no",
+      "PO_Name": "PO Bonus Recorrente Individual",
+      "External ID": "BONUS_I",
+      "isRecurrence": "yes",
+      "isBCAligned": "yes",
+      "Instance": "Single",
+      "External_Name": "BNSI"
+    },
+    "PACK_POS_ABON3": {
+      "SubService_Id": "-",
+      "bucket": {
+        "1016": {
+          "productBucket": 1016
+        }
+      },
+      "RM_Scope": "no",
+      "PO_TYPE": "Individual",
+      "Sharing_Scope": "no",
+      "PO_Name": "PO Bonus Recorrente Individual",
+      "External ID": "BONUS_I",
+      "isRecurrence": "yes",
+      "isBCAligned": "yes",
+      "Instance": "Single",
+      "External_Name": "BNSI"
+    },
+    "BONUSPACKCOMP": {
+      "SubService_Id": "-",
+      "bucket": {
+        "2016": {
+          "productBucket": 2016
+        }
+      },
+      "RM_Scope": "yes",
+      "PO_TYPE": "Groups",
+      "Sharing_Scope": "yes",
+      "PO_Name": "PO Bonus Recorrente Compartilhado",
+      "External ID": "BONUS",
+      "isRecurrence": "yes",
+      "isBCAligned": "yes",
+      "Instance": "Multiple",
+      "External_Name": "BNS"
+    },
+    "PACK_POS_ABON4": {
+      "SubService_Id": "-",
+      "bucket": {
+        "2016": {
+          "productBucket": 2016
+        }
+      },
+      "RM_Scope": "yes",
+      "PO_TYPE": "Groups",
+      "Sharing_Scope": "yes",
+      "PO_Name": "PO Bonus Recorrente Compartilhado",
+      "External ID": "BONUS",
+      "isRecurrence": "yes",
+      "isBCAligned": "yes",
+      "Instance": "Multiple",
+      "External_Name": "BNS"
+    },
+    "DATAPACK#PLANO": {
+      "SubService_Id": "-",
+      "bucket": {
+        "1015": {
+          "productBucket": 1015
+        }
+      },
+      "RM_Scope": "no",
+      "PO_TYPE": "Individual",
+      "Sharing_Scope": "no",
+      "PO_Name": "PO Franquia Individual",
+      "External ID": "FRANQUIA_PLANO_I",
+      "isRecurrence": "yes",
+      "isBCAligned": "yes",
+      "Instance": "Single",
+      "External_Name": "FRQPI"
+    },
+    "DATAPACKCOMP": {
+      "SubService_Id": "-",
+      "bucket": {
+        "2015": {
+          "productBucket": 2015
+        }
+      },
+      "RM_Scope": "yes",
+      "PO_TYPE": "Groups",
+      "Sharing_Scope": "yes",
+      "PO_Name": "PO Franquia Compartilhado",
+      "External ID": "FRANQUIA_PLANO",
+      "isRecurrence": "yes",
+      "isBCAligned": "yes",
+      "Instance": "Single",
+      "External_Name": "FRQP"
+    },
+    "PACK_POS_STRM": {
+      "SubService_Id": "-",
+      "bucket": {
+        "1013": {
+          "productBucket": 1013
+        }
+      },
+      "RM_Scope": "no",
+      "PO_TYPE": "Individual",
+      "Sharing_Scope": "no",
+      "PO_Name": "PO Double Play Individual",
+      "External ID": "STREAM_I",
+      "isRecurrence": "yes",
+      "isBCAligned": "yes",
+      "Instance": "Multiple",
+      "External_Name": "STRMI"
+    },
+    "PACK_POS_STRM_C": {
+      "SubService_Id": "-",
+      "bucket": {
+        "2013": {
+          "productBucket": 2013
+        }
+      },
+      "RM_Scope": "yes",
+      "PO_TYPE": "Groups",
+      "Sharing_Scope": "yes",
+      "PO_Name": "PO Double Play Compartilhado",
+      "External ID": "STREAM",
+      "isRecurrence": "yes",
+      "isBCAligned": "yes",
+      "Instance": "Multiple",
+      "External_Name": "STRM"
+    },
+    "PACK_POS_AWON": {
+      "SubService_Id": "-",
+      "bucket": {
+        "1014": {
+          "productBucket": 1014
+        }
+      },
+      "RM_Scope": "no",
+      "PO_TYPE": "Individual",
+      "Sharing_Scope": "no",
+      "PO_Name": "PO Apps Essenciais Individual",
+      "External ID": "MOBILITY_I",
+      "isRecurrence": "yes",
+      "isBCAligned": "yes",
+      "Instance": "Multiple",
+      "External_Name": "MBLTI"
+    },
+    "PACK_POS_AWON_C": {
+      "SubService_Id": "-",
+      "bucket": {
+        "2014": {
+          "productBucket": 2014
+        }
+      },
+      "RM_Scope": "yes",
+      "PO_TYPE": "Groups",
+      "Sharing_Scope": "yes",
+      "PO_Name": "PO Apps Essenciais Compartilhado",
+      "External ID": "MOBILITY",
+      "isRecurrence": "yes",
+      "isBCAligned": "yes",
+      "Instance": "Multiple",
+      "External_Name": "MBLT"
+    },
+    "PACK_POS_AADC1": {
+      "SubService_Id": "-",
+      "bucket": {
+        "1115": {
+          "productBucket": 1115
+        }
+      },
+      "RM_Scope": "no",
+      "PO_TYPE": "Individual",
+      "Sharing_Scope": "no",
+      "PO_Name": "PO Adicional Recorrente Individual",
+      "External ID": "ADICIONAL_I",
+      "isRecurrence": "yes",
+      "isBCAligned": "yes",
+      "Instance": "Single",
+      "External_Name": "ADCNI"
+    },
+    "PACK_POS_AADC2": {
+      "SubService_Id": "-",
+      "bucket": {
+        "2115": {
+          "productBucket": 2115
+        }
+      },
+      "RM_Scope": "yes",
+      "PO_TYPE": "Groups",
+      "Sharing_Scope": "yes",
+      "PO_Name": "PO Adicional Recorrente Compartilhado",
+      "External ID": "ADICIONAL",
+      "isRecurrence": "yes",
+      "isBCAligned": "yes",
+      "Instance": "Multiple",
+      "External_Name": "ADCN"
+    },
+    "PACK_POS_ABON1": {
+      "SubService_Id": "-",
+      "bucket": {
+        "1116": {
+          "productBucket": 1116
+        }
+      },
+      "RM_Scope": "no",
+      "PO_TYPE": "Individual",
+      "Sharing_Scope": "no",
+      "PO_Name": "PO Bonus Recorrente Individual",
+      "External ID": "BONUS_I",
+      "isRecurrence": "no",
+      "isBCAligned": "yes",
+      "Instance": "Single",
+      "External_Name": "BNSI"
+    },
+    "PACK_POS_ABON2": {
+      "SubService_Id": "-",
+      "bucket": {
+        "2116": {
+          "productBucket": 2016
+        }
+      },
+      "RM_Scope": "yes",
+      "PO_TYPE": "Groups",
+      "Sharing_Scope": "yes",
+      "PO_Name": "PO Bonus Recorrente Compartilhado",
+      "External ID": "BONUS",
+      "isRecurrence": "no",
+      "isBCAligned": "yes",
+      "Instance": "Multiple",
+      "External_Name": "BNS"
+    },
+    "1015_Rollover": {
+      "SubService_Id": "-",
+      "bucket": {
+        "1019": {
+          "productBucket": "1015_Rollover"
+        }
+      },
+      "RM_Scope": "no",
+      "PO_TYPE": "Individual",
+      "Sharing_Scope": "no",
+      "PO_Name": "PO Franquia Individual",
+      "External ID": "FRANQUIA_PLANO_I",
+      "isRecurrence": "",
+      "isBCAligned": "yes",
+      "Instance": "Multiple",
+      "External_Name": ""
+    },
+    "INT_MODEM_PACT": {
+      "SubService_Id": 156,
+      "bucket": {
+        "Default_CAPTIVE": {
+          "productBucket": "PBS_ExternalId_iterceptacao_captive"
+        }
+      },
+      "RM_Scope": "yes",
+      "PO_TYPE": "-",
+      "Sharing_Scope": "yes",
+      "PO_Name": "PO Interceptacao Captive",
+      "External ID": "PO_ExtId_IntCaptive",
+      "isRecurrence": "no",
+      "isBCAligned": "yes",
+      "Instance": "-",
+      "External_Name": ""
+    },
+    "-": {
+      "SubService_Id": "-",
+      "bucket": {
+        "2019": {
+          "productBucket": "2015_Rollover"
+        }
+      },
+      "RM_Scope": "yes",
+      "PO_TYPE": "Groups",
+      "Sharing_Scope": "yes",
+      "PO_Name": "PO Franquia Compartilhado",
+      "External ID": "FRANQUIA_PLANO",
+      "isRecurrence": "",
+      "isBCAligned": "",
+      "Instance": "Multiple",
+      "External_Name": ""
+    },
+    "PACK_POS_WHTP_C": {
+      "SubService_Id": "-",
+      "bucket": {
+        "2200": {
+          "productBucket": 2200
+        }
+      },
+      "RM_Scope": "yes",
+      "PO_TYPE": "Groups",
+      "Sharing_Scope": "yes",
+      "PO_Name": "PO Apps WhatsApp Compartilhado",
+      "External ID": "WHTP",
+      "isRecurrence": "no",
+      "isBCAligned": "yes",
+      "Instance": "Single",
+      "External_Name": "WHTP"
+    },
+    "PACK_POS_RAPP": {
+      "SubService_Id": "-",
+      "bucket": {
+        "1201": {
+          "productBucket": 1201
+        }
+      },
+      "RM_Scope": "yes",
+      "PO_TYPE": "Groups",
+      "Sharing_Scope": "no",
+      "PO_Name": "PO Apps Rappi",
+      "External ID": "RAPP",
+      "isRecurrence": "no",
+      "isBCAligned": "yes",
+      "Instance": "Single",
+      "External_Name": "RAPP"
+    },
+    "PACK_POS_NTFX": {
+      "SubService_Id": "-",
+      "bucket": {
+        "1202": {
+          "productBucket": 1202
+        }
+      },
+      "RM_Scope": "yes",
+      "PO_TYPE": "Groups",
+      "Sharing_Scope": "no",
+      "PO_Name": "PO Apps Netflix",
+      "External ID": "NTFX",
+      "isRecurrence": "no",
+      "isBCAligned": "yes",
+      "Instance": "Single",
+      "External_Name": "NTFX"
+    },
+    "PACK_POS_SPTF": {
+      "SubService_Id": "-",
+      "bucket": {
+        "1203": {
+          "productBucket": 1203
+        }
+      },
+      "RM_Scope": "yes",
+      "PO_TYPE": "Groups",
+      "Sharing_Scope": "no",
+      "PO_Name": "PO Apps Spotify",
+      "External ID": "SPTF",
+      "isRecurrence": "no",
+      "isBCAligned": "yes",
+      "Instance": "Single",
+      "External_Name": "SPTF"
+    },
+    "PACK_POS_TAXI": {
+      "SubService_Id": "-",
+      "bucket": {
+        "1204": {
+          "productBucket": 1204
+        }
+      },
+      "RM_Scope": "yes",
+      "PO_TYPE": "Groups",
+      "Sharing_Scope": "no",
+      "PO_Name": "PO Apps 99 Taxi",
+      "External ID": "TAXI",
+      "isRecurrence": "no",
+      "isBCAligned": "yes",
+      "Instance": "Single",
+      "External_Name": "TAXI"
+    },
+    "PACK_POS_PRMR": {
+      "SubService_Id": "-",
+      "bucket": {
+        "1205": {
+          "productBucket": 1205
+        }
+      },
+      "RM_Scope": "yes",
+      "PO_TYPE": "Groups",
+      "Sharing_Scope": "no",
+      "PO_Name": "PO Apps Premiere",
+      "External ID": "PRMR",
+      "isRecurrence": "no",
+      "isBCAligned": "yes",
+      "Instance": "Single",
+      "External_Name": "PRMR"
+    },
+    "PACK_POS_AMPR": {
+      "SubService_Id": "-",
+      "bucket": {
+        "1206": {
+          "productBucket": 1206
+        }
+      },
+      "RM_Scope": "yes",
+      "PO_TYPE": "Groups",
+      "Sharing_Scope": "no",
+      "PO_Name": "PO Apps Amazon Prime",
+      "External ID": "AMPR",
+      "isRecurrence": "no",
+      "isBCAligned": "yes",
+      "Instance": "Single",
+      "External_Name": "AMPR"
+    },
+    "PACK_POS_GBPL": {
+      "SubService_Id": "-",
+      "bucket": {
+        "1207": {
+          "productBucket": 1207
+        }
+      },
+      "RM_Scope": "yes",
+      "PO_TYPE": "Groups",
+      "Sharing_Scope": "no",
+      "PO_Name": "PO Apps Globo Play",
+      "External ID": "GBPL",
+      "isRecurrence": "no",
+      "isBCAligned": "yes",
+      "Instance": "Single",
+      "External_Name": "GBPL"
+    },
+    "PACK_POS_DSNY": {
+      "SubService_Id": "-",
+      "bucket": {
+        "1208": {
+          "productBucket": 1208
+        }
+      },
+      "RM_Scope": "yes",
+      "PO_TYPE": "Groups",
+      "Sharing_Scope": "no",
+      "PO_Name": "PO Apps Vivo Selfie Disney+",
+      "External ID": "DSNY",
+      "isRecurrence": "no",
+      "isBCAligned": "yes",
+      "Instance": "Single",
+      "External_Name": "DSNY"
+    },
+    "PACK_POS_TLCN": {
+      "SubService_Id": "-",
+      "bucket": {
+        "1209": {
+          "productBucket": 1209
+        }
+      },
+      "RM_Scope": "yes",
+      "PO_TYPE": "Groups",
+      "Sharing_Scope": "no",
+      "PO_Name": "PO Apps Vivo Selfie Telecine",
+      "External ID": "TLCN",
+      "isRecurrence": "no",
+      "isBCAligned": "yes",
+      "Instance": "Single",
+      "External_Name": "TLCN"
+    },
+    "ROLLOVER_COMP": {
+      "SubService_Id": 125,
+      "bucket": {
+        "-": {
+          "productBucket": "-"
+        }
+      },
+      "RM_Scope": "YesF",
+      "PO_TYPE": "",
+      "Sharing_Scope": "",
+      "PO_Name": "clientRollover (contract characteristics)",
+      "External ID": "ComRollover",
+      "isRecurrence": "",
+      "isBCAligned": "",
+      "Instance": "-",
+      "External_Name": ""
+    },
+    "ROLLOVER_POS": {
+      "SubService_Id": 97,
+      "bucket": {
+        "-": {
+          "productBucket": "-"
+        }
+      },
+      "RM_Scope": "YesF",
+      "PO_TYPE": "",
+      "Sharing_Scope": "",
+      "PO_Name": "clientRollover (contract characteristics)",
+      "External ID": "-",
+      "isRecurrence": "",
+      "isBCAligned": "",
+      "Instance": "-",
+      "External_Name": ""
+    },
+    "SRV_NTF_AVL_POS": {
+      "SubService_Id": 26,
+      "bucket": {
+        "-": {
+          "productBucket": "-"
+        }
+      },
+      "RM_Scope": "YesF",
+      "PO_TYPE": "",
+      "Sharing_Scope": "",
+      "PO_Name": "clientPupInternetAvulsa (contract characteristics)",
+      "External ID": "-",
+      "isRecurrence": "",
+      "isBCAligned": "",
+      "Instance": "-",
+      "External_Name": ""
+    },
+    "CONT_ALLOW_LIST": {
+      "SubService_Id": "-",
+      "bucket": {
+        "-": {
+          "productBucket": "-"
+        }
+      },
+      "RM_Scope": "No",
+      "PO_TYPE": "",
+      "Sharing_Scope": "",
+      "PO_Name": "AdditionalStatus(ContractCharacteristics)",
+      "External ID": "blkPartial",
+      "isRecurrence": "",
+      "isBCAligned": "",
+      "Instance": "-",
+      "External_Name": "blkPartial"
+    },
+    "CONT_BLOCK_LIST": {
+      "SubService_Id": "-",
+      "bucket": {
+        "-": {
+          "productBucket": "-"
+        }
+      },
+      "RM_Scope": "No",
+      "PO_TYPE": "",
+      "Sharing_Scope": "",
+      "PO_Name": "AdditionalStatus(ContractCharacteristics)",
+      "External ID": "blkSms",
+      "isRecurrence": "",
+      "isBCAligned": "",
+      "Instance": "-",
+      "External_Name": "blkSms"
+    }
+  },
+  "Timezone": {
+    "-03:00": {
+      "timeZone": "America/Sao_Paulo"
+    }
+  },
+  "Default": {
+    "PROVIDER_MV": {
+      "Value": "Default_PO_All_Providers",
+      "productBucket": 2019,
+      "PO_NAME": "PO Provider"
+    },
+    "CONSUMER_MV": {
+      "Value": "Default_PO_All_Groups",
+      "productBucket": "Consumer_Sharing_Individual_Limit",
+      "PO_NAME": "PO Consumer"
+    },
+    "EXCEDENTE": {
+      "Value": "Default_PO_All_Groups",
+      "productBucket": 2006,
+      "PO_NAME": "PO Excedente Compartilhado"
+    },
+    "TECHNICAL_I": {
+      "Value": "Default_PO_All_Individual",
+      "productBucket": "-",
+      "PO_NAME": "PO Technical"
+    },
+    "EXCEDENTE_I": {
+      "Value": "Default_PO_All_Individual",
+      "productBucket": 1006,
+      "PO_NAME": "PO Excedente Individual"
+    },
+    "CONVERGENTE": {
+      "Value": "-",
+      "productBucket": 2115,
+      "PO_NAME": "-"
+    },
+    "PO_ExtId_SVA": {
+      "Value": "Default_PO_All_Common",
+      "productBucket": 1005,
+      "PO_NAME": "PO SVA"
+    },
+    "user.externalId": {
+      "Value": "userExtId_",
+      "productBucket": "-",
+      "PO_NAME": "-"
+    },
+    "user.partyRoleCategoryId": {
+      "Value": "User",
+      "productBucket": "-",
+      "PO_NAME": "-"
+    },
+    "userParty.externalId": {
+      "Value": "userPartyExternalId_",
+      "productBucket": "-",
+      "PO_NAME": "-"
+    },
+    "user.key": {
+      "Value": "roleType",
+      "productBucket": "-",
+      "PO_NAME": "-"
+    },
+    "msisdn.min.length": {
+      "Value": 9,
+      "productBucket": "-",
+      "PO_NAME": "-"
+    },
+    "msisdn.max.length": {
+      "Value": 11,
+      "productBucket": "-",
+      "PO_NAME": "-"
+    },
+    "imsi.min.length": {
+      "Value": 14,
+      "productBucket": "-",
+      "PO_NAME": "-"
+    },
+    "imsi.max.length": {
+      "Value": 15,
+      "productBucket": "-",
+      "PO_NAME": "-"
+    },
+    "party.externalId": {
+      "Value": "customerPartyExternalId_",
+      "productBucket": "-",
+      "PO_NAME": "-"
+    },
+    "party.contactMedia": {
+      "Value": "Catalog:CMS_sms",
+      "productBucket": "-",
+      "PO_NAME": "-"
+    },
+    "party.contactMedia.key": {
+      "Value": "Comm ID SMS:Channel Type SMS",
+      "productBucket": "-",
+      "PO_NAME": "-"
+    },
+    "party.contactMedia.CHANNELTYPE_SMS.value": {
+      "Value": "SMS",
+      "productBucket": "-",
+      "PO_NAME": "-"
+    },
+    "party.contactMediaExtID": {
+      "Value": "customerContactMediumExtId_",
+      "productBucket": "-",
+      "PO_NAME": "-"
+    },
+    "partyUser.contactMediaExtID": {
+      "Value": "userContactMediumExtId_",
+      "productBucket": "-",
+      "PO_NAME": "-"
+    },
+    "party.contactMediumSpecExternalId": {
+      "Value": "CMS_ExternalId_sms",
+      "productBucket": "-",
+      "PO_NAME": "-"
+    },
+    "party.type": {
+      "Value": "Multivivo",
+      "productBucket": "-",
+      "PO_NAME": "-"
+    },
+    "party.partitionId": {
+      "Value": 1,
+      "productBucket": "-",
+      "PO_NAME": "-"
+    },
+    "party.defaultPartitionId": {
+      "Value": "YES",
+      "productBucket": "-",
+      "PO_NAME": "-"
+    },
+    "party.languageId": {
+      "Value": "pt",
+      "productBucket": "-",
+      "PO_NAME": "-"
+    },
+    "customer.externalId": {
+      "Value": "cust_",
+      "productBucket": "-",
+      "PO_NAME": "-"
+    },
+    "customer.billingAccounts": {
+      "Value": "BAS_Pospago",
+      "productBucket": "-",
+      "PO_NAME": "-"
+    },
+    "customer.billingAccounts.key": {
+      "Value": "Customer Tax Category:Tax Jurisdiction Code",
+      "productBucket": "-",
+      "PO_NAME": "-"
+    },
+    "customer.billingAccounts.value": {
+      "Value": "12#23",
+      "productBucket": "-",
+      "PO_NAME": "-"
+    },
+    "customer.key": {
+      "Value": "clientType",
+      "productBucket": "-",
+      "PO_NAME": "-"
+    },
+    "customer.clientType.value": {
+      "Value": "PF",
+      "productBucket": "-",
+      "PO_NAME": "-"
+    },
+    "customer.contactRoleId": {
+      "Value": "Notification",
+      "productBucket": "-",
+      "PO_NAME": "-"
+    },
+    "customer.languageId": {
+      "Value": "pt",
+      "productBucket": "-",
+      "PO_NAME": "-"
+    },
+    "customer.contactMediumId": {
+      "Value": "Catalog:CMS_sms:id",
+      "productBucket": "",
+      "PO_NAME": "-"
+    },
+    "customer. Enable": {
+      "Value": true,
+      "productBucket": "-",
+      "PO_NAME": "-"
+    },
+    "customer.priceTypes": {
+      "Value": "any",
+      "productBucket": "-",
+      "PO_NAME": "-"
+    },
+    "customer.billingAccounts.externalId": {
+      "Value": "billingAccountExtId_",
+      "productBucket": "-",
+      "PO_NAME": "-"
+    },
+    "customer.billingAccountSpecExternalId": {
+      "Value": "billingAccountSpecExternalId_",
+      "productBucket": "-",
+      "PO_NAME": "-"
+    },
+    "customer.partyRoleCategoryId": {
+      "Value": "Customer",
+      "productBucket": "-",
+      "PO_NAME": "-"
+    },
+    "customer.billCycleSpecExternalId": {
+      "Value": "customerBillCycleExtId_",
+      "productBucket": "-",
+      "PO_NAME": "-"
+    },
+    "customer.billingAccountStatus": {
+      "Value": "BillingAccountActive",
+      "productBucket": "-",
+      "PO_NAME": "-"
+    },
+    "contract.paymentContextId": {
+      "Value": "Postpaid",
+      "productBucket": "-",
+      "PO_NAME": "-"
+    },
+    "resource.cc": {
+      "Value": 55,
+      "productBucket": "-",
+      "PO_NAME": "-"
+    },
+    "resource.MSISDN": {
+      "Value": "LRSMSISDN",
+      "productBucket": "-",
+      "PO_NAME": "-"
+    },
+    "resource.IMSI": {
+      "Value": "LRSIMSI",
+      "productBucket": "-",
+      "PO_NAME": "-"
+    },
+    "contract.interactionRole": {
+      "Value": "LegalContractHolder",
+      "productBucket": "-",
+      "PO_NAME": "-"
+    },
+    "contract.resource.externalId": {
+      "Value": "",
+      "productBucket": "-",
+      "PO_NAME": "-"
+    },
+    "contract.resource.resourceSpecExtId": {
+      "Value": "",
+      "productBucket": "-",
+      "PO_NAME": "-"
+    },
+    "contract.key": {
+      "Value": "sharingClassification:sharingGroupId:clientCategory:clientQuota:clientRollover:clientPupPublicitario:clientPupIncentivo:clientPupCadastrado:clientPupInternetAvulsa:clientPupBlkPacoteAvulso",
+      "productBucket": "-",
+      "PO_NAME": "-"
+    },
+    "contract.po.key": {
+      "Value": "recurrenceValue:initialValue:threshold 80:individualLimit:threshold 100",
+      "productBucket": "-",
+      "PO_NAME": "-"
+    },
+    "contract.pb.key": {
+      "Value": "quota:rollover:ThresholdValue",
+      "productBucket": "-",
+      "PO_NAME": "-"
+    },
+    "contract.recurrence.strict.validation": {
+      "Value": "DISABLE",
+      "productBucket": "-",
+      "PO_NAME": "-"
+    },
+    "contract.po.scope": {
+      "Value": "unlimited",
+      "productBucket": "",
+      "PO_NAME": ""
+    },
+    "header.reason": {
+      "Value": "Migration",
+      "productBucket": "-",
+      "PO_NAME": "-"
+    },
+    "VIVO.loglevel": {
+      "Value": "info",
+      "productBucket": "-",
+      "PO_NAME": "-"
+    },
+    "disableNotif_Start": {
+      "Value": "",
+      "productBucket": "-",
+      "PO_NAME": "-"
+    },
+    "disableNotif_End": {
+      "Value": 8,
+      "productBucket": "-",
+      "PO_NAME": "-"
+    },
+    "individualbucket.rollover": {
+      "Value": 1019,
+      "productBucket": 1015,
+      "PO_NAME": "-"
+    },
+    "bucket.rollover": {
+      "Value": 2019,
+      "productBucket": 2015,
+      "PO_NAME": "-"
+    },
+    "rb.party.chars_name": {
+      "Value": "baseconfig_party_cs_G277C51",
+      "productBucket": "-",
+      "PO_NAME": "-"
+    },
+    "rb.user.chars_name": {
+      "Value": "baseconfig_user_cs_D277B53",
+      "productBucket": "-",
+      "PO_NAME": "-"
+    },
+    "rb.customer.chars_name": {
+      "Value": "baseconfig_customers_cs_D277B53",
+      "productBucket": "-",
+      "PO_NAME": "-"
+    },
+    "rb.contract.chars_name": {
+      "Value": "baseconfig_contracts_cs_D277B52",
+      "productBucket": "-",
+      "PO_NAME": "-"
+    },
+    "rb.entityValues": {
+      "Value": "1:2:3:4",
+      "productBucket": "-",
+      "PO_NAME": "-"
+    },
+    "rb.chars_name": {
+      "Value": "party#baseconfig_party_cs_G277C51:user#baseconfig_user_cs_D277B53:customer#baseconfig_customers_cs_D277B53:contract#baseconfig_contracts_cs_D277B52",
+      "productBucket": "-",
+      "PO_NAME": "-"
+    },
+    "rb.chars_value": {
+      "Value": "party#5:user#4:customer#3:provider#1:consumer#1",
+      "productBucket": "-",
+      "PO_NAME": "-"
+    },
+    "rb.validity": {
+      "Value": "party#1:user#2:customer#3:provider#4:consumer#5",
+      "productBucket": "-",
+      "PO_NAME": "-"
+    },
+    "pb.decimal": {
+      "Value": 0,
+      "productBucket": "-",
+      "PO_NAME": "-"
+    },
+    "bucket.exceptionList": {
+      "Value": "2006#2019",
+      "productBucket": "-",
+      "PO_NAME": "-"
+    }
+  },
+  "Recurrence": {
+    "0": {
+      "Range": "-"
+    },
+    "524800000": {
+      "Range": "-"
+    },
+    "1073741824": {
+      "Range": "-"
+    },
+    "2147483648": {
+      "Range": "-"
+    },
+    "3221225472": {
+      "Range": "-"
+    },
+    "-1": {
+      "Range": "-"
+    },
+    "4294967296": {
+      "Range": "-"
+    },
+    "5368709120": {
+      "Range": "-"
+    },
+    "7516192768": {
+      "Range": "-"
+    },
+    "8589934592": {
+      "Range": "-"
+    },
+    "10737418240": {
+      "Range": "-"
+    },
+    "12884901888": {
+      "Range": "-"
+    },
+    "16106127360": {
+      "Range": "-"
+    },
+    "17179869184": {
+      "Range": "-"
+    },
+    "21474836480": {
+      "Range": "-"
+    },
+    "26843545600": {
+      "Range": "-"
+    },
+    "32212254720": {
+      "Range": "-"
+    },
+    "37580963840": {
+      "Range": "-"
+    },
+    "42949672960": {
+      "Range": "-"
+    },
+    "53687091200": {
+      "Range": "-"
+    },
+    "64424509440": {
+      "Range": "-"
+    },
+    "75161927680": {
+      "Range": "-"
+    },
+    "85899345920": {
+      "Range": "-"
+    },
+    "107374182400": {
+      "Range": "-"
+    },
+    "150323855360": {
+      "Range": "-"
+    },
+    "193273528320": {
+      "Range": "-"
+    },
+    "536870912000": {
+      "Range": "-"
+    }
+  },
+  "Partition": {
+    "1": {
+      "Range": 11,
+      "Site": "Palmeiras"
+    },
+    "2": {
+      "Range": "12#19",
+      "Site": "jaguare"
+    },
+    "3": {
+      "Range": "31,6",
+      "Site": "Funcionarios"
+    },
+    "4": {
+      "Range": "2,32#39",
+      "Site": "Barra"
+    },
+    "5": {
+      "Range": 9,
+      "Site": "Pedreira"
+    },
+    "6": {
+      "Range": "7,8",
+      "Site": "Cabula"
+    },
+    "7": {
+      "Range": 4,
+      "Site": "P. Gusso"
+    },
+    "8": {
+      "Range": 5,
+      "Site": "Indep"
+    }
+  },
+  "Topics": {
+    "b1": {
+      "Range": "1#2",
+      "Site": "Batch-1"
+    },
+    "b2": {
+      "Range": "3#10",
+      "Site": "Batch-2"
+    },
+    "b3": {
+      "Range": 11,
+      "Site": "Batch-3"
+    }
+  },
+  "Sharing": {
+    "PROVIDER_MV": {
+      "Consumer": "CONSUMER_MV",
+      "Type": "Global"
+    },
+    "EXCEDENTE": {
+      "Consumer": "EXCEDENTE",
+      "Type": "local"
+    },
+    "TECHNICAL_I": {
+      "Consumer": "TECHNICAL_I",
+      "Type": "local"
+    }
+  },
+  "Wallet": {
+    "1005": {
+      "Type": "VOL",
+      "Way": "ASC",
+      "Rollover": "YES",
+      "RMCA_Name": "Technical SVA",
+      "ExtId": "Technical SVA"
+    },
+    "1006": {
+      "Type": "VOL",
+      "Way": "ASC",
+      "Rollover": "NO",
+      "RMCA_Name": "Excedente Individual",
+      "ExtId": "Excedente Individual"
+    },
+    "1013": {
+      "Type": "VOL",
+      "Way": "ASC",
+      "Rollover": "NO",
+      "RMCA_Name": "Double Play Individual",
+      "ExtId": "Double Play Individual"
+    },
+    "1014": {
+      "Type": "VOL",
+      "Way": "ASC",
+      "Rollover": "NO",
+      "RMCA_Name": "Apps Essenciais Individual",
+      "ExtId": "Apps Essenciais Individual"
+    },
+    "1015": {
+      "Type": "VOL",
+      "Way": "ASC",
+      "Rollover": "YES",
+      "RMCA_Name": "Franquia Individual",
+      "ExtId": "Franquia Individual"
+    },
+    "1016": {
+      "Type": "VOL",
+      "Way": "ASC",
+      "Rollover": "NO",
+      "RMCA_Name": "Bonus Recorrente Individual",
+      "ExtId": "Bonus Recorrente Individual"
+    },
+    "1017": {
+      "Type": "VOL",
+      "Way": "ASC",
+      "Rollover": "NO",
+      "RMCA_Name": "Pacote Avulso Individual",
+      "ExtId": "Pacote Avulso Individual"
+    },
+    "1019": {
+      "Type": "VOL",
+      "Way": "ASC",
+      "Rollover": "NO",
+      "RMCA_Name": "Franquia Rollover Individual",
+      "ExtId": "Franquia Rollover Individual"
+    },
+    "1115": {
+      "Type": "VOL",
+      "Way": "ASC",
+      "Rollover": "YES",
+      "RMCA_Name": "Adicional Recorrente Individual",
+      "ExtId": "Adicional Recorrente Individual"
+    },
+    "1116": {
+      "Type": "VOL",
+      "Way": "ASC",
+      "Rollover": "NO",
+      "RMCA_Name": "Bonus Recorrente Individual",
+      "ExtId": "Bonus Recorrente Individual"
+    },
+    "1171": {
+      "Type": "VOL",
+      "Way": "ASC",
+      "Rollover": "YES",
+      "RMCA_Name": "Funcionario",
+      "ExtId": "Funcionario"
+    },
+    "1201": {
+      "Type": "VOL",
+      "Way": "ASC",
+      "Rollover": "NO",
+      "RMCA_Name": "Apps Rappi Individual",
+      "ExtId": "Rappi"
+    },
+    "1202": {
+      "Type": "VOL",
+      "Way": "ASC",
+      "Rollover": "NO",
+      "RMCA_Name": "Apps Netflix Individual",
+      "ExtId": "Netflix"
+    },
+    "1203": {
+      "Type": "VOL",
+      "Way": "ASC",
+      "Rollover": "NO",
+      "RMCA_Name": "Apps Spotify Individual",
+      "ExtId": "Spotify"
+    },
+    "1204": {
+      "Type": "VOL",
+      "Way": "ASC",
+      "Rollover": "NO",
+      "RMCA_Name": "Apps 99 Taxi Individual",
+      "ExtId": "99 Taxi"
+    },
+    "1205": {
+      "Type": "VOL",
+      "Way": "ASC",
+      "Rollover": "NO",
+      "RMCA_Name": "Apps Premiere Individual",
+      "ExtId": "Premiere"
+    },
+    "1206": {
+      "Type": "VOL",
+      "Way": "ASC",
+      "Rollover": "NO",
+      "RMCA_Name": "Apps Amazon Prime Individual",
+      "ExtId": "AMPR"
+    },
+    "1207": {
+      "Type": "VOL",
+      "Way": "ASC",
+      "Rollover": "NO",
+      "RMCA_Name": "Apps Globo Play Individual",
+      "ExtId": "GBPL"
+    },
+    "1208": {
+      "Type": "VOL",
+      "Way": "ASC",
+      "Rollover": "NO",
+      "RMCA_Name": "Apps Vivo Selfie Disney",
+      "ExtId": "DSNY"
+    },
+    "1209": {
+      "Type": "VOL",
+      "Way": "ASC",
+      "Rollover": "NO",
+      "RMCA_Name": "Apps Vivo Selfie Telecine",
+      "ExtId": "TLCN"
+    },
+    "2006": {
+      "Type": "VOL",
+      "Way": "ASC",
+      "Rollover": "NO",
+      "RMCA_Name": "Excedente Consumo Compartilhado",
+      "ExtId": "Excedente Compartilhado"
+    },
+    "2013": {
+      "Type": "VOL",
+      "Way": "ASC",
+      "Rollover": "NO",
+      "RMCA_Name": "Double Play Compartilhado",
+      "ExtId": "Double Play Compartilhado"
+    },
+    "2014": {
+      "Type": "VOL",
+      "Way": "ASC",
+      "Rollover": "NO",
+      "RMCA_Name": "Apps Essenciais Compartilhado",
+      "ExtId": "Apps Essenciais Compartilhado"
+    },
+    "2015": {
+      "Type": "VOL",
+      "Way": "ASC",
+      "Rollover": "YES",
+      "RMCA_Name": "Franquia Compartilhado",
+      "ExtId": "Franquia Compartilhado"
+    },
+    "2016": {
+      "Type": "VOL",
+      "Way": "ASC",
+      "Rollover": "NO",
+      "RMCA_Name": "Bonus Recorrente Compartilhado",
+      "ExtId": "Bonus Recorrente Compartilhado"
+    },
+    "2017": {
+      "Type": "VOL",
+      "Way": "ASC",
+      "Rollover": "NO",
+      "RMCA_Name": "Pacote Avulso Compartilhado",
+      "ExtId": "Pacote Avulso Compartilhado"
+    },
+    "2019": {
+      "Type": "VOL",
+      "Way": "ASC",
+      "Rollover": "NO",
+      "RMCA_Name": "Rollover Notification Start Common Limit",
+      "ExtId": "Rollover Notification Start Common Limit"
+    },
+    "2115": {
+      "Type": "VOL",
+      "Way": "ASC",
+      "Rollover": "YES",
+      "RMCA_Name": "Adicional Recorrente Compartilhado",
+      "ExtId": "Adicional Recorrente Compartilhado"
+    },
+    "2116": {
+      "Type": "VOL",
+      "Way": "ASC",
+      "Rollover": "YES",
+      "RMCA_Name": "Bonus Recorrente Compartilhado",
+      "ExtId": "Bonus Recorrente Compartilhado"
+    },
+    "2200": {
+      "Type": "VOL",
+      "Way": "ASC",
+      "Rollover": "NO",
+      "RMCA_Name": "Apps WhatsApp Compartilhado",
+      "ExtId": "WhatsApp Compartilhado"
+    },
+    "1015_Rollover": {
+      "Type": "VOL",
+      "Way": "ASC",
+      "Rollover": "NO",
+      "RMCA_Name": "Franquia Rollover Individual",
+      "ExtId": "Franquia Rollover Individual"
+    },
+    "Technical_Rollover_NTF_Start": {
+      "Type": "-",
+      "Way": "-",
+      "Rollover": "-",
+      "RMCA_Name": "Technical Rollover NTF Start",
+      "ExtId": "Technical Rollover NTF Start"
+    },
+    "Franquia_Dummy": {
+      "Type": "-",
+      "Way": "-",
+      "Rollover": "-",
+      "RMCA_Name": "Franquia Dummy",
+      "ExtId": "Franquia Dummy"
+    },
+    "1115_Rollover": {
+      "Type": "VOL",
+      "Way": "ASC",
+      "Rollover": "YES",
+      "RMCA_Name": "Adicional Recorrente Rollover Individual",
+      "ExtId": "Adicional Recorrente Rollover Individual"
+    },
+    "1116_Rollover": {
+      "Type": "VOL",
+      "Way": "ASC",
+      "Rollover": "NO",
+      "RMCA_Name": "Bonus Recorrente Rollover Individual",
+      "ExtId": "Bonus Recorrente Rollover Individual"
+    },
+    "2015_Rollover": {
+      "Type": "VOL",
+      "Way": "ASC",
+      "Rollover": "NO",
+      "RMCA_Name": "Franquia Rollover Compartilhado",
+      "ExtId": "Franquia Rollover Compartilhado"
+    },
+    "2115_Rollover": {
+      "Type": "VOL",
+      "Way": "ASC",
+      "Rollover": "YES",
+      "RMCA_Name": "Adicional Recorrente Rollover Compartilhado",
+      "ExtId": "Adicional Recorrente Rollover Compartilhado"
+    },
+    "Rollover_Notification_Start_Common_Limit": {
+      "Type": "VOL",
+      "Way": "ASC",
+      "Rollover": "YES",
+      "RMCA_Name": "Rollover Notification Start Common Limit",
+      "ExtId": "Rollover Notification Start Common Limit"
+    },
+    "Consumer_Sharing_Individual_Limit": {
+      "Type": "VOL",
+      "Way": "ASC",
+      "Rollover": "YES",
+      "RMCA_Name": "Consumer Sharing Individual Limit",
+      "ExtId": "Consumer Sharing Individual Limit"
+    },
+    "Interception_Captive": {
+      "Type": "VOL",
+      "Way": "ASC",
+      "Rollover": "YES",
+      "RMCA_Name": "Interception Captive",
+      "ExtId": "Interception Captive"
+    }
+  },
+  "Chars": {
+    "contract": {
+      "chars": {
+        "additionalStatus": {
+          "Value": "active#blkPartial#blkSms"
+        },
+        "sharingClassification": {
+          "Value": "Titular#Dependente#Individual"
+        },
+        "sharingGroupId": {
+          "Value": "0#any"
+        },
+        "clientCategory": {
+          "Value": "pos#ctrl#pre#easy#gestao"
+        },
+        "clientPupIncentivo": {
+          "Value": "0#1"
+        },
+        "clientPupPublicitario": {
+          "Value": "0#1"
+        },
+        "clientPupInternetAvulsa": {
+          "Value": "0#1"
+        },
+        "clientPupCadastrado": {
+          "Value": "0#1"
+        },
+        "clientPupBlkPacoteAvulso": {
+          "Value": "0#1"
+        },
+        "clientQuota": {
+          "Value": "SemCota#ComCota"
+        },
+        "clientRollover": {
+          "Value": "SemRollover:ComRollover"
+        }
+      }
+    },
+    "customer": {
+      "chars": {
+        "clientType": {
+          "Value": "PF#PJ"
+        }
+      }
+    },
+    "user": {
+      "chars": {
+        "roleType": {
+          "Value": "Titular#Dependente#Individual"
+        }
+      }
+    },
+    "bucket": {
+      "chars": {
+        "individualLimit": {
+          "Value": "2015#2115"
+        }
+      }
+    },
+    "po": {
+      "chars": {
+        "initialValue": {
+          "Value": 0
+        },
+        "threshold 80": {
+          "Value": "limit_value * 0.80"
+        },
+        "recurrenceValue": {
+          "Value": "limit_value"
+        }
+      }
+    }
+  }
+}

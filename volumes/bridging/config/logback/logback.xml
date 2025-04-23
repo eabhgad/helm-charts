@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+	<property scope="context" name="tag" value="${tag.name}" />
+	<property scope="context" name="service_name" value="${service.name}" />
+	<property scope="context" name="service_host" value="${service.host.name}" />
+	<property scope="context" name="service_port" value="${server.port}" />
+	<property scope="context" name="service_instanceId" value="${service.instanceId}" />
+	<property name="LOG_HOME" value="/home/eabhgad/app/logs" />
+
+	<appender name="kafkaAsyncAppender"
+		class="com.github.danielwegener.logback.kafka.KafkaAppender">
+		<encoder charset= "UTF-8" class= "net.logstash.logback.encoder.LogstashEncoder" > 
+		  <fieldNames>
+    		<tags>marker</tags>
+  		</fieldNames>
+		</encoder> 
+		<topic>CS2BEAM-LOG-TOPIC</topic>
+		<keyingStrategy class="com.github.danielwegener.logback.kafka.keying.NoKeyKeyingStrategy" />
+		<deliveryStrategy class="com.github.danielwegener.logback.kafka.delivery.AsynchronousDeliveryStrategy" />
+		<producerConfig>bootstrap.servers=localhost:9092</producerConfig>
+		<producerConfig>retries=2</producerConfig>
+	</appender>
+	
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+	  <layout class="ch.qos.logback.classic.PatternLayout">
+		<pattern>
+			%d{yyyy-MM-dd HH:mm:ss} [%15.15thread] %-5level %logger{0} - %msg%n
+		</pattern>
+	  </layout>
+    </appender> 
+    
+	<appender name="FILE_APPENDER" class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<file>${LOG_HOME}/brg-${service_host}.log</file>
+		<rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+			<fileNamePattern>${LOG_HOME}/archived/bridging.%d{yyyy-MM-dd}.%i.log.gz</fileNamePattern>
+			<maxFileSize>50MB</maxFileSize>
+			<totalSizeCap>20GB</totalSizeCap>
+			<maxHistory>60</maxHistory>
+		</rollingPolicy>
+		<!--
+		<encoder class="net.logstash.logback.encoder.LogstashEncoder" /> 
+		-->
+		<encoder>
+			<pattern><![CDATA[%date{yyyy-MM-dd HH:mm:ss.SSS} [%property{service_host}] [%thread] %marker %-5level %logger{15}#%line %X{req.requestURI} %msg%n]]></pattern>   
+		</encoder>
+	</appender>
+   
+    <!-- <logger name="com.ericsson" level="${app.logger.level}" additivity="false"> -->
+	<logger name="com.ericsson" level="DEBUG" additivity="false">
+      <appender-ref ref="FILE_APPENDER" />
+    </logger> 
+    <logger name="org.springframework" level="INFO" additivity="false">
+      <appender-ref ref="FILE_APPENDER" />
+    </logger> 
+    <logger name="org.apache" level="WARN" additivity="false">
+      <appender-ref ref="FILE_APPENDER" />
+    </logger>
+     <logger name="Groovy" level="INFO" additivity="false">
+        <appender-ref ref="FILE_APPENDER" />
+    </logger>
+	 <logger name="org.quartz.core" level="WARN" additivity="false">
+		<appender-ref ref="FILE_APPENDER" />
+	</logger>
+	<logger name="com.datastax" level="WARN" additivity="false">
+	  <appender-ref ref="FILE_APPENDER" />
+	</logger>
+	
+
+	<root level="INFO">
+	   <appender-ref ref="FILE_APPENDER" />
+	   <appender-ref ref="STDOUT" />
+    </root>
+</configuration>

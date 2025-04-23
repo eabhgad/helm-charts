@@ -1,0 +1,31 @@
+source:
+  local:
+    hostname: locahost
+    user:
+    password:
+    resources:
+      - esa_logs: #  Specify name of a resource. You can provide any name here.
+          path: /var/log/esa
+          files: # Specify files to be copied to target location 
+            - alarms.log*
+            - PmAgent.log*
+          target: # Specify target names where the files will be copied. 
+            - local
+            - remote 
+          action: copy
+      - application_log:
+          path: /data/bridging/logs
+          files: 
+            - bridging.log
+          target:
+            - local
+          #action: copy
+targets:
+  local:
+    hostname: localhost
+    path: /data/test/sftp
+  remote:
+    hostname: 10.61.45.216
+    user: admin
+    password: ABc123456!
+    path: /home/admin/temp

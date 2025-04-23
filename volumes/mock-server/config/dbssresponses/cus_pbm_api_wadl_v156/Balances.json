@@ -1,0 +1,41 @@
+{
+	"balances": [{
+		"id": "id1",
+		"name": "balance1",
+		"bucketType": "billingAccountBucket",
+		"description": "description1",
+		"bucket": {
+			"id": "1"
+		},
+		"remainedAmount": {
+			"amount": 1000,
+			"units": "10"
+		}
+	},
+	{
+		"id": "productBucketId1",
+		"name": "balance2",
+		"bucketType": "productBucket",
+		"description": "description2",
+		"bucket": {
+			"id": "1"
+		},
+		"remainedAmount": {
+			"amount": 1000,
+			"units": "20"
+		}
+	},
+	{
+		"id": "productBucketId3",
+		"name": "balance2",
+		"bucketType": "productBucket",
+		"description": "description2",
+		"bucket": {
+			"id": "1"
+		},
+		"remainedAmount": {
+			"amount": 125,
+			"units": "10"
+		}
+	}]
+}

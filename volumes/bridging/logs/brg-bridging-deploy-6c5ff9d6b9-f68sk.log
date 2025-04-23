@@ -1,0 +1,166 @@
+2025-04-18 08:35:09.555 [bridging-deploy-6c5ff9d6b9-f68sk] [main]  INFO  c.e.r.b.v.BridgingApp#50  Starting BridgingApp v0.0-SNAPSHOT on bridging-deploy-6c5ff9d6b9-f68sk with PID 12 (/home/eabhgad/app/bridging/Bridging-2.8.9.m.0-snapshot.jar started by root in /home/eabhgad/app/bridging)
+2025-04-18 08:35:09.555 [bridging-deploy-6c5ff9d6b9-f68sk] [main]  DEBUG c.e.r.b.v.BridgingApp#53  Running with Spring Boot v2.1.3.RELEASE, Spring v5.1.5.RELEASE
+2025-04-18 08:35:09.557 [bridging-deploy-6c5ff9d6b9-f68sk] [main]  INFO  c.e.r.b.v.BridgingApp#679  The following profiles are active: dev
+2025-04-18 08:35:17.568 [bridging-deploy-6c5ff9d6b9-f68sk] [main]  INFO  o.s.d.r.c.RepositoryConfigurationDelegate#126  Bootstrapping Spring Data repositories in DEFAULT mode.
+2025-04-18 08:35:17.684 [bridging-deploy-6c5ff9d6b9-f68sk] [main]  INFO  o.s.d.r.c.RepositoryConfigurationDelegate#182  Finished Spring Data repository scanning in 90ms. Found 0 repository interfaces.
+2025-04-18 08:35:17.705 [bridging-deploy-6c5ff9d6b9-f68sk] [main]  INFO  o.s.d.r.c.RepositoryConfigurationDelegate#126  Bootstrapping Spring Data repositories in DEFAULT mode.
+2025-04-18 08:35:17.710 [bridging-deploy-6c5ff9d6b9-f68sk] [main]  INFO  o.s.d.r.c.RepositoryConfigurationDelegate#182  Finished Spring Data repository scanning in 4ms. Found 0 repository interfaces.
+2025-04-18 08:35:20.767 [bridging-deploy-6c5ff9d6b9-f68sk] [main]  INFO  o.s.c.s.PostProcessorRegistrationDelegate$BeanPostProcessorChecker#330  Bean 'org.springframework.kafka.annotation.KafkaBootstrapConfiguration' of type [org.springframework.kafka.annotation.KafkaBootstrapConfiguration$$EnhancerBySpringCGLIB$$c89fea20] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2025-04-18 08:35:21.021 [bridging-deploy-6c5ff9d6b9-f68sk] [main]  INFO  o.s.c.s.PostProcessorRegistrationDelegate$BeanPostProcessorChecker#330  Bean 'org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration' of type [org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration$$EnhancerBySpringCGLIB$$f4edd89d] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2025-04-18 08:35:21.253 [bridging-deploy-6c5ff9d6b9-f68sk] [main]  INFO  c.e.d.b.c.c.u.IOUtils#341  Properties file loaded:/home/eabhgad/app/bridging/config/properties/bridging-dev.properties
+2025-04-18 08:35:21.339 [bridging-deploy-6c5ff9d6b9-f68sk] [main]  INFO  o.e.j.util.log#193  Logging initialized @23521ms to org.eclipse.jetty.util.log.Slf4jLog
+2025-04-18 08:35:23.313 [bridging-deploy-6c5ff9d6b9-f68sk] [main]  INFO  o.s.b.w.e.j.JettyServletWebServerFactory#143  Server initialized with port: 8989
+2025-04-18 08:35:23.353 [bridging-deploy-6c5ff9d6b9-f68sk] [main]  INFO  c.e.r.b.v.BridgingApp#124  Started endpoint [Name: Generic, Type: null, Port: 8081, Secured: false]
+2025-04-18 08:35:23.354 [bridging-deploy-6c5ff9d6b9-f68sk] [main]  INFO  c.e.r.b.v.BridgingApp#124  Started endpoint [Name: Management, Type: null, Port: 1004, Secured: false]
+2025-04-18 08:35:23.355 [bridging-deploy-6c5ff9d6b9-f68sk] [main]  INFO  c.e.r.b.v.BridgingApp#124  Started endpoint [Name: Subscription, Type: null, Port: 1003, Secured: false]
+2025-04-18 08:35:23.357 [bridging-deploy-6c5ff9d6b9-f68sk] [main]  INFO  c.e.r.b.v.BridgingApp#124  Started endpoint [Name: Lookup, Type: null, Port: 1002, Secured: false]
+2025-04-18 08:35:23.426 [bridging-deploy-6c5ff9d6b9-f68sk] [main]  INFO  o.e.j.s.Server#370  jetty-9.4.14.v20181114; built: 2018-11-14T21:20:31.478Z; git: c4550056e785fb5665914545889f21dc136ad9e6; jvm 1.8.0_212-b04
+2025-04-18 08:35:23.895 [bridging-deploy-6c5ff9d6b9-f68sk] [main]  WARN  o.e.j.s.SecurityHandler#803  null has uncovered http methods for path: /
+2025-04-18 08:35:23.911 [bridging-deploy-6c5ff9d6b9-f68sk] [main]  WARN  o.e.j.s.SecurityHandler#803  null has uncovered http methods for path: /
+2025-04-18 08:35:23.915 [bridging-deploy-6c5ff9d6b9-f68sk] [main]  WARN  o.e.j.s.SecurityHandler#803  null has uncovered http methods for path: /
+2025-04-18 08:35:23.918 [bridging-deploy-6c5ff9d6b9-f68sk] [main]  WARN  o.e.j.s.SecurityHandler#803  null has uncovered http methods for path: /
+2025-04-18 08:35:24.039 [bridging-deploy-6c5ff9d6b9-f68sk] [main]  INFO  o.e.j.s.h.C.application#2345  Initializing Spring embedded WebApplicationContext
+2025-04-18 08:35:24.040 [bridging-deploy-6c5ff9d6b9-f68sk] [main]  INFO  o.s.w.c.ContextLoader#296  Root WebApplicationContext: initialization completed in 12864 ms
+2025-04-18 08:35:25.209 [bridging-deploy-6c5ff9d6b9-f68sk] [main]  INFO  o.s.j.d.e.EmbeddedDatabaseFactory#189  Starting embedded database: url='jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=false', username='sa'
+2025-04-18 08:35:26.525 [bridging-deploy-6c5ff9d6b9-f68sk] [main]  INFO  c.e.d.b.c.c.u.IOUtils#341  Counters file loaded:/home/eabhgad/app/bridging/config/logback/counters.properties
+2025-04-18 08:35:26.577 [bridging-deploy-6c5ff9d6b9-f68sk] [main]  INFO  c.e.d.b.d.c.s.c.SchedulerCounterConfig#60  9 counterJobs were scheduled 
+2025-04-18 08:35:26.699 [bridging-deploy-6c5ff9d6b9-f68sk] [main]  INFO  o.q.i.StdSchedulerFactory#1208  Using default implementation for ThreadExecutor
+2025-04-18 08:35:26.837 [bridging-deploy-6c5ff9d6b9-f68sk] [main]  INFO  o.q.s.RAMJobStore#155  RAMJobStore initialized.
+2025-04-18 08:35:26.864 [bridging-deploy-6c5ff9d6b9-f68sk] [main]  INFO  o.q.i.StdSchedulerFactory#1362  Quartz scheduler 'schedulerFactoryBean' initialized from an externally provided properties instance.
+2025-04-18 08:35:26.865 [bridging-deploy-6c5ff9d6b9-f68sk] [main]  INFO  o.q.i.StdSchedulerFactory#1366  Quartz scheduler version: 2.3.0
+2025-04-18 08:35:26.960 [bridging-deploy-6c5ff9d6b9-f68sk] [main]  WARN  c.e.d.b.d.c.s.c.GenericConfiguration#34  REST generic endpoint started
+2025-04-18 08:35:27.020 [bridging-deploy-6c5ff9d6b9-f68sk] [main]  WARN  c.e.d.b.d.c.s.c.LookUpConfiguration#36  REST dblookup started
+2025-04-18 08:35:27.040 [bridging-deploy-6c5ff9d6b9-f68sk] [main]  WARN  c.e.d.b.d.c.s.c.ManagementConfiguration#34  REST management started
+2025-04-18 08:35:27.071 [bridging-deploy-6c5ff9d6b9-f68sk] [main]  WARN  c.e.d.b.d.c.s.c.SubscriptionConfiguration#34  REST subscription started
+2025-04-18 08:35:28.560 [bridging-deploy-6c5ff9d6b9-f68sk] [main]  INFO  o.e.j.s.session#365  DefaultSessionIdManager workerName=node0
+2025-04-18 08:35:28.579 [bridging-deploy-6c5ff9d6b9-f68sk] [main]  INFO  o.e.j.s.session#370  No SessionScavenger set, using defaults
+2025-04-18 08:35:28.605 [bridging-deploy-6c5ff9d6b9-f68sk] [main]  INFO  o.e.j.s.session#149  node0 Scavenging every 660000ms
+2025-04-18 08:35:28.718 [bridging-deploy-6c5ff9d6b9-f68sk] [main]  INFO  o.e.j.s.h.ContextHandler#855  Started o.s.b.w.e.j.JettyEmbeddedWebAppContext@5e7cd6cc{application,/,[file:///tmp/jetty-docbase.1232478524448070123.8989/],AVAILABLE}
+2025-04-18 08:35:28.745 [bridging-deploy-6c5ff9d6b9-f68sk] [main]  INFO  o.e.j.s.Server#407  Started @30929ms
+2025-04-18 08:35:29.104 [bridging-deploy-6c5ff9d6b9-f68sk] [main]  INFO  c.e.d.b.d.c.c.InterfacesConfigurationLoader#341  Loading dispatcher configuration interfaces.
+2025-04-18 08:35:29.223 [bridging-deploy-6c5ff9d6b9-f68sk] [main]  INFO  c.e.d.b.c.c.c.GenericConfigurationLoader#341  Reading configuration files from: /home/eabhgad/app/bridging/config/interfaces/
+2025-04-18 08:35:29.233 [bridging-deploy-6c5ff9d6b9-f68sk] [main]  INFO  c.e.d.b.c.c.c.GenericConfigurationLoader#341  ------ Dispatcher interfaces configurations files to be upload: -------
+2025-04-18 08:35:29.259 [bridging-deploy-6c5ff9d6b9-f68sk] [main]  INFO  c.e.d.b.c.c.c.GenericConfigurationLoader#341  Loading interface configuration from file: MigrateCustomer
+2025-04-18 08:35:29.260 [bridging-deploy-6c5ff9d6b9-f68sk] [main]  INFO  c.e.d.b.c.c.c.GenericConfigurationLoader#341  Loading interface configuration from file: commons
+2025-04-18 08:35:29.290 [bridging-deploy-6c5ff9d6b9-f68sk] [main]  INFO  c.e.d.b.c.c.c.GenericConfigurationLoader#341  Loading interface configuration from file: MessageBroker
+2025-04-18 08:35:29.294 [bridging-deploy-6c5ff9d6b9-f68sk] [main]  INFO  c.e.d.b.c.c.c.GenericConfigurationLoader#341  Loading interface configuration from file: SoapReadDbLookup.xml
+2025-04-18 08:35:29.295 [bridging-deploy-6c5ff9d6b9-f68sk] [main]  INFO  c.e.d.b.c.c.c.GenericConfigurationLoader#341  Loading interface configuration from file: SoapReadDbLookup
+2025-04-18 08:35:29.296 [bridging-deploy-6c5ff9d6b9-f68sk] [main]  INFO  c.e.d.b.c.c.c.GenericConfigurationLoader#341  Reading dispatcher interface from: MigrateCustomer
+2025-04-18 08:35:29.323 [bridging-deploy-6c5ff9d6b9-f68sk] [main]  WARN  c.e.d.b.c.c.c.GenericConfigurationLoader#346  The file "MigrateCustomer" is not an ".xml" file.
+2025-04-18 08:35:29.324 [bridging-deploy-6c5ff9d6b9-f68sk] [main]  INFO  c.e.d.b.c.c.c.GenericConfigurationLoader#341  Reading dispatcher interface from: commons
+2025-04-18 08:35:29.331 [bridging-deploy-6c5ff9d6b9-f68sk] [main]  WARN  c.e.d.b.c.c.c.GenericConfigurationLoader#346  The file "commons" is not an ".xml" file.
+2025-04-18 08:35:29.333 [bridging-deploy-6c5ff9d6b9-f68sk] [main]  INFO  c.e.d.b.c.c.c.GenericConfigurationLoader#341  Reading dispatcher interface from: MessageBroker
+2025-04-18 08:35:29.340 [bridging-deploy-6c5ff9d6b9-f68sk] [main]  WARN  c.e.d.b.c.c.c.GenericConfigurationLoader#346  The file "MessageBroker" is not an ".xml" file.
+2025-04-18 08:35:29.343 [bridging-deploy-6c5ff9d6b9-f68sk] [main]  INFO  c.e.d.b.c.c.c.GenericConfigurationLoader#341  Reading dispatcher interface from: SoapReadDbLookup.xml
+2025-04-18 08:35:30.748 [bridging-deploy-6c5ff9d6b9-f68sk] [main]  INFO  c.e.d.b.c.c.u.IOUtils#341  External Systems yml file loaded:/home/eabhgad/app/bridging/config/properties/external-systems.yml
+2025-04-18 08:35:30.769 [bridging-deploy-6c5ff9d6b9-f68sk] [main]  INFO  c.e.d.b.d.c.c.InterfacesConfigurationLoader#341  Uploaded configuration for interface SoapReadDbLookup with the followings arguments - Function: LOOKUP Protocol: SOAP Version: 6.0
+2025-04-18 08:35:30.785 [bridging-deploy-6c5ff9d6b9-f68sk] [main]  INFO  c.e.d.b.c.c.c.GenericConfigurationLoader#341  Reading dispatcher interface from: SoapReadDbLookup
+2025-04-18 08:35:30.789 [bridging-deploy-6c5ff9d6b9-f68sk] [main]  WARN  c.e.d.b.c.c.c.GenericConfigurationLoader#346  The file "SoapReadDbLookup" is not an ".xml" file.
+2025-04-18 08:35:30.800 [bridging-deploy-6c5ff9d6b9-f68sk] [main]  INFO  c.e.d.b.d.c.c.InterfacesConfigurationLoader#341  1 dispatcher interfaces loaded.
+2025-04-18 08:35:30.800 [bridging-deploy-6c5ff9d6b9-f68sk] [main]  INFO  c.e.d.b.d.c.j.JettyConnectorFactory#267  Starting interface [SoapReadDbLookup]
+2025-04-18 08:35:30.815 [bridging-deploy-6c5ff9d6b9-f68sk] [main]  INFO  c.e.d.b.d.c.j.JettyConnectorFactory#269  Starting Operation [LookupServiceDBLookupReadRequest] of Interface [SoapReadDbLookup] ...
+2025-04-18 08:35:30.817 [bridging-deploy-6c5ff9d6b9-f68sk] [main]  INFO  c.e.d.b.d.c.j.JettyConnectorFactory#305  Starting server on port "1010".
+2025-04-18 08:35:30.830 [bridging-deploy-6c5ff9d6b9-f68sk] [main]  INFO  o.e.j.s.Server#370  jetty-9.4.14.v20181114; built: 2018-11-14T21:20:31.478Z; git: c4550056e785fb5665914545889f21dc136ad9e6; jvm 1.8.0_212-b04
+2025-04-18 08:35:31.026 [bridging-deploy-6c5ff9d6b9-f68sk] [main]  INFO  o.e.j.s.AbstractConnector#292  Started ServerConnector@1cd629b3{HTTP/1.1,[http/1.1]}{0.0.0.0:1010}
+2025-04-18 08:35:31.046 [bridging-deploy-6c5ff9d6b9-f68sk] [main]  INFO  o.e.j.s.Server#407  Started @33229ms
+2025-04-18 08:35:31.048 [bridging-deploy-6c5ff9d6b9-f68sk] [main]  INFO  c.e.d.b.d.c.j.JettyConnectorFactory#345  Server on port "1010" started.
+2025-04-18 08:35:31.049 [bridging-deploy-6c5ff9d6b9-f68sk] [main]  INFO  c.e.d.b.d.c.j.JettyConnectorFactory#464  Starting context "/bridging/accountlookup" on port "1010"
+2025-04-18 08:35:31.114 [bridging-deploy-6c5ff9d6b9-f68sk] [main]  DEBUG c.e.d.b.d.c.j.JettyConnectorFactory#514  *** Set GzipHandler ****
+2025-04-18 08:35:31.115 [bridging-deploy-6c5ff9d6b9-f68sk] [main]  WARN  o.e.j.s.ServletContextHandler#198  ServletContextHandler.setHandler should not be called directly. Use insertHandler or setSessionHandler etc.
+2025-04-18 08:35:31.132 [bridging-deploy-6c5ff9d6b9-f68sk] [main]  INFO  o.e.j.s.h.ContextHandler#855  Started o.e.j.s.ServletContextHandler@52815fa3{/bridging/accountlookup,null,AVAILABLE}
+2025-04-18 08:35:31.137 [bridging-deploy-6c5ff9d6b9-f68sk] [main]  INFO  c.e.d.b.d.c.j.JettyConnectorFactory#473  Context "/bridging/accountlookup" on port "1010" started.
+2025-04-18 08:35:31.140 [bridging-deploy-6c5ff9d6b9-f68sk] [main]  INFO  c.e.d.b.d.c.j.JettyConnectorFactory#477  Adding operation "LookupServiceDBLookupReadRequest" to context "/bridging/accountlookup" on port "1010"
+2025-04-18 08:35:31.157 [bridging-deploy-6c5ff9d6b9-f68sk] [main]  INFO  c.e.d.b.d.c.j.JettyConnectorFactory#486  Operation "LookupServiceDBLookupReadRequest" on context "/bridging/accountlookup" and port "1010" added
+2025-04-18 08:35:31.208 [bridging-deploy-6c5ff9d6b9-f68sk] [main]  INFO  c.e.d.b.c.c.u.IOUtils#341  Scheduled jobs yml file loaded:/home/eabhgad/app/bridging/config/properties/scheduled-jobs.yml
+2025-04-18 08:35:31.235 [bridging-deploy-6c5ff9d6b9-f68sk] [main]  INFO  o.q.i.StdSchedulerFactory#1208  Using default implementation for ThreadExecutor
+2025-04-18 08:35:31.237 [bridging-deploy-6c5ff9d6b9-f68sk] [main]  INFO  o.q.s.SimpleThreadPool#268  Job execution threads will use class loader of thread: main
+2025-04-18 08:35:31.270 [bridging-deploy-6c5ff9d6b9-f68sk] [main]  INFO  o.q.s.RAMJobStore#155  RAMJobStore initialized.
+2025-04-18 08:35:31.271 [bridging-deploy-6c5ff9d6b9-f68sk] [main]  INFO  o.q.i.StdSchedulerFactory#1362  Quartz scheduler 'DefaultQuartzScheduler' initialized from default resource file in Quartz package: 'quartz.properties'
+2025-04-18 08:35:31.276 [bridging-deploy-6c5ff9d6b9-f68sk] [main]  INFO  o.q.i.StdSchedulerFactory#1366  Quartz scheduler version: 2.3.0
+2025-04-18 08:35:31.390 [bridging-deploy-6c5ff9d6b9-f68sk] [main]  DEBUG c.e.d.b.w.a.WorkflowManagerApplication#366  |          YAML Workflow Manager Latest         |
+2025-04-18 08:35:31.412 [bridging-deploy-6c5ff9d6b9-f68sk] [main]  DEBUG c.e.d.b.w.a.WorkflowManagerApplication#366  -------------------------------------------
+2025-04-18 08:35:31.419 [bridging-deploy-6c5ff9d6b9-f68sk] [main]  DEBUG c.e.d.b.w.a.WorkflowManagerApplication#366  Initializing component
+2025-04-18 08:35:31.422 [bridging-deploy-6c5ff9d6b9-f68sk] [main]  INFO  c.e.d.b.w.y.e.WFMYamlEngine#341  Loading yaml definition
+2025-04-18 08:35:31.861 [bridging-deploy-6c5ff9d6b9-f68sk] [main]  INFO  c.e.d.b.w.y.e.WFMYamlEngine#341  Yaml definition loaded
+2025-04-18 08:35:31.864 [bridging-deploy-6c5ff9d6b9-f68sk] [main]  DEBUG c.e.d.b.w.a.WorkflowManagerApplication#366  Workflow Manager component started
+
+2025-04-18 08:35:37.880 [bridging-deploy-6c5ff9d6b9-f68sk] [main]  DEBUG c.e.d.b.c.c.v.GroovyHandler#42  loadGroovyResources() method executed successfully.
+2025-04-18 08:35:38.325 [bridging-deploy-6c5ff9d6b9-f68sk] [main]  INFO  c.e.d.d.c.c.c.CassandraClient#341  Initializing Cassandra Cluster
+2025-04-18 08:35:38.573 [bridging-deploy-6c5ff9d6b9-f68sk] [main]  WARN  c.e.d.d.c.c.c.CassandraConfig#346  Property 'max.requests.per.connection' is specified. Setting with value.
+2025-04-18 08:35:38.596 [bridging-deploy-6c5ff9d6b9-f68sk] [main]  INFO  c.e.d.d.c.c.c.CassandraClient#341  Using Password based authentication.
+2025-04-18 08:35:40.420 [bridging-deploy-6c5ff9d6b9-f68sk] [main]  INFO  c.e.d.d.c.c.c.CassandraClient#341  Check Connection with Cassandra Database
+2025-04-18 08:35:40.422 [bridging-deploy-6c5ff9d6b9-f68sk] [main]  INFO  c.e.d.d.c.c.c.CassandraClient#341  Session with Cassandra is either not initialized or it has been closed.
+2025-04-18 08:35:40.423 [bridging-deploy-6c5ff9d6b9-f68sk] [main]  INFO  c.e.d.d.c.c.c.CassandraClient#341  Initializing the Session with the Cluster.
+2025-04-18 08:35:44.449 [bridging-deploy-6c5ff9d6b9-f68sk] [cluster1-nio-worker-1]  WARN  c.d.d.c.p.RoundRobinPolicy#104  Detected request at Consistency Level LOCAL_ONE but the non-DC aware RoundRobinPolicy is in use. It is strongly advised to use DCAwareRoundRobinPolicy if you have multiple DCs/use DC-aware consistency levels (note: this message will only be logged once)
+2025-04-18 08:35:44.496 [bridging-deploy-6c5ff9d6b9-f68sk] [main]  DEBUG c.e.d.d.c.c.c.CassandraClient#366  #############
+2025-04-18 08:35:44.518 [bridging-deploy-6c5ff9d6b9-f68sk] [main]  DEBUG c.e.d.d.c.c.c.CassandraClient#366   Cassandra Cluster Configuration
+2025-04-18 08:35:44.519 [bridging-deploy-6c5ff9d6b9-f68sk] [main]  DEBUG c.e.d.d.c.c.c.CassandraClient#366  ProtocolVersion : V4
+2025-04-18 08:35:44.533 [bridging-deploy-6c5ff9d6b9-f68sk] [main]  DEBUG c.e.d.d.c.c.c.CassandraClient#366  Pool : Core Connections per host (local) : 1
+2025-04-18 08:35:44.533 [bridging-deploy-6c5ff9d6b9-f68sk] [main]  DEBUG c.e.d.d.c.c.c.CassandraClient#366  Pool : Core Connections per host (remote) : 5
+2025-04-18 08:35:44.535 [bridging-deploy-6c5ff9d6b9-f68sk] [main]  DEBUG c.e.d.d.c.c.c.CassandraClient#366  Pool : MaxConnectionsPerHost (local) : 1
+2025-04-18 08:35:44.538 [bridging-deploy-6c5ff9d6b9-f68sk] [main]  DEBUG c.e.d.d.c.c.c.CassandraClient#366  Pool : MaxConnectionsPerHost (remote) : 20
+2025-04-18 08:35:44.559 [bridging-deploy-6c5ff9d6b9-f68sk] [main]  DEBUG c.e.d.d.c.c.c.CassandraClient#366  Pool : MaxRequestsPerConnection (local) : 1024
+2025-04-18 08:35:44.560 [bridging-deploy-6c5ff9d6b9-f68sk] [main]  DEBUG c.e.d.d.c.c.c.CassandraClient#366  Pool : MaxRequestsPerConnection (remote) : 256
+2025-04-18 08:35:44.560 [bridging-deploy-6c5ff9d6b9-f68sk] [main]  DEBUG c.e.d.d.c.c.c.CassandraClient#366  Pool : HeartbeatIntervalSeconds : 30
+2025-04-18 08:35:44.561 [bridging-deploy-6c5ff9d6b9-f68sk] [main]  DEBUG c.e.d.d.c.c.c.CassandraClient#366  CL   : writeConsistencyLevel : ONE
+2025-04-18 08:35:44.583 [bridging-deploy-6c5ff9d6b9-f68sk] [main]  DEBUG c.e.d.d.c.c.c.CassandraClient#366  CL   : readConsistencyLevel : ONE
+2025-04-18 08:35:44.585 [bridging-deploy-6c5ff9d6b9-f68sk] [main]  DEBUG c.e.d.d.c.c.c.CassandraClient#366  -------------------
+2025-04-18 08:35:44.628 [bridging-deploy-6c5ff9d6b9-f68sk] [main]  DEBUG c.e.d.d.c.c.c.CassandraClient#366  No. of users :: 6
+2025-04-18 08:35:44.730 [bridging-deploy-6c5ff9d6b9-f68sk] [main]  WARN  c.e.d.d.c.c.c.CassandraConfig#346  Property 'max.requests.per.connection' is specified. Setting with value.
+2025-04-18 08:35:46.125 [bridging-deploy-6c5ff9d6b9-f68sk] [main]  WARN  o.a.i.i.u.t.G#127  Ignite work directory is not provided, automatically resolved to: /home/eabhgad/app/bridging/ignite/work
+2025-04-18 08:35:46.810 [bridging-deploy-6c5ff9d6b9-f68sk] [main]  WARN  o.a.i.i.IgniteKernal%bridging#127  Peer class loading is enabled (disable it in production for performance and deployment consistency reasons)
+2025-04-18 08:35:46.813 [bridging-deploy-6c5ff9d6b9-f68sk] [main]  WARN  o.a.i.i.IgniteKernal%bridging#127  Please set system property '-Djava.net.preferIPv4Stack=true' to avoid possible problems in mixed environments.
+2025-04-18 08:35:46.896 [bridging-deploy-6c5ff9d6b9-f68sk] [pub-#22%bridging%]  WARN  o.a.i.i.GridDiagnostic#127  Initial heap size is 94MB (should be no less than 512MB, use -Xms512m -Xmx512m).
+2025-04-18 08:35:49.031 [bridging-deploy-6c5ff9d6b9-f68sk] [main]  WARN  o.a.i.s.c.t.TcpCommunicationSpi#127  Message queue limit is set to 0 which may lead to potential OOMEs when running cache operations in FULL_ASYNC or PRIMARY_SYNC modes due to message queues growth on sender and receiver sides.
+2025-04-18 08:35:49.133 [bridging-deploy-6c5ff9d6b9-f68sk] [main]  WARN  o.a.i.s.c.n.NoopCheckpointSpi#127  Checkpoints are disabled (to enable configure any GridCheckpointSpi implementation)
+2025-04-18 08:35:49.334 [bridging-deploy-6c5ff9d6b9-f68sk] [main]  WARN  o.a.i.i.m.c.GridCollisionManager#127  Collision resolution is disabled (all jobs will be activated upon arrival).
+2025-04-18 08:35:51.089 [bridging-deploy-6c5ff9d6b9-f68sk] [main]  WARN  o.a.i.i.p.c.p.IgniteCacheDatabaseSharedManager#127  DataRegionConfiguration.maxWalArchiveSize instead DataRegionConfiguration.walHistorySize would be used for removing old archive wal files
+2025-04-18 08:35:51.281 [bridging-deploy-6c5ff9d6b9-f68sk] [main]  WARN  o.a.i.i.p.c.d.d.t.PartitionsEvictManager#127  Logging at INFO level without checking if INFO level is enabled: Evict partition permits=12
+2025-04-18 08:35:51.861 [bridging-deploy-6c5ff9d6b9-f68sk] [main]  WARN  o.a.i.i.p.q.h.IgniteH2Indexing#127  Serialization of Java objects in H2 was enabled.
+2025-04-18 08:35:53.657 [bridging-deploy-6c5ff9d6b9-f68sk] [disco-notifier-worker-#41%bridging%]  WARN  o.a.i.i.p.c.GridClusterStateProcessor#127  Logging at INFO level without checking if INFO level is enabled: Received state change finish message: true
+2025-04-18 08:35:53.685 [bridging-deploy-6c5ff9d6b9-f68sk] [main]  WARN  o.a.i.i.IgniteKernal%bridging#127  Nodes started on local machine require more than 80% of physical RAM what can lead to significant slowdown due to swapping (please decrease JVM heap size, data region size or checkpoint buffer size) [required=2602MB, available=5925MB]
+2025-04-18 08:35:56.269 [bridging-deploy-6c5ff9d6b9-f68sk] [main]  WARN  o.a.i.i.u.t.G#127  Logging at INFO level without checking if INFO level is enabled: Node started : [stage="Configure system pool" (184 ms),stage="Start managers" (2808 ms),stage="Configure binary metadata" (433 ms),stage="Start processors" (3133 ms),stage="Init metastore" (70 ms),stage="Finish recovery" (0 ms),stage="Join topology" (457 ms),stage="Await transition" (163 ms),stage="Await exchange" (2402 ms),stage="Total time" (9650 ms)]
+2025-04-18 08:35:56.794 [bridging-deploy-6c5ff9d6b9-f68sk] [exchange-worker-#43%bridging%]  WARN  o.a.i.i.p.a.GridAffinityAssignmentCache#127  Logging at INFO level without checking if INFO level is enabled: Local node affinity assignment distribution is not ideal [cache=ASYNC_PROCESS_INFO, expectedPrimary=1024.00, actualPrimary=1024, expectedBackups=1024.00, actualBackups=0, warningThreshold=50.00%]
+2025-04-18 08:35:57.480 [bridging-deploy-6c5ff9d6b9-f68sk] [main]  INFO  c.e.d.d.c.i.s.IgniteServiceServerNode#341  Ignite service started
+2025-04-18 08:35:57.531 [bridging-deploy-6c5ff9d6b9-f68sk] [main]  INFO  c.e.d.i.a.c.ImdgClient#62  class org.apache.ignite.IgniteException: Spring XML configuration path is invalid: /opt/app/config/ignite/ignite-config-te.xml. Note that this path should be either absolute or a relative local file system path, relative to META-INF in classpath or valid URL to IGNITE_HOME.
+Connection attempt to an Ignite server node failed. Performing 1 retry
+2025-04-18 08:35:57.561 [bridging-deploy-6c5ff9d6b9-f68sk] [main]  INFO  c.e.d.i.a.c.ImdgClient#62  class org.apache.ignite.IgniteException: Spring XML configuration path is invalid: /opt/app/config/ignite/ignite-config-te.xml. Note that this path should be either absolute or a relative local file system path, relative to META-INF in classpath or valid URL to IGNITE_HOME.
+Connection attempt to an Ignite server node failed. Performing 2 retry
+2025-04-18 08:35:57.566 [bridging-deploy-6c5ff9d6b9-f68sk] [main]  ERROR c.e.d.i.a.c.ImdgClient#59  class org.apache.ignite.IgniteException: Spring XML configuration path is invalid: /opt/app/config/ignite/ignite-config-te.xml. Note that this path should be either absolute or a relative local file system path, relative to META-INF in classpath or valid URL to IGNITE_HOME.
+Unable to connect to an Ignite server node after three retries. Please check config file or server node status
+2025-04-18 08:35:57.931 [bridging-deploy-6c5ff9d6b9-f68sk] [main]  DEBUG c.e.d.d.c.i.s.IgniteServiceServerNode#366  Ignite Cache create/load=mappingCache
+2025-04-18 08:35:58.454 [bridging-deploy-6c5ff9d6b9-f68sk] [main]  DEBUG c.e.d.d.c.i.s.IgniteServiceServerNode#366  Ignite Cache create/load=authenticationCache
+2025-04-18 08:35:58.786 [bridging-deploy-6c5ff9d6b9-f68sk] [main]  DEBUG c.e.d.d.c.i.s.IgniteServiceServerNode#366  Ignite Cache create/load=networkidsCache
+2025-04-18 08:35:59.151 [bridging-deploy-6c5ff9d6b9-f68sk] [main]  INFO  c.e.d.d.c.i.s.IgniteServiceServerNode#341  Ignite service started and cache loaded
+2025-04-18 08:35:59.252 [bridging-deploy-6c5ff9d6b9-f68sk] [main]  INFO  c.e.d.b.d.c.s.c.DataTableManipulatorRestController#47  authorizationEnabled = true
+2025-04-18 08:35:59.471 [bridging-deploy-6c5ff9d6b9-f68sk] [main]  INFO  c.e.d.b.d.c.s.r.LookupResource#47  authorizationEnabled [false], authorizationType [Basic]
+2025-04-18 08:35:59.511 [bridging-deploy-6c5ff9d6b9-f68sk] [main]  INFO  c.e.d.b.d.c.s.r.LookupXMLResource#47  authorizationEnabled [false], authorizationType [Basic]
+2025-04-18 08:35:59.566 [bridging-deploy-6c5ff9d6b9-f68sk] [main]  DEBUG c.e.d.b.c.c.c.JSONProductMappingLoader#366  loadMappingAtStartup = false
+2025-04-18 08:35:59.569 [bridging-deploy-6c5ff9d6b9-f68sk] [main]  INFO  c.e.d.b.c.c.c.JSONProductMappingLoader#341  The product mapping file will not be loaded during the application statup.
+2025-04-18 08:35:59.658 [bridging-deploy-6c5ff9d6b9-f68sk] [main]  INFO  c.e.d.b.d.c.s.r.SubscriptionResource#47  authorizationEnabled = false
+2025-04-18 08:35:59.799 [bridging-deploy-6c5ff9d6b9-f68sk] [main]  ERROR c.e.d.b.d.c.s.MessageFileReader#361  TE__SYSTEM_EXP_ BRIDGING_TE_ERR _null
+2025-04-18 08:36:02.144 [bridging-deploy-6c5ff9d6b9-f68sk] [main]  INFO  o.s.s.c.ThreadPoolTaskExecutor#171  Initializing ExecutorService
+2025-04-18 08:36:02.163 [bridging-deploy-6c5ff9d6b9-f68sk] [main]  INFO  o.s.s.c.ThreadPoolTaskExecutor#171  Initializing ExecutorService 'asyncExecutor'
+2025-04-18 08:36:02.199 [bridging-deploy-6c5ff9d6b9-f68sk] [main]  INFO  o.s.s.c.ThreadPoolTaskExecutor#171  Initializing ExecutorService
+2025-04-18 08:36:02.225 [bridging-deploy-6c5ff9d6b9-f68sk] [main]  INFO  o.s.s.c.ThreadPoolTaskExecutor#171  Initializing ExecutorService 'asyncPriorityExecutor'
+2025-04-18 08:36:07.709 [bridging-deploy-6c5ff9d6b9-f68sk] [main]  INFO  o.s.s.q.SchedulerFactoryBean#726  Starting Quartz Scheduler now
+2025-04-18 08:36:07.768 [bridging-deploy-6c5ff9d6b9-f68sk] [main]  DEBUG c.e.d.b.d.c.s.c.FiltersConfiguration$1#241  Filter 'genericPortRestriction' configured for use
+2025-04-18 08:36:07.797 [bridging-deploy-6c5ff9d6b9-f68sk] [main]  INFO  o.e.j.s.h.C.application#2345  Initializing Spring DispatcherServlet 'dispatcherServlet'
+2025-04-18 08:36:07.814 [bridging-deploy-6c5ff9d6b9-f68sk] [main]  INFO  o.s.w.s.DispatcherServlet#524  Initializing Servlet 'dispatcherServlet'
+2025-04-18 08:36:07.987 [bridging-deploy-6c5ff9d6b9-f68sk] [main]  INFO  o.s.w.s.DispatcherServlet#546  Completed initialization in 167 ms
+2025-04-18 08:36:08.110 [bridging-deploy-6c5ff9d6b9-f68sk] [main]  INFO  o.e.j.s.AbstractConnector#292  Started ServerConnector@6421bc32{HTTP/1.1,[http/1.1]}{0.0.0.0:8989}
+2025-04-18 08:36:08.144 [bridging-deploy-6c5ff9d6b9-f68sk] [main]  INFO  o.e.j.s.AbstractConnector#292  Started NetworkTrafficServerConnector@4905c46b{HTTP/1.1,[http/1.1]}{0.0.0.0:8081}
+2025-04-18 08:36:08.214 [bridging-deploy-6c5ff9d6b9-f68sk] [main]  INFO  o.e.j.s.AbstractConnector#292  Started NetworkTrafficServerConnector@17ae7628{HTTP/1.1,[http/1.1]}{0.0.0.0:1004}
+2025-04-18 08:36:08.243 [bridging-deploy-6c5ff9d6b9-f68sk] [main]  INFO  o.e.j.s.AbstractConnector#292  Started NetworkTrafficServerConnector@1136b469{HTTP/1.1,[http/1.1]}{0.0.0.0:1003}
+2025-04-18 08:36:08.274 [bridging-deploy-6c5ff9d6b9-f68sk] [main]  INFO  o.e.j.s.AbstractConnector#292  Started NetworkTrafficServerConnector@6579c3d9{HTTP/1.1,[http/1.1]}{0.0.0.0:1002}
+2025-04-18 08:36:08.282 [bridging-deploy-6c5ff9d6b9-f68sk] [main]  INFO  o.s.b.w.e.j.JettyWebServer#159  Jetty started on port(s) 8989 (http/1.1), 8081 (http/1.1), 1004 (http/1.1), 1003 (http/1.1), 1002 (http/1.1) with context path ''
+2025-04-18 08:36:08.295 [bridging-deploy-6c5ff9d6b9-f68sk] [main]  INFO  c.e.r.b.v.BridgingApp#59  Started BridgingApp in 64.593 seconds (JVM running for 70.479)
+2025-04-18 08:38:39.447 [bridging-deploy-6c5ff9d6b9-f68sk] [jvm-pause-detector-worker]  WARN  o.a.i.i.IgniteKernal%bridging#127  Possible too long JVM pause: 928 milliseconds.
+2025-04-18 08:39:11.561 [bridging-deploy-6c5ff9d6b9-f68sk] [jvm-pause-detector-worker]  WARN  o.a.i.i.IgniteKernal%bridging#127  Possible too long JVM pause: 684 milliseconds.
+2025-04-18 08:43:40.558 [bridging-deploy-6c5ff9d6b9-f68sk] [jvm-pause-detector-worker]  WARN  o.a.i.i.IgniteKernal%bridging#127  Possible too long JVM pause: 614 milliseconds.
+2025-04-18 08:52:05.315 [bridging-deploy-6c5ff9d6b9-f68sk] [jvm-pause-detector-worker]  WARN  o.a.i.i.IgniteKernal%bridging#127  Possible too long JVM pause: 1100 milliseconds.
+2025-04-18 08:53:20.271 [bridging-deploy-6c5ff9d6b9-f68sk] [jvm-pause-detector-worker]  WARN  o.a.i.i.IgniteKernal%bridging#127  Possible too long JVM pause: 501 milliseconds.
+2025-04-18 08:53:43.398 [bridging-deploy-6c5ff9d6b9-f68sk] [jvm-pause-detector-worker]  WARN  o.a.i.i.IgniteKernal%bridging#127  Possible too long JVM pause: 740 milliseconds.
+2025-04-18 08:55:08.015 [bridging-deploy-6c5ff9d6b9-f68sk] [jvm-pause-detector-worker]  WARN  o.a.i.i.IgniteKernal%bridging#127  Possible too long JVM pause: 1446 milliseconds.
+2025-04-18 09:03:45.004 [bridging-deploy-6c5ff9d6b9-f68sk] [jvm-pause-detector-worker]  WARN  o.a.i.i.IgniteKernal%bridging#127  Possible too long JVM pause: 593 milliseconds.
+2025-04-18 09:04:06.260 [bridging-deploy-6c5ff9d6b9-f68sk] [jvm-pause-detector-worker]  WARN  o.a.i.i.IgniteKernal%bridging#127  Possible too long JVM pause: 536 milliseconds.

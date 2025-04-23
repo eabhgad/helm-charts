@@ -1,0 +1,333 @@
+metadata:
+  mandatory: systemId | port | protocol
+  systemTypes: LEGACY | NEW | BRIDGING | IGNITE | DBSS | Database | IMDG | Other
+  protocols: HTTP | HTTPS | FTP | SFTP | SOAP | REST
+  authTypes: NONE | BASIC | Bearer | Param | SSL
+  sslStoreTypes: JKS | PKCS12
+#system-definitions:
+#  dbss_system:
+#    systemId: <unique alphanumeric identifier of the system>
+#    systemType:  <one of the systemTypes specified in metadata>
+#    hostnames: 
+#       - abc.xyz.com
+#    port: 5550 (Mandatory)
+#    protocol:  <one of the protocols specified in metadata>
+#    authentication:
+#      authType: <one of the authTypes specified in metadata>
+#      username: <applicable if authType = Basic>
+#      password: <applicable if authType = Basic>
+#      ssl: <applicable if authType = SSL> 
+#        clientAuthRequired: false/true
+#        keystore:
+#          path: <system path>
+#          password: <plain text> / <encrypted>
+#          type: JKS | PVCS
+#        truststore: 
+#          path: <system path>
+#          password: <plain text> / <encrypted>
+#          type: JKS | PVCS
+#    connectionPool:
+#      active: True | False
+#      minConnections:
+#      maxConnections:
+system-definitions:
+  SOAP_DB_LOOKUP: !!com.ericsson.datamigration.bridging.commons.core.dto.ExternalSystem
+    systemId: INTERNAL
+    systemType: BRIDGING
+    hostnames: 
+       - dev-01.dmtool.ericsson.com
+    port: 5000
+    protocol: SOAP
+    authentication:
+      authType: BASIC  
+  GENERIC_TOKEN_API: !!com.ericsson.datamigration.bridging.commons.core.dto.ExternalSystem
+    systemId: GENERIC_TOKEN_API
+    systemType: NEW
+    hostnames: 
+       - mock-svc
+    port: 8090
+    protocol: REST    
+    authentication:
+      authType: Bearer
+    connectionPool:
+      active: true
+      minConnections: 5
+      maxConnections: 10
+  GENERIC_API: !!com.ericsson.datamigration.bridging.commons.core.dto.ExternalSystem
+    systemId: GENERIC_API
+    systemType: NEW
+    hostnames: 
+       - mock-svc
+    port: 8091
+    protocol: REST    
+    authentication:
+      authType: Bearer
+    connectionPool:
+      active: true
+      minConnections: 5
+      maxConnections: 10  
+#  CS_TARGET: !!com.ericsson.datamigration.bridging.commons.core.dto.ExternalSystem
+#    systemId: CS_TARGET
+#    systemType: NEW
+#    hostnames: 
+#       - dev-01.dmtool.ericsson.com
+#    port: 8081
+#    protocol: HTTP
+#    properties: 
+#      hostNameVerification: true
+#    retry: 
+#      supportingOperations : [GetAccountDetails,UpdateServiceClass]
+#      retryCount: 3
+#      waitTime: 10000
+#      errorCodes: [500,501]
+#    authentication:
+#      authType: BASIC
+#      username: csadmin
+#      password: csadmin
+#      ssl:
+#        clientAuthRequired: false
+#        keystore:
+#          path: security/certificates/dmtool/dmtool-keystore.jks
+#          password: security/certificates/dmtool/keystorepwd.txt
+#          type: JKS
+#        truststore: 
+#          path: security/certificates/dmtool/dmtool-truststore.jks
+#          password: security/certificates/dmtool/truststorepwd.txt
+#          type: JKS
+#  DXP_API: !!com.ericsson.datamigration.bridging.commons.core.dto.ExternalSystem
+#    systemId: DXP_API
+#    systemType: NEW
+#    hostnames: 
+#       - dev-01.dmtool.ericsson.com
+#    port: 8085
+#    protocol: HTTP
+#    properties: 
+#      httpClientMinThreads: 50
+#      httpClientMaxThreads: 75
+#      requestTimeoutDefault: 30
+#    authentication:
+#      authType: NONE
+#      ssl:
+#        clientAuthRequired: true
+#        keystore:
+#          path: security/certificates/dmtool/dmtool-keystore.jks
+#          password: security/certificates/dmtool/keystorepwd.txt
+#          type: JKS
+#        truststore: 
+#          path: security/certificates/dmtool/dmtool-truststore.jks
+#          password: security/certificates/dmtool/truststorepwd.txt
+#          type: JKS
+#  DEMO_PRODUCT_API: !!com.ericsson.datamigration.bridging.commons.core.dto.ExternalSystem
+#    systemId: DEMO_PRODUCT_API
+#    systemType: NEW
+#    hostnames: 
+#       - dev-01.dmtool.ericsson.com
+#    port: 8200
+#    protocol: REST
+#    authentication:
+#      authType: NONE
+#      ssl:
+#        clientAuthRequired: true
+#        keystore:
+#          path: security/certificates/dmtool/dmtool-keystore.jks
+#          password: security/certificates/dmtool/keystorepwd.txt
+#          type: JKS
+#        truststore: 
+#          path: security/certificates/dmtool/dmtool-truststore.jks
+#          password: security/certificates/dmtool/truststorepwd.txt
+#          type: JKS
+#    connectionPool:
+#      active: true
+#      minConnections: 50
+#      maxConnections: 75
+#  ORPHEUS: !!com.ericsson.datamigration.bridging.commons.core.dto.ExternalSystem
+#    systemId: ORPHEUS
+#    systemType: NEW
+#    hostnames: 
+#       - dev-01.dmtool.ericsson.com
+#    port: 8082
+#    protocol: SOAP
+#    authentication:
+#      authType: NONE
+#      ssl:
+#        clientAuthRequired: true
+#        keystore:
+#          path: security/certificates/dmtool/dmtool-keystore.jks
+#          password: security/certificates/dmtool/keystorepwd.txt
+#          type: JKS
+#        truststore: 
+#          path: security/certificates/dmtool/dmtool-truststore.jks
+#          password: security/certificates/dmtool/truststorepwd.txt
+#          type: JKS
+#    connectionPool:
+#      active: true
+#      minConnections: 50
+#      maxConnections: 75  
+#  EVENT_DISPATCHER: !!com.ericsson.datamigration.bridging.commons.core.dto.ExternalSystem
+#    systemId: EVENT_DISPATCHER
+#    systemType: NEW
+#    hostnames: 
+#       - dev-01.dmtool.ericsson.com
+#    port: 8084
+#    protocol: REST
+#    retry: 
+#      supportingOperations : [EDOAuthTokenRequest]
+#      retryCount: 1
+#      waitTime: 10000
+#      errorCodes: [400,401,500,503]
+#    authentication:
+#      authType: NONE
+#      ssl:
+#        clientAuthRequired: true
+#        keystore:
+#          path: security/certificates/dmtool/dmtool-keystore.jks
+#          password: security/certificates/dmtool/keystorepwd.txt
+#          type: JKS
+#        truststore: 
+#          path: security/certificates/dmtool/dmtool-truststore.jks
+#          password: security/certificates/dmtool/truststorepwd.txt
+#          type: JKS
+#    connectionPool:
+#      active: true
+#      minConnections: 50
+#      maxConnections: 75
+#  EVENT_DISPATCHER_AUTH: !!com.ericsson.datamigration.bridging.commons.core.dto.ExternalSystem
+#    systemId: EVENT_DISPATCHER_AUTH
+#    systemType: NEW
+#    hostnames: 
+#       - dev-01.dmtool.ericsson.com
+#    port: 8084
+#    protocol: REST    
+#    authentication:
+#      authType: Bearer
+#      ssl:
+#        clientAuthRequired: true
+#        keystore:
+#          path: security/certificates/dmtool/dmtool-keystore.jks
+#          password: security/certificates/dmtool/keystorepwd.txt
+#          type: JKS
+#        truststore: 
+#          path: security/certificates/dmtool/dmtool-truststore.jks
+#          password: security/certificates/dmtool/truststorepwd.txt
+#          type: JKS
+#    connectionPool:
+#      active: true
+#      minConnections: 50
+#      maxConnections: 75
+#    connectionPool:
+#      active: true
+#      minConnections: 50
+#      maxConnections: 75
+#  EOC_TOKEN: !!com.ericsson.datamigration.bridging.commons.core.dto.ExternalSystem
+#    systemId: EOC_TOKEN
+#    systemType: NEW
+#    hostnames: 
+#       - dev-01.dmtool.ericsson.com
+#    port: 8083
+#    protocol: HTTP
+#    authentication:
+#      authType: BASIC
+#      username: dxpcsr1
+#      password: RHhwQDEyMzQ=
+#      ssl:
+#        clientAuthRequired: true
+#        keystore:
+#          path: security/certificates/dmtool/dmtool-keystore.jks
+#          password: security/certificates/dmtool/keystorepwd.txt
+#          type: JKS
+#        truststore:
+#          path: security/certificates/dmtool/dmtool-truststore.jks
+#          password: security/certificates/dmtool/truststorepwd.txt
+#          type: JKS
+#    connectionPool:
+#      active: true
+#      minConnections: 50
+#      maxConnections: 75
+#  DXP: !!com.ericsson.datamigration.bridging.commons.core.dto.ExternalSystem
+#    systemId: DXP
+#    systemType: NEW
+#    hostnames: 
+#       - dev-01.dmtool.ericsson.com
+#    port: 8083
+#    protocol: REST
+#    authentication:
+#      authType: Bearer
+#      ssl:
+#        clientAuthRequired: true
+#        keystore:
+#          path: security/certificates/dmtool/dmtool-keystore.jks
+#          password: security/certificates/dmtool/keystorepwd.txt
+#          type: JKS
+#        truststore:
+#          path: security/certificates/dmtool/dmtool-truststore.jks
+#          password: security/certificates/dmtool/truststorepwd.txt
+#          type: JKS
+#    connectionPool:
+#      active: true
+#      minConnections: 50
+#      maxConnections: 75
+#    connectionPool:
+#      active: true
+#      minConnections: 50
+#      maxConnections: 75
+#  BEAM_SERVER: !!com.ericsson.datamigration.bridging.commons.core.dto.ExternalSystem
+#    systemId: BEAM_SERVER
+#    systemType: NEW
+#    hostnames: 
+#       - 10.184.99.83 
+#    port: 8080
+#    protocol: REST
+#    connectionPool:
+#      active: true
+#      minConnections: 50
+#      maxConnections: 75
+#  EOC: !!com.ericsson.datamigration.bridging.commons.core.dto.ExternalSystem
+#    systemId: EOC
+#    systemType: NEW
+#    hostnames: 
+#       - dev-01.dmtool.ericsson.com
+#    port: 8086
+#    protocol: REST
+#    authentication:
+#      authType: NONE
+#      ssl:
+#        clientAuthRequired: true
+#        keystore:
+#          path: security/certificates/dmtool/dmtool-keystore.jks
+#          password: security/certificates/dmtool/keystorepwd.txt
+#          type: JKS
+#        truststore:
+#          path: security/certificates/dmtool/dmtool-truststore.jks
+#          password: security/certificates/dmtool/truststorepwd.txt
+#          type: JKS
+#    connectionPool:
+#      active: true
+#      minConnections: 50
+#      maxConnections: 75
+#  DXP_CUSTOMER_INTERACTION: !!com.ericsson.datamigration.bridging.commons.core.dto.ExternalSystem
+#    systemId: DXP_CUSTOMER_INTERACTION
+#    systemType: NEW
+#    hostnames: 
+#       - dev-01.dmtool.ericsson.com
+#    port: 8083
+#    protocol: HTTP
+#    properties: 
+#      httpClientMinThreads: 50
+#      httpClientMaxThreads: 75
+#      requestTimeoutDefault: 30
+#    authentication:
+#      authType: Bearer
+#      ssl:
+#        clientAuthRequired: true
+#        keystore:
+#          path: security/certificates/dmtool/dmtool-keystore.jks
+#          password: security/certificates/dmtool/keystorepwd.txt
+#          type: JKS
+#        truststore:
+#          path: security/certificates/dmtool/dmtool-truststore.jks
+#          password: security/certificates/dmtool/truststorepwd.txt
+#          type: JKS
+#    connectionPool:
+#      active: true
+#      minConnections: 50
+#      maxConnections: 75

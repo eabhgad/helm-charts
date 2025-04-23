@@ -1,0 +1,12 @@
+Name: SoapReadDbLookup-Dummy-flow
+Description: Dummy workflow
+
+Initial-Step: workflow_context
+
+Flow-Definition:
+  workflow_context: !!com.ericsson.datamigration.bridging.converter.core.wfm.yaml.steps.WorkflowContextManager
+      input: []
+      attributes:
+          AttributeOne: 1
+          AttributeTwo: 2
+      nextStep: END

@@ -1,0 +1,8 @@
+{  
+   "status":"400",
+   "code":"BadRequest",
+   "message":"Error while processing request",
+   "details":"Query parameter 'resourceSubType' not found!",
+   "action":"Correct request queryParameters and resend the request",
+   "source":"API-L"
+}

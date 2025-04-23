@@ -1,0 +1,995 @@
+"use strict";
+
+var characteristics = {};
+//Logging wrapper to enable debugging information
+/*function logging(enable,log_info){
+	var logger = []
+	if(enable !=undefined || enable.includes("enable") {
+		for (let lg=0,len=arguments.length;lg<len;lg++){
+		    logger.push(" "+arguments[lg])
+		}
+		//console.log("Log information: " + stringify(logger))
+	}
+}*/
+//Validate whether the date is valid or not
+function isValidDate(s) {
+  var bits = s.split('/');
+  let set = false
+  switch (bits[0].length) {
+			case 4: if(parseInt(bits[0]) >= 1970) {
+					   if(parseInt(bits[1]) < 13 && parseInt(bits[1]) > 0){
+						   if(parseInt(bits[2].split(" ")[0]) < 32 && parseInt(bits[2].split(" ")[0]) > 0) {
+								set = true
+						   }   
+					   }	   
+					}
+					break
+		}
+	return set
+}
+//Validate for duplicate offer id and bucket id through ORIGIN_ID
+function validate_duplicate(offers, buckets) {
+	//console.log('offer validation: '+JSON.stringify(offers))
+	//console.log('Bucket validation: '+JSON.stringify(buckets))
+	let uniqueList = [];
+	let dupList = [];
+	let origin_bucket = [];
+	let origin_offer = [];
+	let errcode = {"ERRCODE":"NA"}
+	
+	function checkList(searchKey) {
+		for(let cl_idx=0;cl_idx<uniqueList.length;cl_idx++) {
+		  //console.log(JSON.stringify(uniqueList[cl_idx]))
+		  if(JSON.stringify(uniqueList[cl_idx]) === JSON.stringify(searchKey)) {
+			console.log(JSON.stringify(searchKey))
+			return true
+		  }
+		}
+		return false
+	}
+	
+	function pushToUniqueList(item, addl_item, type){
+		//uniqueList.push(item);
+		if(type === 'offer') {
+			//origin_offer.push({"ORIGIN_ID":item.ORIGIN_ID})
+			uniqueList.push(item);
+			origin_offer.push({'ORIGIN_ID':item.ORIGIN_ID})
+		}
+		else if (type === 'bucket' && item.QUOTA === 'N'){
+			//origin_bucket.push({"ORIGIN_ID":item.ORIGIN_ID})
+			//console.log('quota: '+item.QUOTA)
+			uniqueList.push(item);
+			origin_bucket.push({'BUCKET_ID':item.BUCKET_ID,'ORIGIN_ID':item.ORIGIN_ID,'CLIENT_ID': addl_item.CLIENT_ID,'BALANCE':addl_item.BALANCE})
+		}
+		
+	}
+	
+	function pushToDuplicateList(item){
+		dupList.push(item);
+	}
+	
+	for(let i = 0; i < offers.length; i++){
+		//console.log('Offer>>> '+offers[i]["ORIGIN_ID"])
+		if(checkList({"ORIGIN_ID":offers[i]["ORIGIN_ID"],"OFFER_ID":offers[i]["OFFER_ID"]})) {
+			pushToDuplicateList({"ORIGIN_ID":offers[i]["ORIGIN_ID"],"OFFER_ID":offers[i]["OFFER_ID"]})
+			errcode={"ERRCODE":"ERR028","CLIENT_ID":offers[i]["CLIENT_ID"],"ORIGIN_ID":offers[i]["ORIGIN_ID"],"OFFER_ID":offers[i]["OFFER_ID"]}
+		}
+		else {
+			pushToUniqueList({"ORIGIN_ID":offers[i]["ORIGIN_ID"],"OFFER_ID":offers[i]["OFFER_ID"]},'','offer')
+		}
+	}
+	
+	for(let i = 0; i < buckets.length; i++){
+		//console.log('Bucket>>> '+buckets[i]["ORIGIN_ID"])
+		if(checkList({"ORIGIN_ID":buckets[i]["ORIGIN_ID"],"BUCKET_ID":buckets[i]["BUCKET_ID"],"QUOTA":buckets[i]["QUOTA"]})) {
+			pushToDuplicateList({"ORIGIN_ID":buckets[i]["ORIGIN_ID"],"BUCKET_ID":buckets[i]["BUCKET_ID"],"QUOTA":buckets[i]["QUOTA"]})
+			errcode={"ERRCODE":"ERR023","CLIENT_ID":buckets[i]["CLIENT_ID"],"ORIGIN_ID":buckets[i]["ORIGIN_ID"],"BUCKET_ID":buckets[i]["BUCKET_ID"],"BALANCE":buckets[i]["BALANCE"]}
+		}
+		else {
+			pushToUniqueList({"ORIGIN_ID":buckets[i]["ORIGIN_ID"],"BUCKET_ID":buckets[i]["BUCKET_ID"],"QUOTA":buckets[i]["QUOTA"]},{"BALANCE":buckets[i]["BALANCE"],"CLIENT_ID":buckets[i]["CLIENT_ID"]},'bucket')
+		}
+	}
+	//console.log('Duplicate list is ', JSON.stringify(dupList));
+	//console.log('Unique list is ', JSON.stringify(uniqueList));	
+	if(errcode.ERRCODE === "NA") {
+		
+		//Verify the exceptionList to validate whether the discard are not from counters
+		function exceptionList(bucket_id) {
+			for (let mf_idx=0;mf_idx<(defaultMapping['bucket.exceptionList'].Value).split('#').length;mf_idx++) {
+						if((defaultMapping['bucket.exceptionList'].Value).split('#')[mf_idx] === bucket_id) {
+						  return true
+						}
+						//console.log('Arr2: '+arr2[i].BUCKET_ID)
+					}
+			return false
+		}
+		
+		//Loop through offer and bucket to validate no match origin_id of buckets 
+		function noMatchEntries(arr1,arr2){
+			let discard_entries = [];
+			if(!arr1  || !arr2) return discard_entries; 
+			for(let i=0;i<arr2.length;i++) {
+				let match_flag = false
+				for(let j=0;j<arr1.length;j++) {
+					if(arr2[i].ORIGIN_ID === arr1[j].ORIGIN_ID) {
+						match_flag=true
+					}
+				}
+				if(match_flag === false && exceptionList(arr2[i].BUCKET_ID) === false) {
+					//console.log('discard_entries>>: '+ JSON.stringify(arr2[i]))
+					discard_entries.push({'ERRCODE':"DIS008","CLIENT_ID":arr2[i].CLIENT_ID,"ORIGIN_ID":arr2[i].ORIGIN_ID,"BUCKET_ID":arr2[i].BUCKET_ID,"BALANCE":arr2[i].BALANCE})
+				}
+			}
+			return discard_entries
+		}
+		//console.log('No rejection at LUW level ---> Verify bucket discard')
+		//console.log('Discard Entity entries: '+ JSON.stringify(noMatchEntries(origin_offer, origin_bucket)));
+		let discard_message = noMatchEntries(origin_offer, origin_bucket)
+		if(discard_message.length > 0) {
+			for(let dis_idx=0;dis_idx<discard_message.length; dis_idx++) {
+				//console.log('Discard Entity entries: '+ JSON.stringify(discard_message[dis_idx]))
+				let edata = errorMap['DIS008'].Data
+				edata['CLIENT_ID'] = discard_message[dis_idx].CLIENT_ID
+				edata['BUCKET.ID'] = discard_message[dis_idx].BUCKET_ID
+				edata['BUCKET.ORIGIN_ID'] = discard_message[dis_idx].ORIGIN_ID
+				edata['BUCKET.BALANCE'] = discard_message[dis_idx].BALANCE
+				//console.log('Discard Entity entries: '+ JSON.stringify(edata));
+				errorLog('DIS008', edata, '')
+			}
+		}
+	}
+	return errcode
+}
+//Support function to write into ignite and retreiving from cache for update requests
+function writeTocache(area_name,key) {
+	if(area_name != undefined && key != undefined) {
+		const test = ''
+		return JSON.parse(idManager.invoke(area_name, test + key)).callback_value
+	}
+}
+//Function for error log 
+function errorLog(code, data, client){
+	const errorlog = {'code': code, 'desc' : errorMap[code].error_desc, 'data' : data}
+	log.invoke(JSON.stringify(errorlog))
+	//console.log('errorLog: '+JSON.stringify(errorlog))
+	//return errorlog
+}
+//update the tmpId of the serviceId - To mitiate redundant values
+function srv_update_tmpId(type,arrayL,ukey,cfs_id,rfs_id) {
+ let rcfs_tmpId
+  let update_flag=false
+  if(type === 'cfs'){
+     rcfs_tmpId = seqKey(ukey,cfs_id)
+  }
+  else {
+	  rcfs_tmpId = seqKey(ukey,rfs_id)
+  }
+	//console.log('service tmpId update:' + ukey +' , '+arrayL.length)
+	for(let rcfs=0;rcfs<arrayL.length;rcfs++) {
+			//writeLog.debug('Key value inserted is: ' + JSON.stringify(arrayL[rcfs]) + 'cfs_id & rfs_id: ' + cfs_id+','+rfs_id)
+			if(arrayL[rcfs].cfs_id.includes(cfs_id) && arrayL[rcfs].rfs_id.includes(rfs_id)){
+				arrayL[rcfs].tmpId = rcfs_tmpId
+				update_flag = true
+			}	
+		}
+	
+	if(update_flag === false) {
+				//writeLog.debug('inserting the values: '+ ukey + ','+rcfs_tmpId)
+				arrayL.push({'tmpId' : rcfs_tmpId,
+							 'cfs_id' : cfs_id,
+							 'rfs_id' : rfs_id
+							})
+			}	
+	return rcfs_tmpId
+}
+//update the tmpId of the arrayList - To mitiate redundant values
+function update_tmpId(arrayL,ukey,value) {
+	//writeLog.debug('Insert function: ')
+	let update_flag=false
+	const tmp_Id = seqKey(ukey,value)
+	for(let alIdx=0;alIdx<arrayL.length;alIdx++) {
+		////console.log('Key value inserted is: ' + JSON.stringify(arrayL[alIdx]))
+		if(arrayL[alIdx][ukey] != undefined && arrayL[alIdx].MSISDN === value){
+			arrayL[alIdx][ukey] = tmp_Id
+			update_flag = true
+		}
+	}
+	if(update_flag === false) {
+		//writeLog.debug('inserting the values: '+ ukey + ','+tmp_Id)
+		arrayL.push({[ukey] : tmp_Id,
+					 'MSISDN' : value
+					})
+	}
+	//Testing the inserted records
+	for(let alIdx=0;alIdx<arrayL.length;alIdx++) {
+		if(arrayL[alIdx][ukey] === tmp_Id){
+			//writeLog.debug('Key value inserted is: ' + arrayL[alIdx][ukey])
+		}
+	}
+	return tmp_Id
+}
+//Return all the CFS when type is 'all'
+function getCFS_info(Obj, type) {
+	//let cfs_all_id = []
+	//let rfs
+	const cfs_id = []
+	if(type.includes('all')){
+		for(let gsIdx=0;gsIdx<Object.keys(cproducts).length;gsIdx++){
+			if(cproducts[Object.keys(cproducts)[gsIdx]].CFS != undefined) {
+				for(let cfsIdx=0;cfsIdx<Object.keys(cproducts[Object.keys(cproducts)[gsIdx]].CFS).length;cfsIdx++) {
+				    //console.log('getServices: ' + JSON.stringify(cproducts[Object.keys(cproducts)[gsIdx]].CFS[Object.keys(cproducts[Object.keys(cproducts)[gsIdx]].CFS)[cfsIdx]].id) +' , '+cproducts[Object.keys(cproducts)[gsIdx]].externalId)
+				    cfs_id.push({'tmpcfsId' : cproducts[Object.keys(cproducts)[gsIdx]].CFS[Object.keys(cproducts[Object.keys(cproducts)[gsIdx]].CFS)[cfsIdx]].id,
+								  'po_id' : Object.keys(cproducts)[gsIdx],
+								  'PO' : cproducts[Object.keys(cproducts)[gsIdx]].externalId
+								})
+					
+				}
+			}
+		}
+		
+	}
+	if(type.includes('po')) {
+		//Add later
+	}
+	if(type.includes('po_id')) {
+		//Add later
+	}
+	return cfs_id
+}
+
+//Return all the RFS for the selected PO & CFS passed
+function getRFS_info(Obj) {
+	var rfs_id = []
+    for(let rf_Idx=0;rf_Idx<Obj.length;rf_Idx++){
+		for(let gsIdx=0;gsIdx<Object.keys(cproducts).length;gsIdx++){
+		   if(Obj[rf_Idx].po_id === Object.keys(cproducts)[gsIdx]) {
+			   ////console.log('getRFS-cproduct: '+ Object.keys(cproducts)[gsIdx])
+			   for(let cfsIdx=0;cfsIdx<Object.keys(cproducts[Object.keys(cproducts)[gsIdx]].CFS).length;cfsIdx++){
+			        ////console.log('getRFS-cfsInfo: '+Object.keys(cproducts[Object.keys(cproducts)[gsIdx]].CFS)[cfsIdx] + ' , '+JSON.stringify(cproducts[Object.keys(cproducts)[gsIdx]].CFS[Object.keys(cproducts[Object.keys(cproducts)[gsIdx]].CFS)[cfsIdx]].id))
+					////console.log('getRFS-rfsInfo: '+ JSON.stringify(cproducts[Object.keys(cproducts)[gsIdx]].CFS[Object.keys(cproducts[Object.keys(cproducts)[gsIdx]].CFS)[cfsIdx]].RFS))
+					for(let rfsIdx=0;rfsIdx<Object.keys(cproducts[Object.keys(cproducts)[gsIdx]].CFS[Object.keys(cproducts[Object.keys(cproducts)[gsIdx]].CFS)[cfsIdx]].RFS).length;rfsIdx++){
+						////console.log('getRFS-rfsInfo: '+ JSON.stringify(cproducts[Object.keys(cproducts)[gsIdx]].CFS[Object.keys(cproducts[Object.keys(cproducts)[gsIdx]].CFS)[cfsIdx]].RFS[Object.keys(cproducts[Object.keys(cproducts)[gsIdx]].CFS[Object.keys(cproducts[Object.keys(cproducts)[gsIdx]].CFS)[cfsIdx]].RFS)[rfsIdx]].id))
+						////console.log('getRFS-rfsInfo-RS: '+ JSON.stringify(cproducts[Object.keys(cproducts)[gsIdx]].CFS[Object.keys(cproducts[Object.keys(cproducts)[gsIdx]].CFS)[cfsIdx]].RFS[Object.keys(cproducts[Object.keys(cproducts)[gsIdx]].CFS[Object.keys(cproducts[Object.keys(cproducts)[gsIdx]].CFS)[cfsIdx]].RFS)[rfsIdx]].RS))
+					    if(rfs_id.length === 0){
+							rfs_id.push({'cfs_id' : cproducts[Object.keys(cproducts)[gsIdx]].CFS[Object.keys(cproducts[Object.keys(cproducts)[gsIdx]].CFS)[cfsIdx]].id,
+										 'rfs_id' : cproducts[Object.keys(cproducts)[gsIdx]].CFS[Object.keys(cproducts[Object.keys(cproducts)[gsIdx]].CFS)[cfsIdx]].RFS[Object.keys(cproducts[Object.keys(cproducts)[gsIdx]].CFS[Object.keys(cproducts[Object.keys(cproducts)[gsIdx]].CFS)[cfsIdx]].RFS)[rfsIdx]].id
+											})
+						}
+						else {
+							let cmp_flag = false
+							for(let countIdx=0;countIdx<rfs_id.length;countIdx++){
+								if(rfs_id[countIdx].cfs_id === cproducts[Object.keys(cproducts)[gsIdx]].CFS[Object.keys(cproducts[Object.keys(cproducts)[gsIdx]].CFS)[cfsIdx]].id && rfs_id[countIdx].rfs_id === cproducts[Object.keys(cproducts)[gsIdx]].CFS[Object.keys(cproducts[Object.keys(cproducts)[gsIdx]].CFS)[cfsIdx]].RFS[Object.keys(cproducts[Object.keys(cproducts)[gsIdx]].CFS[Object.keys(cproducts[Object.keys(cproducts)[gsIdx]].CFS)[cfsIdx]].RFS)[rfsIdx]].id){
+										cmp_flag = true
+								}
+								
+							}
+							if(cmp_flag === false) {
+								rfs_id.push({'cfs_id' : cproducts[Object.keys(cproducts)[gsIdx]].CFS[Object.keys(cproducts[Object.keys(cproducts)[gsIdx]].CFS)[cfsIdx]].id,
+											 'rfs_id' : cproducts[Object.keys(cproducts)[gsIdx]].CFS[Object.keys(cproducts[Object.keys(cproducts)[gsIdx]].CFS)[cfsIdx]].RFS[Object.keys(cproducts[Object.keys(cproducts)[gsIdx]].CFS[Object.keys(cproducts[Object.keys(cproducts)[gsIdx]].CFS)[cfsIdx]].RFS)[rfsIdx]].id
+											})
+							}
+						}
+						for(let rsIdx=0;rsIdx<Object.keys(cproducts[Object.keys(cproducts)[gsIdx]].CFS[Object.keys(cproducts[Object.keys(cproducts)[gsIdx]].CFS)[cfsIdx]].RFS[Object.keys(cproducts[Object.keys(cproducts)[gsIdx]].CFS[Object.keys(cproducts[Object.keys(cproducts)[gsIdx]].CFS)[cfsIdx]].RFS)[rfsIdx]].RS).length;rsIdx++){
+						    ////console.log('getRFS-rfsInfo-RS: '+ JSON.stringify(cproducts[Object.keys(cproducts)[gsIdx]].CFS[Object.keys(cproducts[Object.keys(cproducts)[gsIdx]].CFS)[cfsIdx]].RFS[Object.keys(cproducts[Object.keys(cproducts)[gsIdx]].CFS[Object.keys(cproducts[Object.keys(cproducts)[gsIdx]].CFS)[cfsIdx]].RFS)[rfsIdx]].RS[Object.keys(cproducts[Object.keys(cproducts)[gsIdx]].CFS[Object.keys(cproducts[Object.keys(cproducts)[gsIdx]].CFS)[cfsIdx]].RFS[Object.keys(cproducts[Object.keys(cproducts)[gsIdx]].CFS[Object.keys(cproducts[Object.keys(cproducts)[gsIdx]].CFS)[cfsIdx]].RFS)[rfsIdx]].RS)[rsIdx]]))
+						    ////console.log('getRFS-rfsInfo-RS: ' + Object.keys(cproducts[Object.keys(cproducts)[gsIdx]].CFS[Object.keys(cproducts[Object.keys(cproducts)[gsIdx]].CFS)[cfsIdx]].RFS[Object.keys(cproducts[Object.keys(cproducts)[gsIdx]].CFS[Object.keys(cproducts[Object.keys(cproducts)[gsIdx]].CFS)[cfsIdx]].RFS)[rfsIdx]].RS)[rsIdx])
+						}
+					}
+				
+			   }
+			   
+		   }
+		}
+	}
+	return rfs_id
+}
+
+//Return tmpId when CFS is defined
+function getProductServices(poid) {
+	const tmp_pservice_id = []
+	for(let Idx=0;Idx<Object.keys(cproducts).length;Idx++){
+		if(cproducts[Object.keys(cproducts)[Idx]].poId.includes(poid)) {
+		   //writeLog.debug('getProductServices: ' + cproducts[Object.keys(cproducts)[Idx]].poId + ' , '+poid)
+			  if(cproducts[Object.keys(cproducts)[Idx]].CFS != undefined) { 
+				////console.log('getProductServices: ' + JSON.stringify(cproducts[Object.keys(cproducts)[Idx]].CFS))
+				//tmp_service_id = cproducts[Object.keys(cproducts)[Idx]].CFS.CFS0.id
+					for(let cfsIdx=0;cfsIdx<Object.keys(cproducts[Object.keys(cproducts)[Idx]].CFS).length;cfsIdx++) {
+						//writeLog.debug('CFS array['+cfsIdx+']: '+ JSON.stringify(cproducts[Object.keys(cproducts)[Idx]].CFS[Object.keys(cproducts[Object.keys(cproducts)[Idx]].CFS)[cfsIdx]].id))
+						//Logging tmp Id for services
+						let seq_srvId = seqKey("tmp_prod_service_id",cproducts[Object.keys(cproducts)[Idx]].CFS[Object.keys(cproducts[Object.keys(cproducts)[Idx]].CFS)[cfsIdx]].id)
+						tmp_pservice_id.push({'tmpId' : seq_srvId})
+						if(tmp_acc_tracker.MSISDN != cproducts[Object.keys(cproducts)[Idx]].CFS[Object.keys(cproducts[Object.keys(cproducts)[Idx]].CFS)[cfsIdx]].id) {
+							tmp_acc_tracker.push({'tmp_prod_service_id' : seq_srvId,
+											  'MSISDN': cproducts[Object.keys(cproducts)[Idx]].CFS[Object.keys(cproducts[Object.keys(cproducts)[Idx]].CFS)[cfsIdx]].id
+											})
+						}
+					}
+				}
+			}
+		}
+		return tmp_pservice_id
+}
+//Return the contract Id of the MSISDN
+function getClientContractId(client_info, MSISDN) {
+	let cont_id
+	for (let idx=0;idx<client_info.length;idx++){
+			////console.log('Contract Id: ' + client_info[idx].MSISDN +' , '+client_info[idx].CONT_ID)
+			cont_id = client_info[idx].CONT_ID
+	}
+	return cont_id
+}
+//Return the tmpId 
+function tmpId_from_clientInfo(Ob, type, msisdn) {
+	let ret_tmpId
+	for (let idx=0;idx<Ob.length;idx++){
+		if(type.includes('tmpSP') && JSON.stringify(Ob[idx].MSISDN).includes(msisdn)) {
+			ret_tmpId = Ob[idx].tmpSPId
+		}
+	}
+	return ret_tmpId
+}
+//Return the requested temp Id of the given structure
+function tmpId_from_tracker(tra_array,type,entity) {
+	let tmpIdTracker
+	for(let idx=0; idx<tra_array.length; idx++) {
+		//billingAccountId of the bucketDetermination
+		if(type.includes('billingAccount')) {
+			if(JSON.stringify(tra_array[idx].MSISDN).includes(entity) && tra_array[idx].billingAccExtId != undefined){
+			    //writeLog.debug('tmp billingAcc Id: '+ JSON.stringify(tra_array[idx].MSISDN) + ' , ' + entity+' , '+ JSON.stringify(tra_array[idx].billingAccExtId))	
+				tmpIdTracker = tra_array[idx].billingAccExtId
+			}
+		}
+		//contract tmpId -> we will return tmp_contractId (tmp_contract_acc_id)
+		if(type.includes('contract')) {
+			if(JSON.stringify(tra_array[idx].MSISDN).includes(entity) && tra_array[idx].tmp_contract_acc_id != undefined){
+			    //writeLog.debug('tmp Contract Id: '+ JSON.stringify(tra_array[idx].MSISDN) + ' , ' + entity+' , '+ JSON.stringify(tra_array[idx].tmp_contract_acc_id))	
+				tmpIdTracker = tra_array[idx].tmp_contract_acc_id 
+			}
+		}
+		//If type is SP -> We will need to return tmp_SP_acc_id
+		if(type.includes('SP')) {
+			//writeLog.debug('SP info: '+ JSON.stringify(tra_array[idx].MSISDN) +' entity: '+entity)
+			if(JSON.stringify(tra_array[idx].MSISDN).split(':')[0].includes(entity) && tmp_acc_tracker[idx].tmp_SP_acc_id !=undefined) {
+				tmpIdTracker = tra_array[idx].tmp_SP_acc_id
+			}
+		}
+		//If type is PCMP -> We will need to return the contract Id of the subscriber from input data
+	    if(type.includes('PCMP')){
+			if(JSON.stringify(tra_array[idx].MSISDN).includes(entity) && tmp_acc_tracker[idx].tmp_conscont_acc_id !=undefined){
+			    //writeLog.debug('PCMP: '+ JSON.stringify(tra_array[idx].MSISDN) + ' , ' + entity+' , '+ JSON.stringify(tra_array[idx].tmp_conscont_acc_id))	
+				tmpIdTracker = tra_array[idx].tmp_conscont_acc_id
+			}
+		}
+		//If type is CE -> We will need to return the consumer Entry tmp Id of the subscriber from temp tracker
+	    if(type.includes('CE')){
+			if(JSON.stringify(tra_array[idx].MSISDN).includes(entity)){
+			    //writeLog.debug('CE: '+ JSON.stringify(tra_array[idx].MSISDN) + ' , ' + entity+' , '+ JSON.stringify(tra_array[idx].tmp_cList_acc_id))	
+				tmpIdTracker = tra_array[idx].tmpCEId
+			}
+		}
+	}
+	return tmpIdTracker
+}
+
+//Return the producer MSISDN from the client list of the given LUW
+function getProducerCUSTID(client_info) {
+	for(let Idx=0;Idx<client_info.length;Idx++){
+		if(client_info[Idx].PRODUCER === 'Y') {
+			 return client_info[Idx].CUST_ID
+		}
+	}
+}
+//Return the producer MSISDN from the client list of the given LUW
+function getProducerMSISDN(client_info) {
+	//let p_id
+	for(let Idx=0;Idx<client_info.length;Idx++){
+		if(client_info[Idx].PRODUCER === 'Y') {
+			//p_id = client_info[Idx].MSISDN
+			return client_info[Idx].MSISDN
+		}
+	}
+	//console.log('p_id: ' + p_id)
+	//return p_id 
+}
+function getProducerMSISDN1(client_info) {
+	let p_id
+	for(let Idx=0;Idx<client_info.length;Idx++){
+		if(client_info[Idx].PRODUCER === 'Y') {
+			p_id = client_info[Idx].MSISDN
+			//return client_info[Idx].MSISDN
+		}
+	}
+	//console.log('p_id: ' + p_id)
+	return p_id 
+}
+//getSPS product 
+function getSPSpec(externalId) {
+	let sps
+	for(let spsIdx=0;spsIdx<Object.keys(cproducts).length;spsIdx++){
+		if(cproducts[Object.keys(cproducts)[spsIdx]].externalId === externalId) {
+			for(let prfIdx=0;prfIdx<cproducts[Object.keys(cproducts)[spsIdx]].relations.psRelationsFrom.length;prfIdx++){
+			 if(cproducts[Object.keys(cproducts)[spsIdx]].relations.psRelationsFrom[prfIdx].targetType.includes('SharingProvider')){
+			    sps =  cproducts[Object.keys(cproducts)[spsIdx]].relations.psRelationsFrom[prfIdx].targetId
+			 }
+			}
+		}
+	}
+	return sps
+}
+//getSPS product 
+function getSCSpec(SPSinfo) {
+	let scs
+	for(let scsIdx=0;scsIdx<Object.keys(sharingConsumer).length;scsIdx++){
+		for(let relIdx=0;relIdx<sharingConsumer[Object.keys(sharingConsumer)[scsIdx]].relations.To.length;relIdx++){
+			if(sharingConsumer[Object.keys(sharingConsumer)[scsIdx]].relations.To[relIdx].targetType.includes('SharingConsumer') && sharingConsumer[Object.keys(sharingConsumer)[scsIdx]].relations.To[relIdx].sourceId === SPSinfo) {
+				scs =  sharingConsumer[Object.keys(sharingConsumer)[scsIdx]].relations.To[relIdx].targetId
+			}
+		}
+	}
+	return scs
+}
+//getProvider customer Id
+function getProviderCustId(client){
+	for(let gpIdx = 0; gpIdx < client.length; gpIdx++){
+		if(client[gpIdx].PRODUCER === 'Y') {
+			return client[gpIdx].CUST_ID
+		}
+	}
+}
+//set product tracker for tmp Id
+function setGrouptmpId(po_id, MSISDN, group) {
+	let pid_tmpId
+	for(let sgIdx=0;sgIdx<tmp_pid_tracker.length;sgIdx++) {
+		////console.log('PID tracker: PO_Id: ' + tmp_pid_tracker[sgIdx].po_id + 'tracker MSISDN: '+tmp_pid_tracker[sgIdx].client_id + ' MSISDN:'+MSISDN)
+		if(tmp_pid_tracker[sgIdx].po_id !=po_id && tmp_pid_tracker[sgIdx].client_id.includes(MSISDN)) {
+		  pid_tmpId = tmp_pid_tracker[sgIdx].t_Id
+		}
+	}
+	return pid_tmpId
+}
+//get Group provider tmp Id
+function getGrouptmpId(po_id, MSISDN, group, group_info, type) {
+ let grouptmpId
+ for (let ggIdx=0;ggIdx<tmp_pid_tracker.length;ggIdx++){
+	 if(po_id.includes('PROVIDER')) {
+		 //writeLog.debug('Type of provider: '+type)
+		 if(tmp_pid_tracker[ggIdx].po_id.includes('CONSUMER') && tmp_pid_tracker[ggIdx].group.includes(group) && type==='DPO'){
+		   //writeLog.debug('Default:consumer- consumer_mv information: ' + tmp_pid_tracker[ggIdx].po_id + ' , ' + tmp_pid_tracker[ggIdx].t_id ) 
+		    grouptmpId = tmp_pid_tracker[ggIdx].t_id 
+		 }
+		 if(tmp_pid_tracker[ggIdx].po_id.includes('PROVIDER') && tmp_pid_tracker[ggIdx].group.includes(group) && type==='SP'){
+		   //writeLog.debug('SP:consumer- consumer_mv information: ' + tmp_pid_tracker[ggIdx].po_id + ' , ' + tmp_pid_tracker[ggIdx].t_id ) 
+		    grouptmpId = tmp_pid_tracker[ggIdx].t_id
+		 }
+	 }
+	 else if(po_id.includes('CONSUMER')) {
+		 if(tmp_pid_tracker[ggIdx].po_id.includes('PROVIDER') && tmp_pid_tracker[ggIdx].group.includes(group)){
+		 //if(tmp_pid_tracker[ggIdx].po_id.includes('CONSUMER') && tmp_pid_tracker[ggIdx].group.includes(group)){
+		   //writeLog.debug('consumer- provider_mv information: ' + tmp_pid_tracker[ggIdx].po_id + ' , ' + tmp_pid_tracker[ggIdx].t_id ) 
+		    grouptmpId = tmp_pid_tracker[ggIdx].t_id
+		 }
+	 }
+	 else {
+		 if(getSCSpec(getSPSpec(po_id)) && getProducerMSISDN(group_info) !=undefined){ 
+		   ////console.log('getGrouptmpId:: '+ getProducerMSISDN(group_info) + ' , ' + tmp_pid_tracker[ggIdx].client_id)
+		   if(getProducerMSISDN(group_info) === tmp_pid_tracker[ggIdx].client_id && tmp_pid_tracker[ggIdx].po_id === po_id) {
+				grouptmpId = tmp_pid_tracker[ggIdx].t_id
+		   }
+		 }
+	 }
+ }
+ return grouptmpId
+}
+//get billingAccount Id for baRefForBillCycleAlignedRecurrence->billingAccountLinkId
+function getBARefBCARecurrence(group_parent, offer) {
+		let cu_tmp_id
+		for (let itdx =0;itdx < Object.keys(id_tracker).length; itdx++){
+		   ////console.log("id_tracker for billingAccount :: " + JSON.stringify(id_tracker[itdx]))
+		    if( id_tracker[itdx].entity_type === "CUSTOMER" && id_tracker[itdx].entity_parent === group_parent) {
+				 ////console.log("id_tracker for billingAccount :: " + JSON.stringify(id_tracker[itdx].entity_resource))
+				 cu_tmp_id = JSON.stringify(id_tracker[itdx].entity_resource) 
+			  }
+		   }
+		//writeLog.debug("id_tracker for billingAccount :: " + cu_tmp_id)
+		//return ((defaultMapping["customer.billingAccounts.externalId"].Value+cu_tmp_id).replace("\"","")).replace("\"","")
+		for (let tidx = 0; tidx < Object.keys(tmp_acc_tracker).length; tidx++){
+			////console.log("MSISDN: " + tmp_acc_tracker[tidx].MSISDN)
+		    //Check the if loop to attach the BA 
+			if((cu_tmp_id && cu_tmp_id.includes(tmp_acc_tracker[tidx].MSISDN) && tmp_acc_tracker[tidx]["tmp_acc_id"] !=undefined) && ((offer.isRecurrence === "yes" && offer.isBCAligned === "yes")||offer.includes("defaultPO"))) {
+			    //writeLog.debug("billingAccountLinkId:: " + tmp_acc_tracker[tidx]["tmp_acc_id"])
+			    let tmp_id = tmp_acc_tracker[tidx]["tmp_acc_id"]
+				return tmp_id
+			  }
+			  /*else if (cu_tmp_id.includes(tmp_acc_tracker[tidx].MSISDN) && tmp_acc_tracker[tidx]["tmp_acc_id"] !=undefined && offer.includes("defaultPO")) {
+			    //writeLog.debug("billingAccountLinkId:: " + tmp_acc_tracker[tidx]["tmp_acc_id"])
+			    tmp_id = tmp_acc_tracker[tidx]["tmp_acc_id"]
+				
+				return tmp_id
+			  }*/
+			  
+		   }
+}
+//get and format function for charactersitics values
+function get_charValues(keyValues) {
+	const ret_val = []
+  ////console.log("Arguments:: "+ arguments," length: " + arguments.length)
+  for (let idx=0,l=arguments.length;idx<l;idx++) {
+      ret_val.push(arguments[idx])
+      	  
+  }
+  return ret_val
+}
+//Getting Group info
+function getGroupId(client){
+	for (let grIdx=0;grIdx<client.length; grIdx++){ 
+		if(client[grIdx].PRODUCER === 'Y') {
+			let grp_id = client[grIdx].client_id
+			return grp_id
+		}		
+	}
+}
+//Getting Producer info
+function getProducerId(client, groupId){
+	let prod_id
+	for (let prIdx = 0; prIdx < client.length; prIdx++){
+		if(client[prIdx].PRODUCER === 'Y') {
+			prod_id = client[prIdx].MSISDN
+		}
+	}
+ return prod_id	
+}
+//Getter schedules
+function getSchedules(schedule_obj,billDay) {
+	//let sch_id
+	////console.log("Schedule object: " + Object.keys(schedule_obj)+" , "+Object.keys(schedule_obj).length)
+	for(let idx=0;idx<Object.keys(schedule_obj).length;idx++){
+		////console.log("Inspecting Obj: " + Object.keys(schedule_obj)[idx])
+		if (Object.keys(schedule_obj)[idx].includes(billDay)) {
+			//writeLog.debug("Schedule: " + schedule_obj[Object.keys(schedule_obj)[idx]]+" Id: "+schedule_obj[Object.keys(schedule_obj)[idx]].id)
+			return schedule_obj[Object.keys(schedule_obj)[idx]].id
+		}
+	}
+}
+//getter sharingClassification
+function getsharingClassification(data) {
+	if (data != undefined) {
+		if ( data.PRODUCER.includes("Y")){
+		    ////console.log("Producer:: " + JSON.stringify(data.PRODUCER))
+		    //return ["Titular","Dependente"]
+			return "Titular"
+		}
+		else if  (data.PRODUCER.includes("N")){
+			////console.log("Consumer:: " + JSON.stringify(data.PRODUCER))
+		    return "Dependente"
+		}
+	}
+}
+//getter sharingGroupId
+//function getGroupId(data) {
+//	if (data != undefined) {
+		////console.log("Group ID:: " + JSON.stringify(data.GROUP_ID))
+//		return data.GROUP_ID
+//	}
+//}
+//getter clientQuota
+function getclientQuota(data){
+	//Returning default as semCota since there is no direction on how ComCota should be validated/set - 10Nov2019
+	//console.log('Quota limit: '+ data)
+	return 'ComCota'
+}
+function clientRollover(client_id,defaultMapping,refValue, data) {
+	let ret_value=refValue.split(':')[0]
+	//console.log('clientRollover refValue : '+refValue)
+		for (let d_idx=0;d_idx<data.length;d_idx++) {
+			if(client_id === data[d_idx].CLIENT_ID && defaultMapping[data[d_idx].SERVICE_ID] && data[d_idx].SUB_SERVICE === defaultMapping[data[d_idx].SERVICE_ID].SubService_Id.toString()) {
+				//console.log('services determining clientRollover: '+client_id+' : '+data[d_idx].SERVICE_ID+" : "+data[d_idx].SUB_SERVICE)
+				ret_value=refValue.split(':')[1]
+			}
+		}
+	return ret_value
+}
+//setter prepaidLifeCycleData and PPLC
+function setPPLC(data, switch_on) {
+	if(switch_on.includes("Data")){
+		////console.log("Spec Id:: " + JSON.stringify(Object.keys(data)) + " ,Id : " + JSON.stringify(data[Object.keys(data)[0]].id))
+		return {'specificationId': data[Object.keys(data)[0]].id}
+	}
+}
+//setter function for party contactmedia externalId
+function partycontactMediaExternalId(external_info, defaults, count){
+	if(external_info.length <=count) {
+	    return defaults + external_info
+	}
+}
+//setter for re-factoring the time correction need for entities
+function dt_set(source, time_type, quantity,tz){
+	const return_date = new Date(source)
+	//pb_startDate.setMinutes(pb_startDate.getMinutes() + 7)
+	//console.log('dt_set Before correction: '+return_date)
+	switch(time_type) {
+		case 'hour':
+					return_date.setHours(return_date.getHours() + quantity)
+					break;
+		case 'minute':
+					return_date.setMinutes(return_date.getMinutes() + quantity)
+					break;
+		case 'seconds':
+					return_date.setSeconds(return_date.getSeconds() + quantity)
+					break;
+	}
+	return_date.setMilliseconds(0)
+	//console.log('dt_set After correction: '+return_date.toISOString())
+	return tz? return_date.toISOString().replace('Z',tz): return_date.toISOString()
+}
+
+//setter for date function with format
+function date (source,tz) {
+    if(source) {
+		//console.log("Source, Date format :: " + source+" ,"+format(source))
+		//console.log('Date string: '+new Date().strptime(source, format(source)).toIsoString())
+		const return_date = new Date().strptime(source, format(source)).toIsoString()
+		if(tz) {
+			if(return_date.indexOf('+00:00') != -1) {
+			   return return_date.replace('+00:00',tz)
+			}
+			else if (return_date.indexOf('Z') != -1) {
+				return return_date.replace('Z',tz)
+			}
+		}
+		else {
+			return return_date;
+		}
+	}
+	return undefined
+}
+//compare two dates 
+var compare_dates = function(date1,date2){
+	//console.log('Compare dates: '+ date2)
+	if(date1 != undefined && (date2 != null || date2 != undefined)) {    
+		if (date1>date2) return false;
+		else if (date1<=date2) return true;
+	}
+	else if(date2 === undefined) {
+		return false
+		
+	}
+}
+//setter function for validFor object for party, customer and contract
+function validForDate(start,end,type,mins,tz){
+	if(start === undefined && end === undefined){
+		var data = errorMap['ERR018'].Data
+		errorLog('ERR018',data)
+		return {'error' : {'error_code': 'ERR018'}}
+	}
+	else if(end === undefined){
+		//console.log('start date (with/without set milliseconds): '+start)
+		if(type === 'Default_PO') {
+			const d = new Date(start)
+			d.setMinutes(d.getMinutes() + mins)
+			d.setMilliseconds(0)
+			//console.log('start date (with/without set milliseconds): '+tz?d.toIsoString().replace('+00:00',tz):d)
+			//writeLog.debug('DefaultPO: tZ alignment#Org: '+start+' Added offset: '+d)
+			switch (tz) {
+				case undefined:
+					//console.log('start date (with/without set milliseconds): '+d);break;
+					return {'start': d}
+				default:
+					return {'start': d.toIsoString().replace('+00:00',tz)}
+					//console.log('start date (with/without set milliseconds): '+d.toIsoString().replace('+00:00',tz));break;
+			}
+			//return {'start': d}
+		}
+		else {
+			return {'start': start}
+		}
+	}
+	else {
+		if(type === 'Default_PO') {
+			const d = new Date(start)
+			d.setMinutes(d.getMinutes() + mins)
+			d.setMilliseconds(0)
+			
+			let e1 = new Date(end)
+			if(tz) {
+				e1.setHours(0)
+				e1.setMinutes(0)
+				e1.setSeconds(0)
+				e1.setMilliseconds(0)
+			}
+			else {
+				e1.setHours(3)
+				e1.setMinutes(0)
+				e1.setSeconds(0)
+				e1.setMilliseconds(0)
+			}
+			//writeLog.debug('DefaultPO: tZ alignment#Org: '+start+' Added offset: '+d)
+			console.log('start date (with/without set milliseconds): '+tz?d.toIsoString().replace('+00:00',tz):d)
+			switch (tz) {
+				case undefined:
+					//console.log('start date (with/without set milliseconds): '+d);break;
+					return {'start': d,'end':e1}
+				default:
+					return {'start': d.toIsoString().replace('+00:00',tz),'end':e1.toIsoString().replace('+00:00',tz)}
+					//console.log('start date (with/without set milliseconds): '+d.toIsoString().replace('+00:00',tz));break;
+			}
+			//return {'start': d,'end':end}
+		}
+		else {
+			return {'start': start,'end':end}
+		}
+	}	
+}
+function contactMediumSpecificationId(external_info) {
+	if(external_info !=undefined){
+	   return external_info
+	}
+}
+/*set the offer for both producer and consumers*/
+function setOffer(input_offer, client_id,switch_info) {
+	//console.log('Offer info: '+Object.keys(offer).length)
+	const retoffer=[]
+	for(let offer_idx=0;offer_idx<input_offer.length;offer_idx++) {
+		//console.log('Offer info:subs: '+JSON.stringify(input_offer[offer_idx]))
+		//console.log('Offer info:def_offer: '+JSON.stringify(offer[input_offer[offer_idx].OFFER_ID].Sharing_Scope))
+		switch (switch_info) {
+				case 'Y':
+					if(offer[input_offer[offer_idx].OFFER_ID].Sharing_Scope === 'yes' || (offer[input_offer[offer_idx].OFFER_ID].Sharing_Scope === 'no' && input_offer[offer_idx].CLIENT_ID===client_id)) {
+						retoffer.push(input_offer[offer_idx])
+					}
+					
+					break;
+				
+				case 'N':
+					if(offer[input_offer[offer_idx].OFFER_ID].Sharing_Scope === 'no' && input_offer[offer_idx].CLIENT_ID===client_id) {
+						retoffer.push(input_offer[offer_idx])
+					}
+					break;
+					//console.log('start date (with/without set milliseconds): '+d.toIsoString().replace('+00:00',tz));break;
+			}
+	}
+	return retoffer
+}
+/*set the bucket for both producer and consumers*/
+function setBucket(input_bucket, switch_info) {
+	
+}
+
+/*
+CharacteristicsValue usage: Type of entity, entity keys, valid from date, characteristicsValue
+*/
+//function chars (chars_root, chars_key, validFor, validTo, charsValue) {
+function chars (chars_root, chars_key, validFor,charsValue, charsType) {
+	//Replaced all the chars_root.chars to chars_wrapper
+	const chars_construct = []
+   let charSpecExternalId
+   let val 
+   const cust_val = []
+   //testing value from catalogue against input values
+   let val_cat = []
+   let chars_wrapper
+   //writeLog.debug("Entering the characteristics with keys" + chars_key + " Length: " + chars_key.length) 
+   if (charsType !=undefined && charsType.includes("poChars")){
+      ////console.log("Char root:: "+ JSON.stringify(chars_root))
+      chars_wrapper = chars_root.poChars 	  
+   }
+   else {
+	   chars_wrapper = chars_root.chars
+   }
+  //console.log("Char root:: "+ JSON.stringify(chars_wrapper))
+  for (let idx=0,l=chars_key.length;idx<l;idx++) {
+	  charSpecExternalId = chars_key[idx]
+	  //It will be validated in the main function call - It's hack to reject the undefined po.keys
+      //
+	  //
+	  //val = Object.keys(chars_wrapper[chars_key[idx]].values)[0]
+	  for (let v_idx=0,k=Object.keys(chars_wrapper[chars_key[idx]].values).length;v_idx<k;v_idx++) {
+	     if(!chars_wrapper[chars_key[idx]].values[Object.keys(chars_wrapper[chars_key[idx]].values)[v_idx]].name.includes("discrete") || chars_wrapper[chars_key[idx]].values[Object.keys(chars_wrapper[chars_key[idx]].values)[v_idx]].name.includes("discrete")){
+		            //console.log("val ::" + Object.keys(chars_wrapper[chars_key[idx]].values)[v_idx])
+					val = Object.keys(chars_wrapper[chars_key[idx]].values)[v_idx]
+					val_cat.push(val)
+		     }
+	    }
+	   //console.log('All the values: '+val_cat)
+	  //val = Object.keys(chars_wrapper[chars_key[idx]].values)
+	  if(charsValue !=undefined) { 
+	/*	  cust_val = charsValue[idx]*/
+		  if(Array.isArray(charsValue[idx]) === true && charsValue[idx] != undefined){
+		    ////console.log("==>Chars Value, Length, Object Type:" + charsValue[idx] +" ,"+charsValue[idx].length+" ,"+Array.isArray(charsValue[idx]))
+			for (let val_idx=0, v_l=charsValue[idx].length; val_idx<v_l;val_idx++) {
+			   //console.log(" Array: charValueRef:: " + charsValue[idx][val_idx] + " ,"+JSON.stringify(chars_wrapper[chars_key[idx]].values[charsValue[idx][val_idx]].id))
+			   //Search for characteristic Id for both static or dynamic value
+			  // let Cvf_t = chars_wrapper[chars_key[idx]].values[charsValue[idx][val_idx]].id ? chars_wrapper[chars_key[idx]].values[charsValue[idx][val_idx]].id : chars_wrapper[chars_key[idx]].values[charsValue[idx][val]].id
+			   if(JSON.stringify(chars_wrapper[chars_key[idx]].values[charsValue[idx][val_idx]]).includes("unitOfMeasure")) {
+			     cust_val.push({"validFor":validFor,"value":charsValue[idx][val_idx], "unitOfMeasure" : chars_wrapper[chars_key[idx]].values[charsValue[idx][val_idx]].unitOfMeasure, "charValueRef": chars_wrapper[chars_key[idx]].values[charsValue[idx][val_idx]].id})
+			   }
+			   else {
+				 cust_val.push({"validFor":validFor,"value":charsValue[idx][val_idx],"charValueRef": chars_wrapper[chars_key[idx]].values[charsValue[idx][val_idx]].id})
+			   }
+			   //console.log("charValues:: " + chars_key[idx] + " , " + JSON.stringify(chars_wrapper[chars_key[idx]].values))
+			}
+		  }
+		  else if(Array.isArray(charsValue[idx]) === false && charsValue[idx] != undefined){
+			    //Match catalogue value with dataValue for multiple catalogue results
+				let cVf = (chars_wrapper[chars_key[idx]].values[val].id) ? chars_wrapper[chars_key[idx]].values[val].id : chars_wrapper[chars_key[idx]].values[charsValue[idx]].id	    
+				//console.log("Val :: " + val + " chars wrappers:: " + chars_wrapper[chars_key[idx]].values[val].id)
+				if(val_cat.indexOf(charsValue[idx]) > -1) {
+				   //console.log("Val2 :: " + val_cat + " chars wrappers:: " + chars_wrapper[chars_key[idx]].values[charsValue[idx]].id)
+				   cVf = chars_wrapper[chars_key[idx]].values[charsValue[idx]].id
+				}
+				//console.log("No Array: Chars key/Value, Length, Object Type:" + chars_key[idx]+"/"+charsValue[idx] +" ,"+charsValue[idx].length+" ,"+Array.isArray(charsValue[idx]+": "+chars_wrapper[chars_key[idx]].values))
+			    //cust_val = {"validFor":validFor,"value":charsValue[idx],"charValueRef": cVf}
+			    //console.log("Catalog Definition:: " + JSON.stringify(chars_wrapper[chars_key[idx]].values[val]))
+				if(JSON.stringify(chars_wrapper[chars_key[idx]].values[val]).includes("unitOfMeasure")){
+				   cust_val.push({"validFor":validFor,"value":charsValue[idx], "unitOfMeasure" : chars_wrapper[chars_key[idx]].values[val].unitOfMeasure ,"charValueRef": cVf})
+				}
+				else {
+					cust_val.push({"validFor":validFor,"value":charsValue[idx], "charValueRef": cVf})
+				}
+		  }
+        }	
+	  //console.log("Key/Value info:: " + JSON.stringify(chars_key[idx])+ " ,"+JSON.stringify(cust_val))
+	  //console.log("Values:: " + JSON.stringify(chars_wrapper[chars_key[idx]].values[val].name))
+	  if(JSON.stringify(chars_wrapper[chars_key[idx]].values[val].name).includes("range")){
+		 //chars_root.chars[chars_key[idx]].values[val]
+		 ////console.log("Key range: "+chars_key[idx]+" Values content:" + JSON.stringify(Object.keys(chars_wrapper[chars_key[idx]].values))+ "Chars Value:"+ charsValue)  
+	     if(JSON.stringify(chars_wrapper[chars_key[idx]].values[val]).includes("unitOfMeasure")) {
+		       ////console.log("Key UoM : "+chars_key[idx]+" Values content:" + JSON.stringify(chars_wrapper[chars_key[idx]].values[val].unitOfMeasure))
+	        }
+	    }
+	  //Condition for find whether unit of measure is defined for a characteristic value of a entity
+			//introducing variables to test the constructor
+			if(chars_wrapper[chars_key[idx]].name.includes("Customer Tax Category")) {
+				charSpecExternalId = "customerTaxCategory"
+				
+			}
+			
+			if(chars_wrapper[chars_key[idx]].name.includes("Tax Jurisdiction Code")) {
+				charSpecExternalId = "taxJurisdictionCode"
+			}  
+			
+//			if(JSON.stringify(chars_wrapper[chars_key[idx]].values[val]).includes("unitOfMeasure")) {
+					chars_construct.push({"externalId":charSpecExternalId,
+							//"name":chars_wrapper[chars_key[idx]].name,
+							"name" : charSpecExternalId,
+	                        //"validFor":validFor,
+							"tmpId" : seqKey("chars_tmp_id",chars_wrapper[chars_key[idx]].name),
+							"characteristic":{"characteristicId":chars_wrapper[chars_key[idx]].id},
+							"values":[cust_val[idx]]
+						    })
+			 
+			/*}		  			
+			else {
+					chars_construct.push({"externalId":charSpecExternalId,
+			                      //"name":chars_wrapper[chars_key[idx]].name,
+	                              //"validFor":validFor,
+								  "name" : charSpecExternalId,
+								  "tmpId" : seqKey("chars_tmp_id",chars_wrapper[chars_key[idx]].name),
+								  "characteristic":{"characteristicId":chars_wrapper[chars_key[idx]].id},
+							      "values":[cust_val[idx]]
+						          })
+			  
+			}*/
+			//writeLog.debug("Chars keys/info:: " + chars_key[idx] +" End!")
+			val_cat = []
+	   }
+    
+return chars_construct   	
+}
+
+function formatChar(char_data, value, validFor, entity) {
+	//writeLog.debug("==>") 
+	const current_value = _selectValue(char_data, value);
+	//writeLog.debug("current_value: "+current_value)
+
+	  if (!current_value)
+	    return [];
+	 
+	      //writeLog.debug("=1=>"+char_data.name)
+	      //writeLog.debug("=2=>"+char_data.id)
+	      //writeLog.debug("=3=>"+current_value.id)
+	      //writeLog.debug("=4=>"+(value?value:current_value.value))
+	      //writeLog.debug("=5=>"+  ((current_value.unitOfMeasure)? current_value.unitOfMeasure : undefined) )
+	      //writeLog.debug("=6=>"+ validFor )
+	      //writeLog.debug("=7=>"+ ((current_value.unitOfMeasure)? current_value.unitOfMeasure : undefined))
+	 
+	  return _formatChar(char_data.name, char_data.id, current_value.id, value?value:current_value.value, (current_value.unitOfMeasure)? current_value.unitOfMeasure : undefined, validFor, (current_value.unitOfMeasure)? current_value.unitOfMeasure : undefined);
+     
+
+}
+
+//let PBSCache = ret_PBSCache(productBucket,buckets[jdx],client.TIMEZONE,rollover_data,ind_rb_data,offers[idx].START_DATE)
+function ret_PBSCache(sflag,bflag,productBucketInfo,bucketInfo,offerInfo,tz,rolloverBucketInfo,ind_rb_data) {
+   let pb_cacheInfo = []
+   for(let pbidx=0;pbidx<productBucketInfo.length;pbidx++){
+	 let tmp_bucket_startd = date((offerInfo.START_DATE).split(' ')[0]+' '+(offerInfo.START_DATE).split(' ')[1].split(':')[0]+":"+(parseInt((offerInfo.START_DATE).split(' ')[1].split(':')[1])+5) +':'+(offerInfo.START_DATE).split(' ')[1].split(':')[2])
+	 tmp_bucket_startd = tmp_bucket_startd.split('.')[0]+'.000'+tz
+	 //set the bucket to zero but report the actual values for KPI delivery - 13/Sep/2020
+	 //console.log('>> sp.Offer PBS : '+JSON.stringify(productBucketInfo[pbidx]))
+	 if(sflag) {
+		switch(productBucketInfo[pbidx].externalId.split('_')[1]) {
+		 //console.log('setz info: '+parseInt(buckets[jdx].LIMIT_VALUE)+' balance: '+parseInt(buckets[jdx].BALANCE))
+		 case 'Rollover':
+		 case 'rollover':
+			//console.log(productBucket[pbidx].externalId+' Rollover set to right value')
+			let rbal = (productBucketInfo[pbidx].externalId.includes(defaultMapping["bucket.rollover"].productBucket))? (parseInt(rolloverBucketInfo.LIMIT_VALUE) - parseInt(rolloverBucketInfo.BALANCE) === 0)?parseInt(rolloverBucketInfo.BALANCE):0 : 0
+			let rlim =  (productBucketInfo[pbidx].externalId.includes(defaultMapping["bucket.rollover"].productBucket))? (parseInt(rolloverBucketInfo.LIMIT_VALUE) - parseInt(rolloverBucketInfo.BALANCE) === 0)?parseInt(rolloverBucketInfo.LIMIT_VALUE):0 : 0
+			pb_cacheInfo.push({
+				'tmpId' : productBucketInfo[pbidx].tmpId,
+				'externalId' : productBucketInfo[pbidx].externalId ,
+				'CLIENT_ID' : bucketInfo.CLIENT_ID,
+				'BALANCE' : rbal,
+				'LIMIT_VALUE': rlim,
+				'BUCKET_TYPE':bucketInfo.BUCKET_TYPE,
+				'VALIDITY_INFO': {'start': tmp_bucket_startd,'end': date(bucketInfo.FINAL_DATE,tz)},
+				'WAY' : 'SET'
+			})
+			break;
+		default:
+			//console.log(productBucket[pbidx].externalId)
+			pb_cacheInfo.push({
+				'tmpId' : productBucketInfo[pbidx].tmpId,
+				'externalId' : productBucketInfo[pbidx].externalId ,
+				'CLIENT_ID' : bucketInfo.CLIENT_ID,
+				'BALANCE' : (parseInt(bucketInfo.LIMIT_VALUE) - parseInt(bucketInfo.BALANCE) === 0)?parseInt(bucketInfo.BALANCE):0,
+				'LIMIT_VALUE': (parseInt(bucketInfo.LIMIT_VALUE) - parseInt(bucketInfo.BALANCE) === 0)?parseInt(bucketInfo.LIMIT_VALUE):0,
+				'BUCKET_TYPE':bucketInfo.BUCKET_TYPE,
+				'VALIDITY_INFO': {'start': tmp_bucket_startd,'end': date(bucketInfo.FINAL_DATE,tz)},
+				'WAY' : 'SET'
+			})
+			break;
+							
+		}
+	 }
+	if( (bflag === true) && (productBucketInfo[pbidx].externalId.includes('Rollover') || productBucketInfo[pbidx].externalId.includes('rollover')) && productBucketInfo[pbidx].externalId.includes(defaultMapping["individualbucket.rollover"].productBucket)) {						
+		console.log('individual Rollover : '+JSON.stringify(ind_rb_data))
+		for(let ind_rb=0;ind_rb<ind_rb_data.length;ind_rb++){
+			if(ind_rb_data[ind_rb].ORIGIN_ID === offerInfo.ORIGIN_ID) {									
+				pb_cacheInfo.push({
+					'tmpId' : productBucketInfo[pbidx].tmpId,
+					'externalId' : productBucketInfo[pbidx].externalId,
+					'CLIENT_ID' : bucketInfo.CLIENT_ID,
+					'BALANCE' : ind_rb_data[ind_rb].BALANCE,
+					'LIMIT_VALUE': ind_rb_data[ind_rb].LIMIT_VALUE,
+					'BUCKET_TYPE':bucketInfo.BUCKET_TYPE,
+					'VALIDITY_INFO':{'start': tmp_bucket_startd,'end': date(bucketInfo.FINAL_DATE,tz)},
+					'WAY' : bucketInfo.WAY
+				})
+			}
+		}
+	}
+	if( (bflag === true) && (productBucketInfo[pbidx].externalId.includes('Rollover') || productBucketInfo[pbidx].externalId.includes('rollover')) && productBucketInfo[pbidx].externalId.includes(defaultMapping["bucket.rollover"].productBucket) && (parseInt(rolloverBucketInfo.LIMIT_VALUE) - parseInt(rolloverBucketInfo.BALANCE)) > 0 && rolloverBucketInfo.BALANCE!==null && rolloverBucketInfo.LIMIT_VALUE!=='') {
+		//console.log('>> sp.Offer PBS First: ')
+		pb_cacheInfo.push({
+			'tmpId' : productBucketInfo[pbidx].tmpId,
+			'externalId' : productBucketInfo[pbidx].externalId,
+			'CLIENT_ID' : bucketInfo.CLIENT_ID,
+			'BALANCE' : rolloverBucketInfo.BALANCE,
+			'LIMIT_VALUE': rolloverBucketInfo.LIMIT_VALUE,
+			'BUCKET_TYPE':bucketInfo.BUCKET_TYPE,
+			'VALIDITY_INFO':{'start': tmp_bucket_startd,'end': date(bucketInfo.FINAL_DATE,tz)},
+			'WAY' : bucketInfo.WAY
+		})
+	}
+	if( (bflag === true) && (productBucketInfo[pbidx].externalId === bucketInfo.BUCKET_ID) && bucketInfo.ORIGIN_ID === offerInfo.ORIGIN_ID && parseInt(bucketInfo.BALANCE) > -1 && (parseInt(bucketInfo.LIMIT_VALUE) - parseInt(bucketInfo.BALANCE) > 0)) {
+		//console.log('>> sp.Offer PBS : Second>>> Org_ID: '+buckets[jdx].ORIGIN_ID+' bucket_id: '+productBucket[pbidx].externalId+ ' balance: '+ parseInt(buckets[jdx].BALANCE))
+		pb_cacheInfo.push({
+			'tmpId' : productBucketInfo[pbidx].tmpId,
+			'externalId' : productBucketInfo[pbidx].externalId ,
+			'CLIENT_ID' : bucketInfo.CLIENT_ID,
+			'BALANCE' : parseInt(bucketInfo.BALANCE),
+			'LIMIT_VALUE': bucketInfo.LIMIT_VALUE,
+			'BUCKET_TYPE':bucketInfo.BUCKET_TYPE,
+			'VALIDITY_INFO': {'start': tmp_bucket_startd,'end': date(bucketInfo.FINAL_DATE,tz)},
+			'WAY' : bucketInfo.WAY
+		})
+										
+									
+	}
+  }
+ return pb_cacheInfo
+}
+
+function seqKey(entity_name, seq_type) {	
+  return sequence.next(entity_name, seq_type)
+}
+
+//module.exports = characteristics;

@@ -1,0 +1,71 @@
+#metadata:
+#  serviceName
+#    port:
+#    protocol:
+#    contextPath:    
+#    methodsAllowed:
+#    mimeTypesAllowed:
+#    responseFilePath: -- path after the src/test/repources
+#    responseContentType: 
+#    minThreads: 
+#    maxThreads:
+#    responseDelay: -- in milliseconds
+#    authentication: true/false
+#    ssl:
+#      clientAuthRequired:
+#      keystore: 
+#        path: 
+#        password: /data/bridging/0/security/certificates/keystorepwd.txt
+#        type: PKCS12
+#      truststore: 
+#        path: 
+#        password: /data/bridging/0/security/certificates/truststorepwd.txt
+#        type: JSK    
+service-definitions:  
+  GENERIC_TOKEN_API: !!com.ericsson.datamigration.bridging.mock.servers.dto.ExternalService
+    port: 8090
+    protocol: HTTP
+    contextPath: /v2/oauth/token
+    methodsAllowed: [POST,GET]
+    mimeTypesAllowed: [text/html, text/plain, text/xml, application/xml,application/JSON, text/css, application/javascript, text/javascript]
+    responseFilePath: /jetty_mock_responses/oauth_token/TelstraOAuthResponse.json
+    responseContentType: application/json
+    minThreads: 5
+    maxThreads: 10
+    responseDelay: 1000
+    authentication: false            
+  GENERIC_API: !!com.ericsson.datamigration.bridging.mock.servers.dto.ExternalService
+    port: 8091
+    protocol: HTTP
+    contextPath: /v1/generic/resource
+    methodsAllowed: [POST,GET]
+    mimeTypesAllowed: [text/html, text/plain, text/xml, application/xml,application/JSON, text/css, application/javascript, text/javascript]
+    responseFilePath: /jetty_mock_responses/event_dispatcher/TelstraNotificationResponse.json
+    responseContentType: application/json
+    minThreads: 5
+    maxThreads: 10
+    responseDelay: 1000
+    authentication: false            
+  CREATE_CONTRACT_API: !!com.ericsson.datamigration.bridging.mock.servers.dto.ExternalService
+    port: 8080
+    protocol: HTTP
+    contextPath: bae/bssfSubscriptionManagement/v1/customerExternalId/custExtId/contractExternalId
+    methodsAllowed: [POST]
+    mimeTypesAllowed: [text/html, text/plain, text/xml, application/xml,application/JSON, text/css, application/javascript, text/javascript]
+    responseFilePath: /jetty_mock_responses/bae/contract/create_contract_response.json
+    responseContentType: application/json
+    minThreads: 5
+    maxThreads: 10
+    responseDelay: 1000
+    authentication: false
+    validator: bae-create-contract-req-interceptor.groovy           
+    ssl:
+      clientAuthRequired: true
+      keystore: 
+        path: C:/Bridging/config/aris-mock-server/config/ssl/dmtool-keystore.jks
+        password: somethingsimple
+        type: JKS
+      truststore: 
+        path: C:/Bridging/config/aris-mock-server/config/ssl/dmtool-truststore.jks
+        password: somethingsimple
+        type: JKS  

@@ -1,0 +1,535 @@
+#metadata:
+#  serviceName
+#    port:
+#    protocol:
+#    contextPath:    
+#    methodsAllowed:
+#    mimeTypesAllowed:
+#    responseFilePath: -- path after the src/test/repources
+#    responseContentType: 
+#    minThreads: 
+#    maxThreads:
+#    responseDelay: -- in milliseconds
+#    authentication: true/false
+#    ssl:
+#      clientAuthRequired:
+#      keystore: 
+#        path: 
+#        password: /data/bridging/0/security/certificates/keystorepwd.txt
+#        type: PKCS12
+#      truststore: 
+#        path: 
+#        password: /data/bridging/0/security/certificates/truststorepwd.txt
+#        type: JSK    
+service-definitions:  
+  GENERIC_TOKEN_API: !!com.ericsson.datamigration.bridging.mock.servers.dto.ExternalService
+    port: 8090
+    protocol: HTTP
+    contextPath: /v2/oauth/token
+    methodsAllowed: [POST,GET]
+    mimeTypesAllowed: [text/html, text/plain, text/xml, application/xml,application/JSON, text/css, application/javascript, text/javascript]
+    responseFilePath: /jetty_mock_responses/oauth_token/TelstraOAuthResponse.json
+    responseContentType: application/json
+    minThreads: 5
+    maxThreads: 10
+    responseDelay: 1000
+    authentication: false            
+  GENERIC_API: !!com.ericsson.datamigration.bridging.mock.servers.dto.ExternalService
+    port: 8091
+    protocol: HTTP
+    contextPath: /v1/generic/resource
+    methodsAllowed: [POST,GET]
+    mimeTypesAllowed: [text/html, text/plain, text/xml, application/xml,application/JSON, text/css, application/javascript, text/javascript]
+    responseFilePath: /jetty_mock_responses/event_dispatcher/TelstraNotificationResponse.json
+    responseContentType: application/json
+    minThreads: 5
+    maxThreads: 10
+    responseDelay: 1000
+    authentication: false            
+  chargingSystemAPI: !!com.ericsson.datamigration.bridging.mock.servers.dto.ExternalService
+    port: 8089
+    protocol: XML-RPC
+    contextPath: /Air    
+    methodsAllowed: [GET,POST]
+    mimeTypesAllowed: [text/html, text/plain, text/xml, application/xml, text/css, application/javascript, text/javascript]
+    responseFilePath: /jetty_mock_responses/cs/DefaultCSResponse.xml
+    responseContentType: application/xml
+    minThreads: 5
+    maxThreads: 10
+    authentication: false
+    validator: cs-request-validator.groovy
+    ssl:
+      clientAuthRequired: false
+      keystore: 
+        path: C:/Bridging/config/aris-mock-server/config/ssl/dmtool-keystore.jks
+        password: somethingsimple
+        type: JKS
+      truststore: 
+        path: C:/Bridging/config/aris-mock-server/config/ssl/dmtool-truststore.jks
+        password: somethingsimple
+        type: JKS    
+  productAPI: !!com.ericsson.datamigration.bridging.mock.servers.dto.ExternalService
+    port: 8200
+    protocol: REST
+    contextPath: /al/Customer360/v1/Product/Read    
+    methodsAllowed: [GET]
+    mimeTypesAllowed: [text/html, text/plain, text/xml, application/xml, text/css, application/javascript, text/javascript]
+    responseFilePath: /jetty_mock_responses/product/Products.json
+    responseContentType: application/json
+    minThreads: 5
+    maxThreads: 10
+    authentication: false
+    ssl:
+      clientAuthRequired: true
+      keystore: 
+        path: C:/Bridging/config/aris-mock-server/config/ssl/dmtool-keystore.jks
+        password: somethingsimple
+        type: JKS
+      truststore: 
+        path: C:/Bridging/config/aris-mock-server/config/ssl/dmtool-truststore.jks
+        password: somethingsimple
+        type: JKS    
+  dxpAPI: !!com.ericsson.datamigration.bridging.mock.servers.dto.ExternalService
+    port: 8085
+    protocol: REST
+    contextPath: /dxp/customermanagement/customer    
+    methodsAllowed: [POST]
+    mimeTypesAllowed: [text/html, text/plain, text/xml, application/xml, text/css, application/javascript, text/javascript]
+    responseFilePath: /jetty_mock_responses/dxp/DXPResponse.json
+    responseContentType: application/json
+    minThreads: 5
+    maxThreads: 10
+    authentication: false
+    ssl:
+      clientAuthRequired: true
+      keystore: 
+        path: C:/Bridging/config/aris-mock-server/config/ssl/dmtool-keystore.jks
+        password: somethingsimple
+        type: JKS
+      truststore: 
+        path: C:/Bridging/config/aris-mock-server/config/ssl/dmtool-truststore.jks
+        password: somethingsimple
+        type: JKS    
+  ORPHEUS: !!com.ericsson.datamigration.bridging.mock.servers.dto.ExternalService
+    port: 8082
+    protocol: SOAP
+    contextPath: /ocsia-selfcare/prepaid/soap/ServiceDetails
+    methodsAllowed: [POST,GET]
+    mimeTypesAllowed: [text/html, text/plain, text/xml, application/xml, text/css, application/javascript, text/javascript]
+    responseFilePath: /jetty_mock_responses/orpheus/OrpheausResponse.xml
+    responseContentType: application/xml
+    validator: orpheus-request-validator.groovy
+    minThreads: 100
+    maxThreads: 200
+    responseDelay: 1000
+    authentication: false
+    ssl:
+      clientAuthRequired: true
+      keystore: 
+        path: C:/Bridging/config/aris-mock-server/config/ssl/dmtool-keystore.jks
+        password: somethingsimple
+        type: JKS
+      truststore: 
+        path: C:/Bridging/config/aris-mock-server/config/ssl/dmtool-truststore.jks
+        password: somethingsimple
+        type: JKS    
+  EVENT_DISPATCHER_NOTIFICATION: !!com.ericsson.datamigration.bridging.mock.servers.dto.ExternalService
+    port: 8084
+    protocol: HTTP
+    contextPath: /v1/message-broker/prepaid/publisher
+    methodsAllowed: [POST,GET]
+    mimeTypesAllowed: [text/html, text/plain, text/xml, application/xml,application/JSON, text/css, application/javascript, text/javascript]
+    responseFilePath: /jetty_mock_responses/event_dispatcher/TelstraNotificationResponse.json
+    responseContentType: application/json
+    validator: ed-notify-request-validator.groovy
+    minThreads: 5
+    maxThreads: 10
+    responseDelay: 1000
+    authentication: false
+    ssl:
+      clientAuthRequired: true
+      keystore: 
+        path: C:/Bridging/config/aris-mock-server/config/ssl/dmtool-keystore.jks
+        password: somethingsimple
+        type: JKS
+      truststore: 
+        path: C:/Bridging/config/aris-mock-server/config/ssl/dmtool-truststore.jks
+        password: somethingsimple
+        type: JKS    
+  OKAPI_EVENT_DISPATCHER_OAUTH: !!com.ericsson.datamigration.bridging.mock.servers.dto.ExternalService
+    port: 8084
+    protocol: HTTP
+    contextPath: /v2/oauth/token
+    methodsAllowed: [POST,GET]
+    mimeTypesAllowed: [text/html, text/plain, text/xml, application/xml,application/JSON, text/css, application/javascript, text/javascript]
+    responseFilePath: /jetty_mock_responses/oauth_token/TelstraOAuthResponse.json
+    responseContentType: application/json
+    validator: token-request-validator.groovy
+    minThreads: 5
+    maxThreads: 10
+    responseDelay: 1000
+    authentication: false            
+    ssl:
+      clientAuthRequired: true
+      keystore: 
+        path: C:/Bridging/config/aris-mock-server/config/ssl/dmtool-keystore.jks
+        password: somethingsimple
+        type: JKS
+      truststore: 
+        path: C:/Bridging/config/aris-mock-server/config/ssl/dmtool-truststore.jks
+        password: somethingsimple
+        type: JKS
+  OKAPI_DXP_TOKEN: !!com.ericsson.datamigration.bridging.mock.servers.dto.ExternalService
+    port: 8084
+    protocol: HTTP
+    contextPath: /auth/realms/dxp/protocol/openid-connect/token
+    methodsAllowed: [POST,GET]
+    mimeTypesAllowed: [text/html, text/plain, text/xml, application/xml,application/JSON, text/css, application/javascript, text/javascript]
+    responseFilePath: /jetty_mock_responses/oauth_token/TelstraOAuthResponse_DXP.json
+    responseContentType: application/json
+    minThreads: 5
+    maxThreads: 10
+    responseDelay: 1000
+    authentication: false            
+    ssl:
+      clientAuthRequired: true
+      keystore: 
+        path: C:/Bridging/config/aris-mock-server/config/ssl/dmtool-keystore.jks
+        password: somethingsimple
+        type: JKS
+      truststore: 
+        path: C:/Bridging/config/aris-mock-server/config/ssl/dmtool-truststore.jks
+        password: somethingsimple
+        type: JKS
+  OKAPI_EMS_TOKEN: !!com.ericsson.datamigration.bridging.mock.servers.dto.ExternalService
+    port: 8084
+    protocol: HTTP
+    contextPath: /v1/eoms/oauth/token
+    methodsAllowed: [POST,GET]
+    mimeTypesAllowed: [text/html, text/plain, text/xml, application/xml,application/JSON, text/css, application/javascript, text/javascript]
+    responseFilePath: /jetty_mock_responses/oauth_token/TelstraOAuthResponse_EOMSYS.json
+    responseContentType: application/json
+    minThreads: 5
+    maxThreads: 10
+    responseDelay: 1000
+    authentication: false            
+    ssl:
+      clientAuthRequired: true
+      keystore: 
+        path: C:/Bridging/config/aris-mock-server/config/ssl/dmtool-keystore.jks
+        password: somethingsimple
+        type: JKS
+      truststore: 
+        path: C:/Bridging/config/aris-mock-server/config/ssl/dmtool-truststore.jks
+        password: somethingsimple
+        type: JKS       
+  OKAPI_CMP_TOKEN: !!com.ericsson.datamigration.bridging.mock.servers.dto.ExternalService
+    port: 8084
+    protocol: HTTP
+    contextPath: /v1/cmp/oauth/token
+    methodsAllowed: [POST,GET]
+    mimeTypesAllowed: [text/html, text/plain, text/xml, application/xml,application/JSON, text/css, application/javascript, text/javascript]
+    responseFilePath: /jetty_mock_responses/oauth_token/TelstraOAuthResponse_CMP.json
+    responseContentType: application/json
+    minThreads: 5
+    maxThreads: 10
+    responseDelay: 1000
+    authentication: false            
+    ssl:
+      clientAuthRequired: true
+      keystore: 
+        path: C:/Bridging/config/aris-mock-server/config/ssl/dmtool-keystore.jks
+        password: somethingsimple
+        type: JKS
+      truststore: 
+        path: C:/Bridging/config/aris-mock-server/config/ssl/dmtool-truststore.jks
+        password: somethingsimple
+        type: JKS    
+  EOC_GET_TOKEN: !!com.ericsson.datamigration.bridging.mock.servers.dto.ExternalService
+    port: 8083
+    protocol: HTTP
+    contextPath: /eoc/avmSecurity/getToken
+    methodsAllowed: [POST,GET]
+    mimeTypesAllowed: [text/html, text/plain, text/xml, application/xml,application/JSON, text/css, application/javascript, text/javascript]
+    responseFilePath: /jetty_mock_responses/dxp/DXP_GetToken.json
+    responseContentType: application/json
+    minThreads: 5
+    maxThreads: 10
+    responseDelay: 1000
+    authentication: false
+    ssl:
+      clientAuthRequired: false
+      keystore: 
+        path: C:/Bridging/config/aris-mock-server/config/ssl/dmtool-keystore.jks
+        password: somethingsimple
+        type: JKS
+      truststore: 
+        path: C:/Bridging/config/aris-mock-server/config/ssl/dmtool-truststore.jks
+        password: somethingsimple
+        type: JKS    
+  DXP_SEARCH_API: !!com.ericsson.datamigration.bridging.mock.servers.dto.ExternalService
+    port: 8083
+    protocol: HTTP
+    contextPath: /customerManagement/v1/customer/query
+    methodsAllowed: [POST,GET]
+    mimeTypesAllowed: [text/html, text/plain, text/xml, application/xml,application/JSON, text/css, application/javascript, text/javascript]
+    responseFilePath: /jetty_mock_responses/dxp/DXP_SearchCustomerResp_NotFound.json
+    responseContentType: application/json
+    minThreads: 5
+    maxThreads: 10
+    responseDelay: 1000
+    authentication: false
+    validator: dxp-search-customer-req-validator.groovy          
+    ssl:
+      clientAuthRequired: true
+      keystore: 
+        path: C:/Bridging/config/aris-mock-server/config/ssl/dmtool-keystore.jks
+        password: somethingsimple
+        type: JKS
+      truststore: 
+        path: C:/Bridging/config/aris-mock-server/config/ssl/dmtool-truststore.jks
+        password: somethingsimple
+        type: JKS
+  DXP_CREATE_PARTY_API: !!com.ericsson.datamigration.bridging.mock.servers.dto.ExternalService
+    port: 8083
+    protocol: HTTP
+    contextPath: /customerManagement/v1/party
+    methodsAllowed: [POST,GET]
+    mimeTypesAllowed: [text/html, text/plain, text/xml, application/xml,application/JSON, text/css, application/javascript, text/javascript]
+    responseFilePath: /jetty_mock_responses/dxp/DXP_CreatePartyResp.json
+    responseContentType: application/json
+    minThreads: 5
+    maxThreads: 10
+    responseDelay: 1000
+    authentication: false
+    validator: dxp-create-party-req-validator.groovy           
+    ssl:
+      clientAuthRequired: true
+      keystore: 
+        path: C:/Bridging/config/aris-mock-server/config/ssl/dmtool-keystore.jks
+        password: somethingsimple
+        type: JKS
+      truststore: 
+        path: C:/Bridging/config/aris-mock-server/config/ssl/dmtool-truststore.jks
+        password: somethingsimple
+        type: JKS  
+  DXP_CREATE_CUSTOMER_API: !!com.ericsson.datamigration.bridging.mock.servers.dto.ExternalService
+    port: 8083
+    protocol: HTTP
+    contextPath: /xCACcore/v1/customer
+    methodsAllowed: [POST,GET]
+    mimeTypesAllowed: [text/html, text/plain, text/xml, application/xml,application/JSON, text/css, application/javascript, text/javascript]
+    responseFilePath: /jetty_mock_responses/dxp/DXP_CreateCustomerResp.json
+    responseContentType: application/json
+    minThreads: 5
+    maxThreads: 10
+    responseDelay: 1000
+    authentication: false
+    validator: dxp-create-customer-req-validator.groovy            
+    ssl:
+      clientAuthRequired: true
+      keystore: 
+        path: C:/Bridging/config/aris-mock-server/config/ssl/dmtool-keystore.jks
+        password: somethingsimple
+        type: JKS
+      truststore: 
+        path: C:/Bridging/config/aris-mock-server/config/ssl/dmtool-truststore.jks
+        password: somethingsimple
+        type: JKS
+  DXP_DELETE_PARTY_API: !!com.ericsson.datamigration.bridging.mock.servers.dto.ExternalService
+    port: 8083
+    protocol: HTTP
+    contextPath: /customerManagement/v1/party/party1234
+    methodsAllowed: [DELETE]
+    mimeTypesAllowed: [text/html, text/plain, text/xml, application/xml,application/JSON, text/css, application/javascript, text/javascript]
+    responseFilePath: /jetty_mock_responses/dxp/DXP_DeletePartyResp.json
+    responseContentType: application/json
+    minThreads: 5
+    maxThreads: 10
+    responseDelay: 1000
+    authentication: false
+    validator: dxp-delete-party-req-validator.groovy            
+    ssl:
+      clientAuthRequired: true
+      keystore: 
+        path: C:/Bridging/config/aris-mock-server/config/ssl/dmtool-keystore.jks
+        password: somethingsimple
+        type: JKS
+      truststore: 
+        path: C:/Bridging/config/aris-mock-server/config/ssl/dmtool-truststore.jks
+        password: somethingsimple
+        type: JKS
+  DXP_DELETE_PARTY_FAILURE_API: !!com.ericsson.datamigration.bridging.mock.servers.dto.ExternalService
+    port: 8083
+    protocol: HTTP
+    contextPath: /customerManagement/v1/party/party2345
+    methodsAllowed: [DELETE]
+    mimeTypesAllowed: [text/html, text/plain, text/xml, application/xml,application/JSON, text/css, application/javascript, text/javascript]
+    responseFilePath: /jetty_mock_responses/dxp/DXP_DeletePartyResp.json
+    responseContentType: application/json
+    minThreads: 5
+    maxThreads: 10
+    responseDelay: 1000
+    authentication: false
+    validator: dxp-delete-party-failed-req-validator.groovy          
+    ssl:
+      clientAuthRequired: true
+      keystore: 
+        path: C:/Bridging/config/aris-mock-server/config/ssl/dmtool-keystore.jks
+        password: somethingsimple
+        type: JKS
+      truststore: 
+        path: C:/Bridging/config/aris-mock-server/config/ssl/dmtool-truststore.jks
+        password: somethingsimple
+        type: JKS
+  EOC_API: !!com.ericsson.datamigration.bridging.mock.servers.dto.ExternalService
+    port: 8086
+    protocol: REST
+    contextPath: /cpq/shoppingCart/v1/shoppingCart/    
+    methodsAllowed: [POST,PATCH,DELETE]
+    mimeTypesAllowed: [application/json, text/html, text/plain, text/xml, application/xml, text/css, application/javascript, text/javascript]
+    responseFilePath: /jetty_mock_responses/eoc/EOCResponse.json
+    responseContentType: application/json
+    minThreads: 5
+    maxThreads: 10
+    authentication: false
+    validator: eoc-shoppingcart-req-validator.groovy
+    ssl:
+      clientAuthRequired: true
+      keystore: 
+        path: C:/Bridging/config/aris-mock-server/config/ssl/dmtool-keystore.jks
+        password: somethingsimple
+        type: JKS
+      truststore: 
+        path: C:/Bridging/config/aris-mock-server/config/ssl/dmtool-truststore.jks
+        password: somethingsimple
+        type: JKS
+  DXP_CREATE_CUSTOMER_INTERACTION_API: !!com.ericsson.datamigration.bridging.mock.servers.dto.ExternalService
+    port: 8083
+    protocol: REST
+    contextPath: /xCACcore/v1/customerInteraction/    
+    methodsAllowed: [POST,GET]
+    mimeTypesAllowed: [application/json, text/html, text/plain, text/xml, application/xml, text/css, application/javascript, text/javascript]
+    responseFilePath: /jetty_mock_responses/dxp/DXP_CreateCustomerInteraction_Response.json
+    responseContentType: application/json
+    minThreads: 5
+    maxThreads: 10
+    authentication: false
+    validator: dxp-customer-interaction-req-validator.groovy 
+    ssl:
+      clientAuthRequired: true
+      keystore: 
+        path: C:/Bridging/config/aris-mock-server/config/ssl/dmtool-keystore.jks
+        password: somethingsimple
+        type: JKS
+      truststore: 
+        path: C:/Bridging/config/aris-mock-server/config/ssl/dmtool-truststore.jks
+        password: somethingsimple
+        type: JKS
+  DXP_UPDATE_CUSTOMER_CONTRACT_API: !!com.ericsson.datamigration.bridging.mock.servers.dto.ExternalService
+    port: 8083
+    protocol: REST
+    contextPath: /customerManagement/v1/contract/    
+    methodsAllowed: [PATCH]
+    mimeTypesAllowed: [application/json, text/html, text/plain, text/xml, application/xml, text/css, application/javascript, text/javascript]
+    responseFilePath: /jetty_mock_responses/dxp/DXP_UpdateCustomerContract_Response.json
+    responseContentType: application/json
+    minThreads: 5
+    maxThreads: 10
+    authentication: false
+    ssl:
+      clientAuthRequired: true
+      keystore: 
+        path: C:/Bridging/config/aris-mock-server/config/ssl/dmtool-keystore.jks
+        password: somethingsimple
+        type: JKS
+      truststore: 
+        path: C:/Bridging/config/aris-mock-server/config/ssl/dmtool-truststore.jks
+        password: somethingsimple
+        type: JKS 
+  DXP_GET_CUSTOMER_CONTRACT_API: !!com.ericsson.datamigration.bridging.mock.servers.dto.ExternalService
+    port: 8083
+    protocol: REST
+    contextPath: /customerManagement/v1/contract/    
+    methodsAllowed: [GET]
+    mimeTypesAllowed: [application/json, text/html, text/plain, text/xml, application/xml, text/css, application/javascript, text/javascript]
+    responseFilePath: /jetty_mock_responses/dxp/DXP_getCustomerContractResponse.json
+    responseContentType: application/json
+    minThreads: 5
+    maxThreads: 10
+    authentication: false
+    ssl:
+      clientAuthRequired: true
+      keystore: 
+        path: C:/Bridging/config/aris-mock-server/config/ssl/dmtool-keystore.jks
+        password: somethingsimple
+        type: JKS
+      truststore: 
+        path: C:/Bridging/config/aris-mock-server/config/ssl/dmtool-truststore.jks
+        password: somethingsimple
+        type: JKS      
+  DXP_EOC_GET_ORDER_API: !!com.ericsson.datamigration.bridging.mock.servers.dto.ExternalService
+    port: 8098
+    protocol: HTTP
+    contextPath: /order/    
+    methodsAllowed: [POST]
+    mimeTypesAllowed: [application/json, text/html, text/plain, text/xml, application/xml, text/css, application/javascript, text/javascript]
+    responseFilePath: /jetty_mock_responses/dxp/DXP_GetEocOrderInfo_Response.json
+    responseContentType: application/json
+    minThreads: 5
+    maxThreads: 10
+    authentication: false
+    ssl:
+      clientAuthRequired: true
+      keystore: 
+        path: C:/Bridging/config/aris-mock-server/config/ssl/dmtool-keystore.jks
+        password: somethingsimple
+        type: JKS
+      truststore: 
+        path: C:/Bridging/config/aris-mock-server/config/ssl/dmtool-truststore.jks
+        password: somethingsimple
+        type: JKS
+  EOMSYS_API: !!com.ericsson.datamigration.bridging.mock.servers.dto.ExternalService
+    port: 8099
+    protocol: HTTP
+    contextPath: /v1/eoms/order  
+    methodsAllowed: [POST]
+    mimeTypesAllowed: [application/json, text/html, text/plain, text/xml, application/xml, text/css, application/javascript, text/javascript]
+    responseFilePath: /jetty_mock_responses/eomsys/CreateOrderResponse.json
+    responseContentType: application/json
+    minThreads: 5
+    maxThreads: 10
+    authentication: false
+    validator: eomsys-create-submit-req-validator.groovy
+    ssl:
+      clientAuthRequired: true
+      keystore: 
+        path: C:/Bridging/config/aris-mock-server/config/ssl/dmtool-keystore.jks
+        password: somethingsimple
+        type: JKS
+      truststore: 
+        path: C:/Bridging/config/aris-mock-server/config/ssl/dmtool-truststore.jks
+        password: somethingsimple
+        type: JKS
+  CMP_API: !!com.ericsson.datamigration.bridging.mock.servers.dto.ExternalService
+    port: 8097
+    protocol: HTTP
+    contextPath: /CMPRoutingService/cmp/v1/BDSRoutingEvents
+    methodsAllowed: [POST]
+    mimeTypesAllowed: [application/json, text/html, text/plain, text/xml, application/xml, text/css, application/javascript, text/javascript]
+    responseFilePath: /jetty_mock_responses/cmp/EventRoutingMessageResponse.json
+    responseContentType: application/json
+    minThreads: 5
+    maxThreads: 10
+    authentication: false
+    validator: cmp-event-routing-req-validator.groovy
+    ssl:
+      clientAuthRequired: true
+      keystore: 
+        path: C:/Bridging/config/aris-mock-server/config/ssl/dmtool-keystore.jks
+        password: somethingsimple
+        type: JKS
+      truststore: 
+        path: C:/Bridging/config/aris-mock-server/config/ssl/dmtool-truststore.jks
+        password: somethingsimple
+        type: JKS

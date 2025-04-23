@@ -1,0 +1,442 @@
+{
+	"header": {
+		"ruleset": {
+			"name": "header_entities",
+			"source": [],
+			"order": "2",
+			"entity": "header"
+		}
+	},
+	"party": {
+		"ruleset": {
+			"name": "party_entities",
+			"source": [
+				"$.BODY"
+			],
+			"order": "1",
+			"entity": "party"
+		}
+	},
+	"customer": {
+		"ruleset": {
+			"name": "customer_entities",
+			"source": [
+				"$.BODY"
+			],
+			"order": "4",
+			"entity": "customer"
+		}
+	},
+	"user": {
+		"ruleset": {
+			"name": "user_entities",
+			"source": ["$.BODY"],
+			"order": "3",
+			"entity": "user"
+		}
+	},
+	"contract": {
+		"ruleset": {
+			"name": "contract_entities",
+			"source": [
+				"$.BODY"
+			],
+			"order": "5",
+			"entity": "contract"
+		}
+	},
+	"_route": {
+		"ruleset": {
+			"name": "route_entities",
+			"source": ["$.BODY"],
+			"entity": "_route",
+			"order": "6"
+		}
+	},
+	"entities": {
+		"header": [
+			{
+				"party": {
+					"rule": {
+						"name": "getextParams",
+						"source": ["$"]
+					}
+				},
+				"customer": {
+					"rule": {
+						"name": "getextParams",
+						"source": ["$"]
+					}
+				},
+				"user": {
+					"rule": {
+						"name": "getextParams",
+						"source": ["$"]
+					}
+				},
+				"contract": {
+					"rule": {
+						"name": "getextParams",
+						"source": ["$"]
+					}
+				}
+			}
+		],
+		"_route": [{
+			"_targetId": {
+					"rule": {
+						"name": "getDistributionId",
+						"source": [$.cli_info],
+						"keepAsString": "true"
+					}	
+			}
+		}],
+		"party": [
+			{
+				"rmPartyKey": {
+					"rule": {
+						"name": "genKey",
+						"source": [
+							"PARTY",
+							"$.CLIENT.MSISDN",
+							"$.CLIENT.LUW_ID",
+							"$.partyType"
+						],
+						"keepAsString": "true"
+					}
+				},
+				"externalId": {
+					"rule": {
+						"name": "get_partyexternalId",
+						"source": [
+							"$.partyType",
+							"$.CLIENT.CONT_ID",
+							"$.CLIENT.CUST_ID"
+						],
+						"keepAsString": "true"
+					}
+				},
+				"partitionId": {
+					"rule": {
+						"name": "getPartyPartitionId",
+						"source": [$.client_info],
+						"keepAsString": "true"
+					}
+				},
+				"type": {
+					"rule": {
+						"name": "getPartyType",
+						"source": [
+							"$.CLIENT.CLIENT_CATEGORY"
+						]
+					}
+				},
+				"gender": {
+					"genderId": "Male"
+				},
+				"contactMedia": {
+					"rule": {
+						"name": "getPartyContactMedia",
+						"source": [ 
+							"$.CLIENT","$.partyType"
+						]
+					}
+				},
+				"characteristicValues": {
+					"rule": {
+						"name": "getPartyCharacteristics",
+						"source": [
+							"$.CLIENT"
+						]
+					}
+				},
+				"languages": {
+					"rule": {
+						"name": "getPartyLanguage",
+						"source": [
+							"$.CLIENT"
+						]
+					}
+				},
+				"statuses": {
+					"rule": {
+						"name": "getPartyStatuses",
+						"source": [
+							"$.CLIENT"
+						]
+					}
+				}
+			}
+		],
+		"customer": [
+			{
+				"rmCustomerKey": {
+					"rule": {
+						"name": "genKey",
+						"source": [
+							"CUSTOMER","$.CLIENT[0].CUST_ID","$.CLIENT[0].LUW_ID"
+						],
+						"keepAsString": "true"
+					}
+				},
+				"externalId": {
+					"rule": {
+						"name": "get_externalId",
+						"source": [
+							"",
+							"$.CLIENT[0].CUST_ID"
+						],
+						"keepAsString": "true"
+					}
+				},
+				"party": {
+					"partyId": {
+						"rule": {
+							"name": "getPartyKey",
+							"source": [
+								"PARTY",
+								"$.CLIENT[0].MSISDN",
+								"$.CLIENT[0].LUW_ID",
+								"customerParty"
+							],
+							"keepAsString": "true"
+						}
+					},
+					"partyFullName": ""
+				},
+				"billingAccounts": {
+					"rule": {
+						"name": "getBillingAccounts",
+						"source": [
+							"$.CLIENT[0]"
+						]
+					}
+				},
+				"contactMediumAssociations": {
+					"rule": {
+						"name": "getContactMediumAssociations",
+						"source": [
+							"CUSTOMER", "$.CLIENT[0].MSISDN", "$.CLIENT[0].CREATION_DATE", "$.CLIENT[0].TIMEZONE"
+						]
+					}
+				},
+				"characteristicValues": {
+					"rule": {
+						"name": "getCustomerCharacteristicValues",
+						"source": [
+							"$.CLIENT[0]"
+						]
+					}
+				},
+				"statuses": {
+					"rule": {
+						"name": "getCustomerStatuses",
+						"source": [
+							"$.CLIENT[0]"
+						]
+					}
+				},
+				"homeTimeZones": {
+					"rule": {
+						"name": "getTimezone",
+						"source": [
+							"$.CLIENT[0]"
+						]
+					}
+				}
+			}
+		],
+		"user": [
+			{
+			"rmUserKey" : {
+				   "rule" : {
+				      "name" : "genKey",
+					  "source" : ["USER", "$.CLIENT.MSISDN","$.CLIENT.LUW_ID"],
+					  "keepAsString": "true"
+				   }
+				},
+				"externalId": {
+					"rule": {
+						"name": "get_externalId",
+						"source": ["userExtId_","$.CLIENT.CONT_ID"],
+						"keepAsString": "true"
+					}
+				},
+				"party": {
+				   "partyId" : {
+							"rule": {
+								"name": "getPartyKey",
+								"source": ["PARTY", "$.CLIENT.MSISDN","$.CLIENT.LUW_ID","userParty"],
+								"keepAsString": "true"
+							}
+						}
+				},
+				"homeTimeZones": {
+					"rule": {
+						"name": "getTimezone",
+						"source": [
+							"$.CLIENT"
+						]
+					}
+				},
+				"contactMediumAssociations": {
+					"rule": {
+						"name": "getContactMediumAssociations",
+						"source": ["USER","$.CLIENT.MSISDN","$.CLIENT.CREATION_DATE","$.CLIENT.TIMEZONE"]
+					}
+				},
+				"validFor": {
+					"start": {
+						"rule": {
+							"name": "convert_date",
+							"source": ["$.CLIENT.CREATION_DATE","$.CLIENT.TIMEZONE","$.CLIENT.CLIENT_ID","$.CLIENT.MSISDN","user_entity"]
+						}
+					}
+				},
+				"characteristicValues": {
+					"rule": {
+						"name": "getUserCharacteristics",
+						"source": [
+							"$.CLIENT.CREATION_DATE","$.CLIENT.TIMEZONE","$.CLIENT.PRODUCER"
+						]
+					}
+				},
+				"statuses": {
+						"rule" : {
+							"name": "getUserStatuses",
+							"source": [ "$.CLIENT" ]
+							}
+				}
+			}
+		],
+		"contract": [
+			{
+				"rmContractKey": {
+					"rule": {
+						"name": "genKey",
+						"source": [
+							"CONTRACT",
+							"$.client.CONT_ID"
+						],
+						"keepAsString": "true",
+						"order": "1"
+					}
+				},
+				"paymentContext": {
+					"rule": {
+						"name": "paymentContext",
+						"source": [],
+						"order": "2"
+					}
+				},
+				"characteristicValues": {
+					"rule": {
+						"name": "getContractCharacteristicValues",
+						"source": ["$"],
+						"order": "13"
+					}
+				},
+				"resources": {
+					"rule": {
+						"name": "getResources",
+						"source": ["$"],
+						"order": "4"
+					}
+				},
+				"statuses": {
+					"rule": {
+						"name": "getContractStatuses",
+						"source": [
+							"$.client_info", 
+							"$.client.STATUS",
+							"$.client.MSISDN",
+							"$.client.CLIENT_ID",
+							"$.client.TIMEZONE"
+						],
+						"order": "5"
+					}
+				},
+				"homeTimeZones": {
+					"rule": {
+						"name": "getTimezone",
+						"source": [
+							"$.client"
+						],
+						"order": "6"
+					}
+				},
+				"tmpId": {
+					"rule": {
+						"name": "getcontractTmpId",
+						"source": [
+							"$.client.MSISDN",
+							"$.client.CONT_ID"
+						],
+						"keepAsString": "true",
+						"order": "7"
+					}
+				},
+				"externalId": {
+					"rule": {
+						"name": "get_externalId",
+						"source": [
+							"$.client.CONT_ID"
+						],
+						"keepAsString": "true",
+						"order": "8"
+					}
+				},
+				"products": {
+					"rule": {
+						"name": "getProducts",
+						"source": [
+							"$","$.client.GROUP_ID"
+						],
+						"order": "9"
+					}
+				},
+				"services": {
+					"rule": {
+						"name": "getServices",
+						"source": [
+							"$.client.MSISDN",
+							"$.client.IMSI",
+							"$.client.CREATION_DATE",
+							"$.client.TIMEZONE"
+						],
+						"order": "10"
+					} 
+				},
+				"partyInteractionRoles": {
+					"rule": {
+						"name": "getpartyInteractionRoles",
+						"source": [
+							"$.client.MSISDN",
+							"$.client.LUW_ID",
+							"$.client_info",
+							"$.client.CREATION_DATE",
+							"$.client.TIMEZONE"
+						],
+						"order": "12"
+					}
+				},
+				"billday": {
+					"rule": {
+						"name": "setBillDay",
+						"source": ["$.client.BILL_DAY"],
+						"keepAsString": "true",
+						"order": "3"
+					}
+				},
+				"custExtId": {
+					"rule": {
+						"name": "setcustExtId",
+						"source": ["$.client.CUST_ID"],
+						"keepAsString": "true",
+						"order": "14"
+					}
+				}
+			}
+		]
+	}
+}                                                                                         

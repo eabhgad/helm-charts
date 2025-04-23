@@ -1,0 +1,74 @@
+{
+	"services": [{
+			"validFor": {
+				"start": "2014-01-01T00:00:00.0000+02:00",
+				"end": "2099-12-31T00:00:00.0000+02:00"
+			},
+			"serviceCharacteristics": [{
+				"name": "charName",
+				"value": "charvalue"
+			}],
+			"statuses": [{
+				"status": "ServiceActive",
+				"validFor": {
+					"start": "2014-01-01T00:00:00.0000+02:00",
+					"end": "2099-12-31T00:00:00.0000+02:00"
+				}
+			}],
+			"name": "serviceName1",
+			"description": "serviceDescription1",
+			"isEnabled": true,
+			"serviceType": "CF",
+			"serviceSpecification": {
+				"id": "340858ff-981e-4f19-b7df-3655eb334b91",
+				"humanReadableId": "340858ff-981e-4f19-b7df-3655eb334b91_serviceSpecificationHumanReadableId",
+				"href": "serviceSpecificationHref",
+				"name": "serviceSpecificationName",
+				"description": "serviceSpecificationDescription"
+			},
+			"servicesRef": [
+				"service1",
+				"service2"
+			],
+			"resourcesRef": [
+				"resource1",
+				"resource2"
+			]
+	},
+	{
+			"validFor": {
+				"start": "2014-01-01T00:00:00.0000+02:00",
+				"end": "2099-12-31T00:00:00.0000+02:00"
+			},
+			"serviceCharacteristics": [{
+				"name": "charName1",
+				"value": "charvalue1"
+			}],
+			"statuses": [{
+				"status": "Active",
+				"validFor": {
+					"start": "2014-01-01T00:00:00.0000+02:00",
+					"end": "2099-12-31T00:00:00.0000+02:00"
+				}
+			}],
+			"name": "serviceName2",
+			"description": "serviceDescription2",
+			"isEnabled": true,
+			"serviceType": "CF",
+			"serviceSpecification": {
+				"id": "5346148a-e4ca-476f-901a-9d1a0d56275b",
+				"humanReadableId": "5346148a-e4ca-476f-901a-9d1a0d56275bserviceSpecificationHumanReadableId",
+				"href": "serviceSpecificationHref",
+				"name": "serviceSpecificationName",
+				"description": "serviceSpecificationDescription"
+			},
+			"servicesRef": [
+				"service1",
+				"service2"
+			],
+			"resourcesRef": [
+				"resource1",
+				"resource2"
+			]
+	}]
+}
