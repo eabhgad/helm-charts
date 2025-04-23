@@ -14,6 +14,11 @@ spec:
       labels:
         app: bridging
     spec:
+      initContainers:
+        - name: check-cassandra-ready
+          image: cassandra:3.11
+          command: ['sh', '-c', 
+          'until cqlsh cassandra-0.cassandra.default.svc.cluster.local -u cassandra -p cassandra -e "desc keyspaces" | grep system_auth; do echo waiting for cassandra; sleep 10; done;']
       containers:
         - name: bridging
           image: "ghcr.io/eabhgad/bridging:1.1"
@@ -37,7 +42,4 @@ spec:
         - name: bridging-log
           hostPath:
             path: /mnt/nfs_share/volumes/bridging/logs
-            type: Directory         
-#        - name: bridging-log
-#          persistentVolumeClaim:
-#            claimName: pvc-nfs-dynamic       
+            type: Directory    
