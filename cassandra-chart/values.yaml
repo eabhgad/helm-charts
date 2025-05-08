@@ -1,3 +1,5 @@
+nfs-storage-class: false
+
 replicaCount: 1
 
 image:

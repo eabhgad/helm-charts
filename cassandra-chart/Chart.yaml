@@ -2,5 +2,5 @@ apiVersion: v2
 name: cassandra-chart
 description: A Helm chart for creating simple Cassandra cluster
 type: application
-version: 1.0
+version: 1.0.0
 appVersion: "5.0"
