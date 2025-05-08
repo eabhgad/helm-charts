@@ -1,0 +1,14 @@
+apiVersion: v1
+entries:
+  cassandra-chart:
+  - apiVersion: v2
+    appVersion: "5.0"
+    created: "2025-05-08T08:21:26.358782521Z"
+    description: A Helm chart for creating simple Cassandra cluster
+    digest: d4950f34419c548e5f7781e98f40e0fa1b7c4229217ce70a90ce2feceeac4f73
+    name: cassandra-chart
+    type: application
+    urls:
+    - cassandra-chart-1.0.0.tgz
+    version: 1.0.0
+generated: "2025-05-08T08:21:26.358406965Z"
